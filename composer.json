@@ -3,7 +3,7 @@
     "description": "A lumen package with base functionality for all foosball manager applications",
     "type": "library",
     "keywords": ["foosball", "manager"],
-    "license": "MIT",
+    "license": "GPL-3.0-or-later",
     "authors": [
       {
         "name": "Benedikt Klocker",
