@@ -20,7 +20,6 @@
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.4.1",
-    "laravel-doctrine/migrations": "^1.0.0",
     "phpunit/phpcov": "^4.0",
     "phpmd/phpmd": "^2.6"
   },

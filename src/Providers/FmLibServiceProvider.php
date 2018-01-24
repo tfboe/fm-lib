@@ -12,7 +12,6 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Database\MigrationServiceProvider;
 use Illuminate\Support\ServiceProvider;
 use Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider;
 use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
@@ -40,7 +39,6 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    $this->loadMigrationsFrom(__DIR__ . '/../../database/migrations');
   }
 
   /**
@@ -69,11 +67,6 @@ class FmLibServiceProvider extends ServiceProvider
     $this->app->register(DoctrineServiceProvider::class);
     $this->app->register(GedmoExtensionsServiceProvider::class);
     $this->app->register(JwtAuthGuardServiceProvider::class);
-    try {
-      //optional service providers
-      $this->app->register(MigrationServiceProvider::class);
-    } catch (\Exception $e) {
-    }
 
     $this->app->singleton(DynamicServiceLoadingServiceInterface::class, function (Container $app) {
       return new DynamicServiceLoadingService($app);
