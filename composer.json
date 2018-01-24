@@ -1,0 +1,6 @@
+{
+    "name": "tfboe/fm-lib",
+    "description": "A lumen package with base functionality for all foosball manager applications",
+    "type": "library",
+    "require": {}
+}
