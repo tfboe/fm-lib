@@ -11,7 +11,9 @@ namespace Tfboe\FmLib\Providers;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Database\MigrationServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
@@ -21,6 +23,7 @@ use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdent
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
 use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
+use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
 class FmLibServiceProvider extends ServiceProvider
 {
@@ -49,6 +52,14 @@ class FmLibServiceProvider extends ServiceProvider
 
     if ($this->app->environment() !== 'production') {
       $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
+    }
+
+    $this->app->register(LumenServiceProvider::class);
+    $this->app->register(DoctrineServiceProvider::class);
+    try {
+      //optional service providers
+      $this->app->register(MigrationServiceProvider::class);
+    } catch (\Exception $e) {
     }
 
     $this->app->singleton(DynamicServiceLoadingServiceInterface::class, function (Container $app) {
