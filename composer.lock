@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "a119b96f80257fc47f4bb26564e05cb0",
+    "content-hash": "f7b67adea68b701b6e956deedc7fbc9b",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1853,6 +1853,67 @@
             "time": "2017-11-21T13:35:42+00:00"
         },
         {
+            "name": "irazasyed/jwt-auth-guard",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/irazasyed/jwt-auth-guard.git",
+                "reference": "b46e134a5b88b772f8061c4a03192f94b6834bb4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/irazasyed/jwt-auth-guard/zipball/b46e134a5b88b772f8061c4a03192f94b6834bb4",
+                "reference": "b46e134a5b88b772f8061c4a03192f94b6834bb4",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0",
+                "php": ">=5.5.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "scrutinizer/ocular": "~1.1",
+                "squizlabs/php_codesniffer": "~2.3",
+                "tymon/jwt-auth": "^1.0@dev"
+            },
+            "suggest": {
+                "tymon/jwt-auth": "Add JWT Auth Package for Laravel and Lumen"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Irazasyed\\JwtAuthGuard\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Syed Irfaq R.",
+                    "email": "syed+gh@lukonet.com",
+                    "homepage": "https://lukonet.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "JWT Auth Guard for Laravel and Lumen",
+            "homepage": "https://github.com/irazasyed/laravel-jwt-guard",
+            "keywords": [
+                "irazasyed",
+                "jwt auth guard",
+                "jwt guard",
+                "laravel jwt auth guard",
+                "lumen jwt auth guard"
+            ],
+            "time": "2017-07-26T20:12:07+00:00"
+        },
+        {
             "name": "laravel-doctrine/extensions",
             "version": "1.0.12",
             "source": {
@@ -3690,7 +3751,9 @@
     ],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": [],
+    "stability-flags": {
+        "irazasyed/jwt-auth-guard": 20
+    },
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": [],
