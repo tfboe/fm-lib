@@ -10,5 +10,21 @@
         "email": "blacktemplar@a1.net"
       }
     ],
-    "require": {}
+  "require": {
+    "laravel/lumen-framework": "^5.5.0",
+    "laravel-doctrine/orm": "^1.4.2",
+    "gedmo/doctrine-extensions": "^2.4.33",
+    "tymon/jwt-auth": "^1.0.0"
+  },
+  "require-dev": {
+    "barryvdh/laravel-ide-helper": "^2.4.1"
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "config": {
+    "optimize-autoloader": true,
+    "platform": {
+      "php": "7.2"
+    }
+  }
 }
