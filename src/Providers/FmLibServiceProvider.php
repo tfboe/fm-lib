@@ -19,6 +19,7 @@ use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
+use Tfboe\FmLib\Http\Middleware\Authenticate;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
@@ -49,6 +50,9 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    //register middleware
+    app()->routeMiddleware(['auth' => Authenticate::class]);
+
     $this->app->singleton(
       ExceptionHandler::class,
       Handler::class
