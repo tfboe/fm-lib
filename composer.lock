@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "27fa4588b095e8ff930759a326923299",
+    "content-hash": "a119b96f80257fc47f4bb26564e05cb0",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -1851,6 +1851,67 @@
             "description": "The Illuminate View package.",
             "homepage": "https://laravel.com",
             "time": "2017-11-21T13:35:42+00:00"
+        },
+        {
+            "name": "laravel-doctrine/extensions",
+            "version": "1.0.12",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/laravel-doctrine/extensions.git",
+                "reference": "d9c8b64a8c9e6e3ef9334c9f3d548cac01b1c2a2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/laravel-doctrine/extensions/zipball/d9c8b64a8c9e6e3ef9334c9f3d548cac01b1c2a2",
+                "reference": "d9c8b64a8c9e6e3ef9334c9f3d548cac01b1c2a2",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/auth": "~5.1",
+                "illuminate/config": "~5.1",
+                "illuminate/contracts": "~5.1",
+                "illuminate/http": "~5.1",
+                "illuminate/support": "~5.1",
+                "laravel-doctrine/orm": "~1.0",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "beberlei/doctrineextensions": "^1.0",
+                "gedmo/doctrine-extensions": "^2.4",
+                "mockery/mockery": "~0.9",
+                "phpunit/phpunit": "~4.0"
+            },
+            "suggest": {
+                "beberlei/DoctrineExtensions": "Query/Type Doctrine2 extensions (^1.0)",
+                "gedmo/doctrine-extensions": "Behavioral Doctrine2 extensions (^2.4)"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "LaravelDoctrine\\Extensions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Patrick Brouwers",
+                    "email": "patrick@maatwebsite.nl"
+                }
+            ],
+            "description": "Doctrine extensions for Doctrine 2 and Laravel 5",
+            "keywords": [
+                "beberlei",
+                "data mapper",
+                "database",
+                "doctrine",
+                "gedmo",
+                "laravel",
+                "orm"
+            ],
+            "time": "2017-07-21T17:01:03+00:00"
         },
         {
             "name": "laravel-doctrine/orm",

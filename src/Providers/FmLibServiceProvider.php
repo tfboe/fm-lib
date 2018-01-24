@@ -13,6 +13,7 @@ use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Database\MigrationServiceProvider;
 use Illuminate\Support\ServiceProvider;
+use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
@@ -56,6 +57,7 @@ class FmLibServiceProvider extends ServiceProvider
 
     $this->app->register(LumenServiceProvider::class);
     $this->app->register(DoctrineServiceProvider::class);
+    $this->app->register(GedmoExtensionsServiceProvider::class);
     try {
       //optional service providers
       $this->app->register(MigrationServiceProvider::class);
