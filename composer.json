@@ -19,6 +19,11 @@
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.4.1"
   },
+  "autoload": {
+    "psr-4": {
+      "Tfboe\\FmLib\\": "src/"
+    }
+  },
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
