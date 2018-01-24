@@ -10,7 +10,9 @@ namespace Tfboe\FmLib\Providers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
+use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\ServiceProvider;
+use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
@@ -40,6 +42,11 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    $this->app->singleton(
+      ExceptionHandler::class,
+      Handler::class
+    );
+
     if ($this->app->environment() !== 'production') {
       $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
     }
