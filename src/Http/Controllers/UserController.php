@@ -72,6 +72,16 @@ class UserController extends BaseController
 
     return response()->json(['id' => $user->getId()]);
   }
+
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * @return JsonResponse
+   */
+  public function userId(): JsonResponse
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    return response()->json(['id' => \Auth::user()->getId()]);
+  }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
