@@ -41,17 +41,19 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
     'as' => 'login', 'uses' => 'UserController@login'
   ]);
 
-  /**
-   * @api {get} /userId Get User ID
-   * @apiUse AuthenticatedRequest
-   * @apiVersion 0.1.0
-   * @apiDescription Gets the user id of the currently logged in user
-   * @apiName GetUserId
-   * @apiGroup User
-   *
-   * @apiSuccess {string} id the id of the user
-   */
-  $router->get('userId', [
-    'as' => 'userId', 'uses' => 'UserController@userId'
-  ]);
+  $router->group(['middleware' => 'auth:api'], function () use ($router) {
+    /**
+     * @api {get} /userId Get User ID
+     * @apiUse AuthenticatedRequest
+     * @apiVersion 0.1.0
+     * @apiDescription Gets the user id of the currently logged in user
+     * @apiName GetUserId
+     * @apiGroup User
+     *
+     * @apiSuccess {string} id the id of the user
+     */
+    $router->get('userId', [
+      'as' => 'userId', 'uses' => 'UserController@userId'
+    ]);
+  });
 });
