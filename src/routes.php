@@ -16,8 +16,8 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
    * @apiParam {integer{>=0}} confirmedAGBVersion confirmed AGB version
    *
    * @apiSuccess {string} id the id of the newly created user
-   * @apiError ValidationException The provided email is malformed or does already exist, or the provided password is too
-   *                               short
+   * @apiError ValidationException The provided email is malformed or does already exist, or the provided password is
+   *                               too short
    */
   $router->post('register', [
     'as' => 'register', 'uses' => 'UserController@register'
@@ -35,8 +35,8 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
    *
    * @apiSuccess {string} id the id of the user
    * @apiHeader (Response Headers) {string} jwt-token Authorization Bearer token.
-   * @apiError ValidationException The provided email is malformed or does already exist, or the provided password is too
-   *                               short
+   * @apiError ValidationException The provided email is malformed or does already exist, or the provided password is
+   *                               too short
    */
   $router->post('login', [
     'as' => 'login', 'uses' => 'UserController@login'
