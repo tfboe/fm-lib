@@ -6,7 +6,7 @@ matrix:
   include:
     php: 7.2
     env:
-      - CODECOVERAGE=1
+      - CODE_COVERAGE=1
 
 before_script:
   - composer install
