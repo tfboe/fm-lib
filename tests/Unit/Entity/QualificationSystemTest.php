@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 use Tfboe\FmLib\Entity\Phase;
 use Tfboe\FmLib\Entity\QualificationSystem;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class TournamentTest

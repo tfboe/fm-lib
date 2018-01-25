@@ -16,7 +16,7 @@ use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Entity\RankingSystemList;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**

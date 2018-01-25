@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use Doctrine\ORM\EntityManager;
 use Tfboe\FmLib\Entity\Helpers\IdGenerator;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class IdGeneratorTest

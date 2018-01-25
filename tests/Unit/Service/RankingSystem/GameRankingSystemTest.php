@@ -17,7 +17,7 @@ use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class GameRankingSystemTest

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 7:08 PM
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
@@ -82,6 +82,53 @@ abstract class UnitTestCase extends TestCase
     }
     $entityManager->expects(static::once())->method('createQueryBuilder')->willReturn($queryBuilder);
     return $entityManager;
+  }
+
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * Gets a mock class (with full implementation). The given arguments are used for the arguments for the constructor.
+   * If too less arguments are given mocks are created for the rest of the constructor arguments.
+   * @param string $className the class to mock
+   * @param array $arguments the arguments to use for the constructor
+   * @param string[] $mockedMethods the methods to mock in the class
+   * @return MockObject the mocked object
+   */
+  protected final function getMockWithMockedArguments(string $className, array $arguments = [],
+                                                      array $mockedMethods = []): MockObject
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $reflection = new \ReflectionClass($className);
+    $params = $reflection->getConstructor()->getParameters();
+    $allArguments = $arguments;
+    for ($i = count($arguments); $i < count($params); $i++) {
+      $allArguments[] = $this->createMock($params[$i]->getClass()->name);
+    }
+    return $this->getMockForAbstractClass($className, $allArguments, '', true, true, true, $mockedMethods);
+  }
+
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * Gets a new instance of the given class. The given arguments are used for the arguments for the constructor.
+   * If too less arguments are given mocks are created for the rest of the constructor arguments.
+   * @param string $className the class for which to create an instance
+   * @param array $arguments the arguments to use for the constructor
+   * @return mixed an instance of the given class
+   */
+  protected final function getObjectWithMockedArguments($className, array $arguments = [])
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $reflection = new \ReflectionClass($className);
+    $params = $reflection->getConstructor()->getParameters();
+    $allArguments = $arguments;
+    for ($i = count($arguments); $i < count($params); $i++) {
+      $allArguments[$i] = $this->createMock($params[$i]->getClass()->name);
+    }
+    return new $className(...$allArguments);
+  }
+
+  public function tearDown()
+  {
+    parent::tearDown();
   }
 //</editor-fold desc="Protected Methods">
 }

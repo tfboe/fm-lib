@@ -12,12 +12,12 @@ namespace Tfboe\FmLib\Tests\Unit\Helpers;
 
 use Tfboe\FmLib\Helpers\Logging;
 use Tfboe\FmLib\Helpers\Logs;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**
  * Class BasicEnumTest
- * @package Tfboe\FmLib\Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 class LoggingTest extends UnitTestCase
 {

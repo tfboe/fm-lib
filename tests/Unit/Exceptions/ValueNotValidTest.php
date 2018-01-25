@@ -11,8 +11,8 @@ namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
 use Tfboe\FmLib\Exceptions\ValueNotValid;
-use Tfboe\FmLib\Tests\Helpers\TestEnum;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\TestEnum;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class ValueNotValidTest
@@ -31,12 +31,12 @@ class ValueNotValidTest extends UnitTestCase
     self::assertEquals('The following value is not valid: "value"', $exc->getMessage());
 
     $exc = new ValueNotValid("val", TestEnum::class);
-    self::assertEquals('The following value is not valid: "val" in Tfboe\FmLib\Tests\Helpers\TestEnum. Possible values:' .
-      ' "value", 1.', $exc->getMessage());
+    self::assertEquals('The following value is not valid: "val" in Tfboe\FmLib\TestHelpers\TestEnum. ' .
+      'Possible values: "value", 1.', $exc->getMessage());
 
     $exc = new ValueNotValid("val", TestEnum::class, "getNames");
-    self::assertEquals('The following value is not valid: "val" in Tfboe\FmLib\Tests\Helpers\TestEnum. Possible values:' .
-      ' "KEY", "INT_KEY".', $exc->getMessage());
+    self::assertEquals('The following value is not valid: "val" in Tfboe\FmLib\TestHelpers\TestEnum. ' .
+      'Possible values: "KEY", "INT_KEY".', $exc->getMessage());
   }
 //</editor-fold desc="Public Methods">
 }

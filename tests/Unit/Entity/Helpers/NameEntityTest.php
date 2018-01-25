@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class BaseEntityTest

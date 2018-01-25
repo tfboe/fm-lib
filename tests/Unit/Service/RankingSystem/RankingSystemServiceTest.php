@@ -34,7 +34,7 @@ use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**
@@ -319,6 +319,19 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals($entityList, static::getMethod(get_class($service), 'getEntities')
       ->invokeArgs($service, [$ranking, new \DateTime("2017-01-01")]));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntityManager
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   */
+  public function testGetEntityManager()
+  {
+    $entityManager = $this->createMock(EntityManagerInterface::class);
+    $service = $this->getMockForAbstractClass(RankingSystemService::class, [$entityManager,
+      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class)]);
+    $em = static::callProtectedMethod($service, 'getEntityManager');
+    self::assertEquals($entityManager, $em);
   }
 
   /**
@@ -669,6 +682,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $service->updateRankingForTournament($ranking, $tournament, null);
   }
 
+  //TODO split this up in multiple unit tests!!!
+
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
@@ -706,8 +721,6 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemService $service */
     $service->updateRankingForTournament($ranking, $tournament, $oldInfluence);
   }
-
-  //TODO split this up in multiple unit tests!!!
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom

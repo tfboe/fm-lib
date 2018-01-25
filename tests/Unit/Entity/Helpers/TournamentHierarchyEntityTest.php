@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class BaseEntityTest

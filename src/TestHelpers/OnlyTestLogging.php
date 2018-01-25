@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 10:21 PM
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 
 use Tfboe\FmLib\Helpers\Logging;

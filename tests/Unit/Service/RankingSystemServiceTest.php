@@ -20,7 +20,7 @@ use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
 use Tfboe\FmLib\Service\RankingSystemService;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**

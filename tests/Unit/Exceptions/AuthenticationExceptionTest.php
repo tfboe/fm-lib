@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
 use Tfboe\FmLib\Exceptions\AuthenticationException;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class AuthenticationExceptionTest

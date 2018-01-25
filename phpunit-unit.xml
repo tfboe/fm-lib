@@ -19,6 +19,9 @@
             <exclude>
                 <file>src/routes.php</file>
             </exclude>
+            <exclude>
+                <directory>src/TestHelpers</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>

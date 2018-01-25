@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Entity\RankingSystemList;
 use Tfboe\FmLib\Entity\RankingSystemListEntry;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**

@@ -8,7 +8,7 @@ declare(strict_types=1);
  * Time: 2:04 PM
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 use Doctrine\DBAL\Connection;
 use Illuminate\Support\Facades\Auth;

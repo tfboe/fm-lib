@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Exceptions\PlayerAlreadyExists;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class ValueNotValidTest

@@ -22,7 +22,7 @@ use Tfboe\FmLib\Entity\RankingSystemListEntry;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class EloRankingTest

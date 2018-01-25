@@ -22,7 +22,7 @@ use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Exceptions\PlayerAlreadyExists;
 use Tfboe\FmLib\Exceptions\ReferenceException;
 use Tfboe\FmLib\Exceptions\UnorderedPhaseNumberException;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class HandlerTest

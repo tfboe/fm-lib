@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\Competition;
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Entity\Team;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class TournamentTest

@@ -11,12 +11,12 @@ namespace Tfboe\FmLib\Tests\Unit\Helpers;
 
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Helpers\BasicEnum;
-use Tfboe\FmLib\Tests\Helpers\TestEnum;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\TestEnum;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class BasicEnumTest
- * @package Tfboe\FmLib\Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 class BasicEnumTest extends UnitTestCase
 {
@@ -34,7 +34,7 @@ class BasicEnumTest extends UnitTestCase
     TestEnum::ensureValidValue(TestEnum::INT_KEY);
     $this->expectException(ValueNotValid::class);
     $this->expectExceptionMessage(
-      'The following value is not valid: "1" in Tfboe\FmLib\Tests\Helpers\TestEnum. Possible values: "value", 1.');
+      'The following value is not valid: "1" in Tfboe\FmLib\TestHelpers\TestEnum. Possible values: "value", 1.');
     /** @noinspection PhpUnhandledExceptionInspection */
     TestEnum::ensureValidValue('1');
   }
@@ -73,8 +73,8 @@ class BasicEnumTest extends UnitTestCase
   public function testGetValueException()
   {
     $this->expectException(ValueNotValid::class);
-    $this->expectExceptionMessage('The following value is not valid: "int_key" in Tfboe\FmLib\Tests\Helpers\TestEnum. Possible ' .
-      'values: "value", 1.');
+    $this->expectExceptionMessage('The following value is not valid: "int_key" in Tfboe\FmLib\TestHelpers\TestEnum.' .
+      ' Possible values: "value", 1.');
     /** @noinspection PhpUnhandledExceptionInspection */
     TestEnum::getValue('int_key', True);
   }

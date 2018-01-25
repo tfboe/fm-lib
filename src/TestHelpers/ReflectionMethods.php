@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 7:07 PM
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 /**
  * Trait ReflectionMethods

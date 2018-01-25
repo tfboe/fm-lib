@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Class TestCase
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 use Laravel\Lumen\Testing\TestCase;
 

@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 11:41 AM
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 
 use Tfboe\FmLib\Helpers\BasicEnum;

@@ -15,7 +15,7 @@ use Tfboe\FmLib\Entity\Match;
 use Tfboe\FmLib\Entity\Phase;
 use Tfboe\FmLib\Entity\Ranking;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class TournamentTest

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 use Tfboe\FmLib\Exceptions\UnorderedPhaseNumberException;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class ValueNotValidTest

@@ -5,7 +5,7 @@ declare(strict_types=1);
  * Class DatabaseTestCase
  */
 
-namespace Tfboe\FmLib\Tests\Helpers;
+namespace Tfboe\FmLib\TestHelpers;
 
 use Faker\Factory;
 use LaravelDoctrine\ORM\Facades\EntityManager;

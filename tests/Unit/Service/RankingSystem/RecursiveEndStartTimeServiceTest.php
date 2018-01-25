@@ -16,7 +16,7 @@ use Tfboe\FmLib\Entity\Match;
 use Tfboe\FmLib\Entity\Phase;
 use Tfboe\FmLib\Entity\Tournament;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**

@@ -13,7 +13,7 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class BaseEntityTest

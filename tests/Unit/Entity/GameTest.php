@@ -14,7 +14,7 @@ use Tfboe\FmLib\Entity\Game;
 use Tfboe\FmLib\Entity\Match;
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 
 /**

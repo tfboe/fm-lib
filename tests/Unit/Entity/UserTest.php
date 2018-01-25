@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 use Tfboe\FmLib\Entity\User;
-use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
 /**
  * Class UserTest
