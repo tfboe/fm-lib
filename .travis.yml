@@ -4,5 +4,8 @@ php:
   - 7.1
   - 7.2
 
+before_script:
+  - composer install
+
 script:
   - phpunit --stderr --configuration phpunit-unit.xml
