@@ -1,7 +1,6 @@
 language: php
 php:
   - 7.1
-  - 7.2
 
 matrix:
   include:
@@ -13,4 +12,4 @@ before_script:
   - composer install
 
 script:
-  - travis.sh
+  - ./travis.sh
