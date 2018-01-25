@@ -6,6 +6,7 @@ namespace Tfboe\FmLib\Http\Controllers;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Application;
 use Tfboe\FmLib\Entity\User;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
@@ -36,11 +37,11 @@ class UserController extends BaseController
     $token = null;
     try {
       // attempt to verify the credentials and create a token for the user
-      $token = \Auth::attempt($credentials);
+      $token = Auth::attempt($credentials);
       if (!$token) {
         throw new AuthenticationException('invalid credentials');
       }
-    } catch (JWTException $e) {
+    } /** @noinspection PhpRedundantCatchClauseInspection */ catch (JWTException $e) {
       // something went wrong whilst attempting to encode the token
       throw new AuthenticationException('could not create token');
     }
@@ -80,7 +81,7 @@ class UserController extends BaseController
   public function userId(): JsonResponse
   {
     /** @noinspection PhpUnhandledExceptionInspection */
-    return response()->json(['id' => \Auth::user()->getId()]);
+    return response()->json(['id' => Auth::user()->getAuthIdentifier()]);
   }
 //</editor-fold desc="Public Methods">
 

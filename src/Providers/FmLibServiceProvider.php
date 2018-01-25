@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -29,6 +30,10 @@ use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
+/**
+ * Class FmLibServiceProvider
+ * @package Tfboe\FmLib\Providers
+ */
 class FmLibServiceProvider extends ServiceProvider
 {
 //<editor-fold desc="Public Methods">
@@ -42,6 +47,7 @@ class FmLibServiceProvider extends ServiceProvider
     include __DIR__ . '/../routes.php';
   }
 
+  /** @noinspection PhpDocMissingThrowsInspection */ //\Doctrine\DBAL\DBALException
   /**
    * Register the application services.
    *
@@ -61,7 +67,7 @@ class FmLibServiceProvider extends ServiceProvider
       $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
     }
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+    /** @noinspection PhpUnhandledExceptionInspection */ // \Doctrine\DBAL\DBALException datetime is a valid type
     Type::overrideType('datetime', UTCDateTimeType::class);
 
     $this->app->register(LumenServiceProvider::class);
