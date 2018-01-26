@@ -64,9 +64,8 @@ class FmLibServiceProvider extends ServiceProvider
     );
 
     if ($this->app->environment() !== 'production') {
-      try {
+      if (class_exists('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider')) {
         $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
-      } catch (\Exception $e) {
       }
     }
 
