@@ -64,7 +64,10 @@ class FmLibServiceProvider extends ServiceProvider
     );
 
     if ($this->app->environment() !== 'production') {
-      $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
+      try {
+        $this->app->register('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider');
+      } catch (\Exception $e) {
+      }
     }
 
     /** @noinspection PhpUnhandledExceptionInspection */ // \Doctrine\DBAL\DBALException datetime is a valid type
