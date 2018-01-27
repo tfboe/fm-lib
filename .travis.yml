@@ -8,20 +8,12 @@ services:
   - mysql
 
 env:
-  - UNIT=1
-  - INTEGRATION=1
+  - UNIT=1 CODE_COVERAGE=1
+  - INTEGRATION=1 CODE_COVERAGE=1
 
 cache:
   directories:
     - $HOME/.composer/cache/files
-
-matrix:
-  include:
-    php: 7.2
-    env:
-      - CODE_COVERAGE=1
-      - UNIT=1
-      - INTEGRATION=1
 
 before_install:
   - ./travis_before_install.sh
