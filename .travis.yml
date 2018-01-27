@@ -1,6 +1,14 @@
+sudo: required
 language: php
 php:
   - 7.1
+
+services:
+  - mysql
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
 
 matrix:
   include:
@@ -8,8 +16,11 @@ matrix:
     env:
       - CODE_COVERAGE=1
 
+before_install:
+  - ./travis_before_install.sh
+
 before_script:
-  - composer install
+  - ./travis_before_script.sh
 
 script:
   - ./travis.sh

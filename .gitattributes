@@ -5,3 +5,5 @@
 /phpunit-unit.xml export-ignore
 /README.md export-ignore
 /travis.sh export-ignore
+/config-example export-ignore
+/database export-ignore
