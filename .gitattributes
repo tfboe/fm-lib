@@ -7,5 +7,6 @@
 /travis.sh export-ignore
 /config-example export-ignore
 /database export-ignore
-/.env.test
-/.env.test.local
+/.env.test export-ignore
+/.env.test.local export-ignore
+/.composer.lock export-ignore
