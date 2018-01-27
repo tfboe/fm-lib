@@ -6,6 +6,11 @@ CODE_COVERAGE="${CODE_COVERAGE:-0}"
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
+WITH_LOCK="${WITH_LOCK:-0}"
+
+if [ "$WITH_LOCK" == "0" ]; then
+    rm composer.lock
+fi
 
 if [ "$GITHUB_OAUTH" != "" ]; then
     echo "using github OAUTH"
@@ -45,8 +50,6 @@ if [ "$INTEGRATION" = '1' ]; then
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\
 '/$app->register(Tfboe\\FmLib\\Providers\\FmLibServiceProvider::class);/g' bootstrap/app.php
-    rm -r vendor/tfboe/fm-lib
-    cp -r ../${directory} vendor/tfboe/fm-lib
 
     # generate doctrine tables and proxies
     php artisan doctrine:schema:create

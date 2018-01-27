@@ -12,24 +12,22 @@ if [ "$INTEGRATION" = '1' ]; then
 fi
 
 if [ "$UNIT" = '1' ]; then
-    if [ "$INTEGRATION" = '1' ]; then
-        #move into inner directory
-        cd ../fm-lib-test/vendor/tfboe/fm-lib
-    fi
     #run unit tests
     echo "Run unit tests"
     vendor/bin/phpunit --stderr --configuration phpunit-unit.xml --coverage-php=unit.cov
-    if [ "$INTEGRATION" = '1' ]; then
-        #move report to outer directory
-        mv unit.cov ../../../
-        #move into outer directory
-        cd ../../../
-    fi
 fi
 
 if [ "$INTEGRATION" = '1' ]; then
+    directory=${PWD##*/}
+    # move into outer directory
+    cd ../fm-lib-test
     echo "Run integration tests"
     vendor/bin/phpunit --stderr --configuration phpunit-integration.xml --coverage-php=integration.cov
+
+    cd ../${directory}
+    # move coverage to original directory and fix paths
+    mv ../fm-lib-test/integration.cov .
+    sed -i -e "s/fm-lib-test\/vendor\/tfboe\/fm-lib/${directory}/g" integration.cov
 fi
 
 if [ "$CODE_COVERAGE" = "1" ]; then
