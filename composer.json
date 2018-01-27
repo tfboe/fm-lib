@@ -38,9 +38,6 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
-    "optimize-autoloader": true,
-    "platform": {
-      "php": "7.2"
-    }
+    "optimize-autoloader": true
   }
 }

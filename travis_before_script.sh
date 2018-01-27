@@ -14,7 +14,7 @@ fi
 
 if [ "$GITHUB_OAUTH" != "" ]; then
     echo "using github OAUTH"
-    composer config -g github-oauth.github.com ${GITHUB_OAUTH}
+    composer config --global -g github-oauth.github.com ${GITHUB_OAUTH}
 fi
 
 composer install

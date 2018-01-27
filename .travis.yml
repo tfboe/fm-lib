@@ -12,6 +12,11 @@ env:
   - UNIT=1 CODE_COVERAGE=1 WITH_LOCK=0
   - INTEGRATION=1 CODE_COVERAGE=1
 
+matrix:
+  exclude:
+  - php: 7.1
+    env: UNIT=1 CODE_COVERAGE=1 WITH_LOCK=1
+
 cache:
   directories:
     - $HOME/.composer/cache/files
