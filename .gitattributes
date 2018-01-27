@@ -7,3 +7,5 @@
 /travis.sh export-ignore
 /config-example export-ignore
 /database export-ignore
+/.env.test
+/.env.test.local

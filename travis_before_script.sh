@@ -4,6 +4,7 @@
 CODE_COVERAGE="${CODE_COVERAGE:-0}"
 # by default no mysql root password
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
+INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
 
 if [ "$GITHUB_OAUTH" != "" ]; then
@@ -13,7 +14,7 @@ fi
 
 composer install
 
-if [ "$CODE_COVERAGE" = '1' ]; then
+if [ "$INTEGRATION" = '1' ]; then
     # modify php.ini for catchmail
     echo "sendmail_path = \/usr\/bin\/env catchmail -f catchmail@php.com/g"  >> \
         ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
