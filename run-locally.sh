@@ -26,5 +26,9 @@ ln -s /etc/php/7.1/cli/php.ini ${phpINIPath}/php.ini
 
 mv .env.test.local .env.test
 
+(
 ./travis_before_script.sh
+)
+(
 ./travis.sh
+)

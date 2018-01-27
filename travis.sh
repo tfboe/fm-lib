@@ -6,11 +6,6 @@ SEND_TO_CODECOV="${SEND_TO_CODECOV:-1}"
 INTEGRATION="${INTEGRATION:-0}"
 UNIT="${UNIT:-0}"
 
-if [ "$INTEGRATION" = '1' ]; then
-    #move into outer directory
-    cd ../fm-lib-test
-fi
-
 if [ "$UNIT" = '1' ]; then
     #run unit tests
     echo "Run unit tests"

@@ -13,6 +13,9 @@
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./vendor/tfboe/fm-lib/src</directory>
+            <exclude>
+                <directory>./vendor/tfboe/fm-lib/src/TestHelpers</directory>
+            </exclude>
         </whitelist>
     </filter>
     <php>
