@@ -7,13 +7,15 @@ declare(strict_types=1);
  * Time: 1:11 PM
  */
 
-namespace Tfboe\FmLib\Tests\Unit\Entity;
+namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Tfboe\FmLib\Entity\Game;
-use Tfboe\FmLib\Entity\Match;
-use Tfboe\FmLib\Entity\Phase;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tfboe\FmLib\Entity\GameInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\Ranking;
+use Tfboe\FmLib\Entity\Traits\Match;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
@@ -26,16 +28,36 @@ class MatchTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Match::getGames
-   * @uses   \Tfboe\FmLib\Entity\Match::getRankingsA
-   * @uses   \Tfboe\FmLib\Entity\Match::getRankingsB
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getGames
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getChildren
+   * @uses   \Tfboe\FmLib\Entity\GameInterface
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    */
-  public function testConstructor()
+  public function testGamesAndChildren()
   {
     $match = $this->match();
-    self::assertInstanceOf(Match::class, $match);
+    $match->init();
+    $game = $this->createMock(GameInterface::class);
+    $game->method('getGameNumber')->willReturn(1);
+    /** @var GameInterface $game */
+    self::assertEquals($match->getGames(), $match->getChildren());
+    $match->getGames()->set($game->getGameNumber(), $game);
+    self::assertEquals(1, $match->getGames()->count());
+    self::assertEquals($game, $match->getGames()[1]);
+    self::assertEquals($match->getGames(), $match->getChildren());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getGames
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
+   */
+  public function testInit()
+  {
+    $match = $this->match();
+    $match->init();
     self::assertInstanceOf(Collection::class, $match->getRankingsA());
     self::assertInstanceOf(Collection::class, $match->getRankingsB());
     self::assertInstanceOf(Collection::class, $match->getGames());
@@ -45,29 +67,7 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::getGames
-   * @covers \Tfboe\FmLib\Entity\Match::getChildren
-   * @uses   \Tfboe\FmLib\Entity\Game
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   */
-  public function testGamesAndChildren()
-  {
-    $match = $this->match();
-    $game = new Game();
-    $game->setGameNumber(1);
-    self::assertEquals($match->getGames(), $match->getChildren());
-    $match->getGames()->set($game->getGameNumber(), $game);
-    self::assertEquals(1, $match->getGames()->count());
-    self::assertEquals($game, $match->getGames()[1]);
-    self::assertEquals($match->getGames(), $match->getChildren());
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Entity\Match::getLevel
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getLevel
    */
   public function testLevel()
   {
@@ -75,11 +75,9 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::setMatchNumber
-   * @covers \Tfboe\FmLib\Entity\Match::getMatchNumber
-   * @covers \Tfboe\FmLib\Entity\Match::getLocalIdentifier
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getLocalIdentifier
    */
   public function testMatchNumberAndLocalIdentifier()
   {
@@ -91,28 +89,27 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::setPhase
-   * @covers \Tfboe\FmLib\Entity\Match::getPhase
-   * @covers \Tfboe\FmLib\Entity\Match::getParent
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Match::getMatchNumber
-   * @uses   \Tfboe\FmLib\Entity\Match::setMatchNumber
-   * @uses   \Tfboe\FmLib\Entity\Phase
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::setPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getParent
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
    */
   public function testPhaseAndParent()
   {
     $match = $this->match();
-    $phase = new Phase();
+    $phase = $this->createStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
     $match->setMatchNumber(1);
+    /** @var PhaseInterface $phase */
     $match->setPhase($phase);
     self::assertEquals($phase, $match->getPhase());
     self::assertEquals(1, $match->getPhase()->getMatches()->count());
     self::assertEquals($match, $match->getPhase()->getMatches()[$match->getMatchNumber()]);
     self::assertEquals($match->getPhase(), $match->getParent());
 
-    $phase2 = new Phase();
+    $phase2 = $this->createStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase2 */
     $match->setPhase($phase2);
     self::assertEquals($phase2, $match->getPhase());
     self::assertEquals(1, $match->getPhase()->getMatches()->count());
@@ -122,14 +119,14 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::getRankingsA
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
    * @uses   \Tfboe\FmLib\Entity\Ranking
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    */
   public function testRankingsA()
   {
     $match = $this->match();
+    $match->init();
     $ranking = new Ranking();
     $ranking->setUniqueRank(1);
     $match->getRankingsA()->set($ranking->getUniqueRank(), $ranking);
@@ -138,14 +135,14 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Match::getRankingsB
-   * @uses   \Tfboe\FmLib\Entity\Match::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
    * @uses   \Tfboe\FmLib\Entity\Ranking
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    */
   public function testRankingsB()
   {
     $match = $this->match();
+    $match->init();
     $ranking = new Ranking();
     $ranking->setUniqueRank(1);
     $match->getRankingsB()->set($ranking->getUniqueRank(), $ranking);
@@ -156,11 +153,11 @@ class MatchTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Match a new match
+   * @return Match|MockObject a new match
    */
-  private function match(): Match
+  private function match(): MockObject
   {
-    return new Match();
+    return $this->getMockForTrait(Match::class);
   }
 //</editor-fold desc="Private Methods">
 }

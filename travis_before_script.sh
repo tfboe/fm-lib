@@ -1,4 +1,5 @@
 #!/bin/bash
+set  -e
 
 #set environment default values
 CODE_COVERAGE="${CODE_COVERAGE:-0}"
@@ -7,6 +8,8 @@ MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
 WITH_LOCK="${WITH_LOCK:-0}"
+REPOSITORY_LOCATION="${REPOSITORY_LOCATION:-https://github.com/tfboe/fm-lib}"
+LIB_NAME="${LIB_NAME:-tfboe/fm-lib}"
 
 if [ "$WITH_LOCK" == "0" ]; then
     rm composer.lock
@@ -40,12 +43,13 @@ if [ "$INTEGRATION" = '1' ]; then
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
     cp -r ../${directory}/tests/Integration/ tests
+    cp -r ../${directory}/tests/Entity/ tests
     cp -r ../${directory}/config-example config
     cp -r ../${directory}/database .
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
-    composer config repositories.github-fm vcs https://github.com/tfboe/fm-lib
-    composer require tfboe/fm-lib --prefer-dist
+    composer config repositories.fm-lib vcs ${REPOSITORY_LOCATION}
+    composer require ${LIB_NAME} --prefer-dist
     composer require phpunit/phpcov --prefer-dist
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\

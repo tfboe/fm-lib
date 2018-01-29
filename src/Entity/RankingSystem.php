@@ -61,7 +61,7 @@ class RankingSystem extends BaseEntity
    *     indexBy="id"
    * )
    * @ORM\JoinTable(name="relation__tournament_ranking_systems")
-   * @var Collection|Tournament[]
+   * @var Collection|TournamentInterface[]
    */
   private $hierarchyEntries;
   /**
@@ -110,7 +110,7 @@ class RankingSystem extends BaseEntity
   }
 
   /**
-   * @return Tournament[]|Collection
+   * @return TournamentInterface[]|Collection
    */
   public function getHierarchyEntries()
   {

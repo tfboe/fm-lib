@@ -14,6 +14,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
+use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 
 /**
@@ -121,10 +122,10 @@ class RankingSystemChange extends BaseEntity
   }
 
   /**
-   * @param TournamentHierarchyEntity $hierarchyEntity
+   * @param TournamentHierarchyInterface $hierarchyEntity
    * @return $this|RankingSystemChange
    */
-  public function setHierarchyEntity(TournamentHierarchyEntity $hierarchyEntity): RankingSystemChange
+  public function setHierarchyEntity(TournamentHierarchyInterface $hierarchyEntity): RankingSystemChange
   {
     $this->hierarchyEntity = $hierarchyEntity;
     return $this;

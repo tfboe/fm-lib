@@ -7,58 +7,48 @@ declare(strict_types=1);
  * Time: 10:57 AM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
+use Tfboe\FmLib\Entity\Team;
+use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Helpers\Level;
 
+
 /**
- * Class Competition
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="competitions",indexes={@ORM\Index(name="unique_name_idx", columns={"tournament_id","name"})})
+ * Trait Competition
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Competition extends TournamentHierarchyEntity
+trait Competition
 {
   use NameEntity;
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="Tournament", inversedBy="competitions")
-   * @var Tournament
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\TournamentInterface", inversedBy="competitions")
+   * @var TournamentInterface
    */
   private $tournament;
 
   /**
-   * @ORM\OneToMany(targetEntity="Team", mappedBy="competition", indexBy="startNumber")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\Team", mappedBy="competition", indexBy="startNumber")
    * @var Collection|Team[]
    */
   private $teams;
 
   /**
-   * @ORM\OneToMany(targetEntity="Phase", mappedBy="competition", indexBy="phaseNumber")
-   * @var Collection|Phase[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", mappedBy="competition", indexBy="phaseNumber")
+   * @var Collection|PhaseInterface[]
    */
   private $phases;
 //</editor-fold desc="Fields">
-
-//<editor-fold desc="Constructor">
-  /**
-   * Competition constructor.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    $this->teams = new ArrayCollection();
-    $this->phases = new ArrayCollection();
-  }
-//</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
   /**
@@ -94,7 +84,7 @@ class Competition extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Phase[]|Collection
+   * @return PhaseInterface[]|Collection
    */
   public function getPhases()
   {
@@ -110,18 +100,27 @@ class Competition extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Tournament
+   * @return TournamentInterface
    */
-  public function getTournament(): Tournament
+  public function getTournament(): TournamentInterface
   {
     return $this->tournament;
   }
 
   /**
-   * @param Tournament $tournament
-   * @return $this|Competition
+   * Competition constructor.
    */
-  public function setTournament(Tournament $tournament): Competition
+  public function init()
+  {
+    $this->teams = new ArrayCollection();
+    $this->phases = new ArrayCollection();
+  }
+
+  /**
+   * @param TournamentInterface $tournament
+   * @return $this|CompetitionInterface|Competition
+   */
+  public function setTournament(TournamentInterface $tournament)
   {
     if ($this->tournament !== null) {
       $this->tournament->getCompetitions()->remove($this->getName());

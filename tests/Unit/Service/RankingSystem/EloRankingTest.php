@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use Tfboe\FmLib\Entity\Game;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Player;
@@ -23,6 +22,7 @@ use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Game;
 
 /**
  * Class EloRankingTest

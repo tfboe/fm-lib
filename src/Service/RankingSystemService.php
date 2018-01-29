@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\Tournament;
+use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
  * Class RankingSystemService
@@ -49,7 +49,7 @@ class RankingSystemService implements RankingSystemServiceInterface
   /**
    * @inheritDoc
    */
-  public function adaptOpenSyncFromValues(Tournament $tournament, array $oldInfluences): void
+  public function adaptOpenSyncFromValues(TournamentInterface $tournament, array $oldInfluences): void
   {
     $earliestInfluences = $this->getRankingSystemsEarliestInfluences($tournament);
     foreach ($oldInfluences as $id => $arr) {
@@ -74,7 +74,7 @@ class RankingSystemService implements RankingSystemServiceInterface
   /**
    * @inheritDoc
    */
-  public function applyRankingSystems(Tournament $tournament, array $earliestInfluences): void
+  public function applyRankingSystems(TournamentInterface $tournament, array $earliestInfluences): void
   {
     $rankingSystems = $this->getRankingSystems($tournament);
     foreach ($rankingSystems as $sys) {
@@ -97,7 +97,7 @@ class RankingSystemService implements RankingSystemServiceInterface
   /**
    * @inheritDoc
    */
-  public function getRankingSystemsEarliestInfluences(Tournament $tournament): array
+  public function getRankingSystemsEarliestInfluences(TournamentInterface $tournament): array
   {
     $rankingSystems = $this->getRankingSystems($tournament);
 

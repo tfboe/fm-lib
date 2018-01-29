@@ -44,6 +44,8 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function boot()
   {
+    app()->configure('fm-lib');
+
     include __DIR__ . '/../routes.php';
   }
 

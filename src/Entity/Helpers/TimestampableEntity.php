@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Helpers;
 
 use Doctrine\ORM\Mapping as ORM;
-use Gedmo\Mapping\Annotation as Gedmo;
 
 /**
  * Trait TimestampableEntity
@@ -15,14 +14,14 @@ trait TimestampableEntity
 //<editor-fold desc="Fields">
   /**
    * @var \DateTime
-   * @Gedmo\Timestampable(on="create")
+   * @\Gedmo\Mapping\Annotation\Timestampable(on="create")
    * @ORM\Column(type="datetime")
    */
   private $createdAt;
 
   /**
    * @var \DateTime
-   * @Gedmo\Timestampable(on="update")
+   * @\Gedmo\Mapping\Annotation\Timestampable(on="update")
    * @ORM\Column(type="datetime")
    */
   private $updatedAt;

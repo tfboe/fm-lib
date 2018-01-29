@@ -7,36 +7,33 @@ declare(strict_types=1);
  * Time: 10:57 AM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\MatchInterface;
+use Tfboe\FmLib\Entity\QualificationSystem;
+use Tfboe\FmLib\Entity\Ranking;
 use Tfboe\FmLib\Helpers\Level;
 
-
 /**
- * Class Phase
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="phases")
- *
- * Method hint for getName, since it will never throw an exception (name gets initialized empty)
- * @method string getName()
+ * Trait Phase
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Phase extends TournamentHierarchyEntity
+trait Phase
 {
   use NameEntity;
 
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToOne(targetEntity="Competition", inversedBy="phases")
-   * @var Competition
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", inversedBy="phases")
+   * @var CompetitionInterface
    */
   private $competition;
 
@@ -47,44 +44,29 @@ class Phase extends TournamentHierarchyEntity
   private $phaseNumber;
 
   /**
-   * @ORM\OneToMany(targetEntity="QualificationSystem", mappedBy="nextPhase")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystem", mappedBy="nextPhase")
    * @var Collection|QualificationSystem[]
    */
   private $preQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="QualificationSystem", mappedBy="previousPhase")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystem", mappedBy="previousPhase")
    * @var Collection|QualificationSystem[]
    */
   private $postQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="Ranking", mappedBy="group", indexBy="uniqueRank")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\Ranking", mappedBy="group", indexBy="uniqueRank")
    * @var Collection|Ranking[]
    */
   private $rankings;
 
   /**
-   * @ORM\OneToMany(targetEntity="Match", mappedBy="phase", indexBy="matchNumber")
-   * @var Collection|Match[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\MatchInterface", mappedBy="phase", indexBy="matchNumber")
+   * @var Collection|MatchInterface[]
    */
   private $matches;
 //</editor-fold desc="Fields">
-
-//<editor-fold desc="Constructor">
-  /**
-   * Competition constructor.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    $this->preQualifications = new ArrayCollection();
-    $this->postQualifications = new ArrayCollection();
-    $this->name = '';
-    $this->rankings = new ArrayCollection();
-    $this->matches = new ArrayCollection();
-  }
-//</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
   /**
@@ -96,9 +78,9 @@ class Phase extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Competition
+   * @return CompetitionInterface
    */
-  public function getCompetition(): Competition
+  public function getCompetition(): CompetitionInterface
   {
     return $this->competition;
   }
@@ -120,7 +102,7 @@ class Phase extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Match[]|Collection
+   * @return MatchInterface[]|Collection
    */
   public function getMatches()
   {
@@ -168,27 +150,35 @@ class Phase extends TournamentHierarchyEntity
   }
 
   /**
-   * @param Competition $competition
-   * @return $this|Phase
+   * Competition constructor.
    */
-  public function setCompetition(Competition $competition): Phase
+  public function init()
+  {
+    $this->preQualifications = new ArrayCollection();
+    $this->postQualifications = new ArrayCollection();
+    $this->name = '';
+    $this->rankings = new ArrayCollection();
+    $this->matches = new ArrayCollection();
+  }
+
+  /**
+   * @param CompetitionInterface $competition
+   */
+  public function setCompetition(CompetitionInterface $competition)
   {
     if ($this->competition !== null) {
       $this->competition->getPhases()->remove($this->getPhaseNumber());
     }
     $this->competition = $competition;
     $competition->getPhases()->set($this->getPhaseNumber(), $this);
-    return $this;
   }
 
   /**
    * @param int $phaseNumber
-   * @return $this|Phase
    */
-  public function setPhaseNumber(int $phaseNumber): Phase
+  public function setPhaseNumber(int $phaseNumber)
   {
     $this->phaseNumber = $phaseNumber;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
 }

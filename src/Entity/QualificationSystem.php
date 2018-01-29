@@ -26,40 +26,40 @@ class QualificationSystem extends BaseEntity
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="Phase", inversedBy="postQualifications")
-   * @var Phase
+   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="postQualifications")
+   * @var PhaseInterface
    */
   private $previousPhase;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Phase", inversedBy="preQualifications")
-   * @var Phase
+   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="preQualifications")
+   * @var PhaseInterface
    */
   private $nextPhase;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return Phase
+   * @return PhaseInterface
    */
-  public function getNextPhase(): Phase
+  public function getNextPhase(): PhaseInterface
   {
     return $this->nextPhase;
   }
 
   /**
-   * @return Phase
+   * @return PhaseInterface
    */
-  public function getPreviousPhase(): Phase
+  public function getPreviousPhase(): PhaseInterface
   {
     return $this->previousPhase;
   }
 
   /**
-   * @param Phase $nextPhase
+   * @param PhaseInterface $nextPhase
    * @return $this|QualificationSystem
    */
-  public function setNextPhase(Phase $nextPhase): QualificationSystem
+  public function setNextPhase(PhaseInterface $nextPhase): QualificationSystem
   {
     if ($this->nextPhase !== null) {
       $this->nextPhase->getPreQualifications()->removeElement($this);
@@ -70,10 +70,10 @@ class QualificationSystem extends BaseEntity
   }
 
   /**
-   * @param Phase $previousPhase
+   * @param PhaseInterface $previousPhase
    * @return $this|QualificationSystem
    */
-  public function setPreviousPhase(Phase $previousPhase): QualificationSystem
+  public function setPreviousPhase(PhaseInterface $previousPhase): QualificationSystem
   {
     if ($this->previousPhase !== null) {
       $this->previousPhase->getPostQualifications()->removeElement($this);

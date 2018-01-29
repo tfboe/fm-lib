@@ -10,17 +10,17 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Tfboe\FmLib\Entity\Competition;
-use Tfboe\FmLib\Entity\Game;
-use Tfboe\FmLib\Entity\Match;
-use Tfboe\FmLib\Entity\Phase;
 use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\Tournament;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
 use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Competition;
+use Tfboe\FmLib\Tests\Entity\Game;
+use Tfboe\FmLib\Tests\Entity\Match;
+use Tfboe\FmLib\Tests\Entity\Phase;
+use Tfboe\FmLib\Tests\Entity\Tournament;
 
 
 /**
@@ -34,7 +34,8 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::adaptOpenSyncFromValues
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
@@ -90,7 +91,8 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::applyRankingSystems
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -153,11 +155,16 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
-   * @uses   \Tfboe\FmLib\Entity\Tournament
-   * @uses   \Tfboe\FmLib\Entity\Competition
-   * @uses   \Tfboe\FmLib\Entity\Phase
-   * @uses   \Tfboe\FmLib\Entity\Match
-   * @uses   \Tfboe\FmLib\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
+   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
+   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
+   * @uses   \Tfboe\FmLib\Tests\Entity\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
+   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
@@ -187,7 +194,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $competition = new Competition();
     $competition->setName("TestCompetition")->setTournament($tournament);
     $phase = new Phase();
-    $phase->setPhaseNumber(1)->setCompetition($competition);
+    $phase->setPhaseNumber(1);
+    $phase->setCompetition($competition);
     $ranking3 = $this->createStubWithId(RankingSystem::class, 'r3');
     $ranking3->method('getServiceName')->willReturn("2017-02-01");
     /** @var RankingSystem $ranking3 */
@@ -195,9 +203,11 @@ class RankingSystemServiceTest extends UnitTestCase
     $phase->getRankingSystems()->set($ranking3->getId(), $ranking3);
 
     $match = new Match();
-    $match->setMatchNumber(1)->setPhase($phase);
+    $match->setMatchNumber(1);
+    $match->setPhase($phase);
     $game = new Game();
-    $game->setGameNumber(1)->setMatch($match);
+    $game->setGameNumber(1);
+    $game->setMatch($match);
     $ranking4 = $this->createStubWithId(RankingSystem::class, 'r4');
     $ranking4->method('getServiceName')->willReturn("2017-03-01");
     /** @var RankingSystem $ranking4 */

@@ -20,7 +20,7 @@ use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Entity\RankingSystemChange;
 use Tfboe\FmLib\Entity\RankingSystemList;
 use Tfboe\FmLib\Entity\RankingSystemListEntry;
-use Tfboe\FmLib\Entity\Tournament;
+use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 
 
@@ -82,7 +82,7 @@ abstract class RankingSystemService implements RankingSystemInterface
   /**
    * @inheritDoc
    */
-  public function getEarliestInfluence(RankingSystem $ranking, Tournament $tournament): ?\DateTime
+  public function getEarliestInfluence(RankingSystem $ranking, TournamentInterface $tournament): ?\DateTime
   {
     return $this->getEarliestEntityInfluence($ranking, $tournament, false);
   }
@@ -90,7 +90,7 @@ abstract class RankingSystemService implements RankingSystemInterface
   /**
    * @inheritdoc
    */
-  public function updateRankingForTournament(RankingSystem $ranking, Tournament $tournament,
+  public function updateRankingForTournament(RankingSystem $ranking, TournamentInterface $tournament,
                                              ?\DateTime $oldInfluence)
   {
     $earliestInfluence = $this->getEarliestInfluence($ranking, $tournament);
@@ -222,12 +222,12 @@ abstract class RankingSystemService implements RankingSystemInterface
   /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * Gets or creates a tournament system change entry for the given entity, ranking and player.
-   * @param TournamentHierarchyEntity $entity the tournament hierarchy entity to search for
+   * @param TournamentHierarchyInterface $entity the tournament hierarchy entity to search for
    * @param RankingSystem $ranking the ranking system to search for
    * @param Player $player the player to search for
    * @return RankingSystemChange the found or newly created ranking system change
    */
-  protected final function getOrCreateChange(TournamentHierarchyEntity $entity, RankingSystem $ranking,
+  protected final function getOrCreateChange(TournamentHierarchyInterface $entity, RankingSystem $ranking,
                                              Player $player)
   {
     $key1 = $entity->getId();

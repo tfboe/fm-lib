@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Tfboe\FmLib\Entity\Phase;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\Ranking;
 use Tfboe\FmLib\Entity\Team;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
@@ -39,7 +40,6 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Ranking::setPhase
    * @covers \Tfboe\FmLib\Entity\Ranking::getPhase
-   * @uses   \Tfboe\FmLib\Entity\Phase
    * @uses   \Tfboe\FmLib\Entity\Ranking::__construct
    * @uses   \Tfboe\FmLib\Entity\Ranking::getUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Ranking::setUniqueRank
@@ -48,15 +48,17 @@ class RankingTest extends UnitTestCase
   public function testPhase()
   {
     $ranking = $this->ranking();
-    $phase = new Phase();
+    $phase = $this->createStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
     $ranking->setUniqueRank(1);
+    /** @var PhaseInterface $phase */
     $ranking->setPhase($phase);
     self::assertEquals($phase, $ranking->getPhase());
     self::assertEquals(1, $ranking->getPhase()->getRankings()->count());
     self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getUniqueRank()]);
 
-    $phase2 = new Phase();
+    $phase2 = $this->createStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase2 */
     $ranking->setPhase($phase2);
     self::assertEquals($phase2, $ranking->getPhase());
     self::assertEquals(1, $ranking->getPhase()->getRankings()->count());

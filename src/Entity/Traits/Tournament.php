@@ -7,25 +7,25 @@ declare(strict_types=1);
  * Time: 11:35 AM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Entity\User;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
- * Class Tournament
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="tournaments",indexes={@ORM\Index(name="user_id_idx", columns={"user_identifier","creator_id"})})
+ * Trait Tournament
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Tournament extends TournamentHierarchyEntity
+trait Tournament
 {
   use TimestampableEntity;
   use NameEntity;
@@ -43,28 +43,16 @@ class Tournament extends TournamentHierarchyEntity
    */
   private $tournamentListId;
   /**
-   * @ORM\ManyToOne(targetEntity="User")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\User")
    * @var User
    */
   private $creator;
   /**
-   * @ORM\OneToMany(targetEntity="Competition", mappedBy="tournament",indexBy="name")
-   * @var Collection|Competition[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", mappedBy="tournament",indexBy="name")
+   * @var Collection|CompetitionInterface[]
    */
   private $competitions;
 //</editor-fold desc="Fields">
-
-//<editor-fold desc="Constructor">
-  /**
-   * Tournament constructor.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    $this->tournamentListId = "";
-    $this->competitions = new ArrayCollection();
-  }
-//</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
   /**
@@ -76,7 +64,7 @@ class Tournament extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Competition[]|Collection
+   * @return CompetitionInterface[]|Collection
    */
   public function getCompetitions()
   {
@@ -132,10 +120,19 @@ class Tournament extends TournamentHierarchyEntity
   }
 
   /**
-   * @param User $creator
-   * @return $this|Tournament
+   * Tournament constructor.
    */
-  public function setCreator(User $creator): Tournament
+  public function init()
+  {
+    $this->tournamentListId = "";
+    $this->competitions = new ArrayCollection();
+  }
+
+  /**
+   * @param User $creator
+   * @return TournamentInterface|Tournament
+   */
+  public function setCreator(User $creator)
   {
     $this->creator = $creator;
     return $this;
@@ -143,9 +140,9 @@ class Tournament extends TournamentHierarchyEntity
 
   /**
    * @param string $tournamentListId
-   * @return $this|Tournament
+   * @return TournamentInterface|Tournament
    */
-  public function setTournamentListId(string $tournamentListId): Tournament
+  public function setTournamentListId(string $tournamentListId)
   {
     $this->tournamentListId = $tournamentListId;
     return $this;
@@ -153,9 +150,9 @@ class Tournament extends TournamentHierarchyEntity
 
   /**
    * @param string $userIdentifier
-   * @return $this|Tournament
+   * @return TournamentInterface|Tournament
    */
-  public function setUserIdentifier(string $userIdentifier): Tournament
+  public function setUserIdentifier(string $userIdentifier)
   {
     $this->userIdentifier = $userIdentifier;
     return $this;

@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service;
 
 
-use Tfboe\FmLib\Entity\Tournament;
+use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
  * Interface RankingSystemServiceInterface
@@ -21,18 +21,18 @@ interface RankingSystemServiceInterface
 //<editor-fold desc="Public Methods">
   /**
    * Adapts the open sync from property of all relevant ranking systems
-   * @param Tournament $tournament The tournament to analyze
+   * @param TournamentInterface $tournament The tournament to analyze
    * @param mixed[][] $influences the earliest influences of the tournament before the change
    */
-  public function adaptOpenSyncFromValues(Tournament $tournament, array $influences): void;
+  public function adaptOpenSyncFromValues(TournamentInterface $tournament, array $influences): void;
 
   /**
    * Gets all ranking systems of a tournament and its earliest influences as time.
    * The result is used as input for the method applyRankingSystems.
-   * @param Tournament $tournament the tournament to analyze
+   * @param TournamentInterface $tournament the tournament to analyze
    * @return mixed[][]
    */
-  public function getRankingSystemsEarliestInfluences(Tournament $tournament): array;
+  public function getRankingSystemsEarliestInfluences(TournamentInterface $tournament): array;
 
   /**
    * Recalculates all ranking systems which have an open sync from value.

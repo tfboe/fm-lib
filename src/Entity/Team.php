@@ -44,8 +44,8 @@ class Team extends BaseEntity
   private $players;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Competition", inversedBy="teams")
-   * @var Competition
+   * @ORM\ManyToOne(targetEntity="CompetitionInterface", inversedBy="teams")
+   * @var CompetitionInterface
    */
   private $competition;
 
@@ -75,9 +75,9 @@ class Team extends BaseEntity
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return Competition
+   * @return CompetitionInterface
    */
-  public function getCompetition(): Competition
+  public function getCompetition(): CompetitionInterface
   {
     return $this->competition;
   }
@@ -107,10 +107,10 @@ class Team extends BaseEntity
   }
 
   /**
-   * @param Competition $competition
+   * @param CompetitionInterface $competition
    * @return $this|Team
    */
-  public function setCompetition(Competition $competition): Team
+  public function setCompetition(CompetitionInterface $competition): Team
   {
     if ($this->competition !== null) {
       $this->competition->getTeams()->remove($this->getStartNumber());

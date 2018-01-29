@@ -44,7 +44,8 @@ class GameRankingSystemTest extends UnitTestCase
     $builder = self::callProtectedMethod($system, "getEntitiesQueryBuilder",
       [$rankingSystem, new \DateTime("2000-01-01")]);
     self::assertEquals(
-      'SELECT g FROM Tfboe\FmLib\Entity\Game g LEFT JOIN g.rankingSystems grs WITH grs = :ranking INNER JOIN g.match ' .
+      'SELECT g FROM Tfboe\FmLib\Entity\GameInterface g LEFT JOIN g.rankingSystems grs WITH grs = :ranking ' .
+      'INNER JOIN g.match ' .
       'm LEFT JOIN m.rankingSystems mrs WITH mrs = :ranking INNER JOIN m.phase p LEFT JOIN p.rankingSystems prs WITH ' .
       'prs = :ranking INNER JOIN p.competition c LEFT JOIN c.rankingSystems crs WITH crs = :ranking INNER JOIN ' .
       'c.tournament t LEFT JOIN t.rankingSystems trs WITH trs = :ranking WHERE (g.endTime > :from OR (g.startTime > ' .

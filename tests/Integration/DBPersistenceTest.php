@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Integration;
 
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Tfboe\FmLib\Entity\Tournament;
 use Tfboe\FmLib\TestHelpers\DatabaseTestCase;
+use Tfboe\FmLib\Tests\Entity\Tournament;
 use Tfboe\FmLib\Tests\Helpers\ApplicationGetter;
 
 /**

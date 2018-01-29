@@ -17,24 +17,24 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tfboe\FmLib\Entity\Competition;
-use Tfboe\FmLib\Entity\Game;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
-use Tfboe\FmLib\Entity\Match;
-use Tfboe\FmLib\Entity\Phase;
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Entity\RankingSystemChange;
 use Tfboe\FmLib\Entity\RankingSystemList;
 use Tfboe\FmLib\Entity\RankingSystemListEntry;
-use Tfboe\FmLib\Entity\Tournament;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Competition;
+use Tfboe\FmLib\Tests\Entity\Game;
+use Tfboe\FmLib\Tests\Entity\Match;
+use Tfboe\FmLib\Tests\Entity\Phase;
+use Tfboe\FmLib\Tests\Entity\Tournament;
 
 
 /**
@@ -87,13 +87,18 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @uses   \Tfboe\FmLib\Entity\Competition
-   * @uses   \Tfboe\FmLib\Entity\Game
+   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
+   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
-   * @uses   \Tfboe\FmLib\Entity\Match
-   * @uses   \Tfboe\FmLib\Entity\Phase
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
+   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
@@ -117,28 +122,33 @@ class RankingSystemServiceTest extends UnitTestCase
     $competition = new Competition();
     $competition->setName("TestCompetition")->setTournament($tournament);
     $phase = new Phase();
-    $phase->setPhaseNumber(1)->setCompetition($competition);
+    $phase->setPhaseNumber(1);
+    $phase->setCompetition($competition);
     $match = new Match();
-    $match->setMatchNumber(1)->setPhase($phase);
+    $match->setMatchNumber(1);
+    $match->setPhase($phase);
     self::assertNull($service->getEarliestInfluence($ranking, $tournament));
 
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertNull($service->getEarliestInfluence($ranking, $tournament));
 
     $game = new Game();
-    $game->setGameNumber(1)->setMatch($match);
+    $game->setGameNumber(1);
+    $game->setMatch($match);
     $gameEndTime = new \DateTime("2017-06-01 00:00:00");
     $game->setEndTime($gameEndTime);
     self::assertEquals($gameEndTime, $service->getEarliestInfluence($ranking, $tournament));
 
     $game2 = new Game();
-    $game2->setGameNumber(2)->setMatch($match);
+    $game2->setGameNumber(2);
+    $game2->setMatch($match);
     $game2EndTime = new \DateTime("2017-05-01 00:00:00");
     $game2->setEndTime($game2EndTime);
     self::assertEquals($game2EndTime, $service->getEarliestInfluence($ranking, $tournament));
 
     $game3 = new Game();
-    $game3->setGameNumber(3)->setMatch($match);
+    $game3->setGameNumber(3);
+    $game3->setMatch($match);
     $game3EndTime = new \DateTime("2017-07-01 00:00:00");
     $game3->setEndTime($game3EndTime);
     self::assertEquals($game2EndTime, $service->getEarliestInfluence($ranking, $tournament));
@@ -147,13 +157,18 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @uses   \Tfboe\FmLib\Entity\Competition
-   * @uses   \Tfboe\FmLib\Entity\Game
+   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
+   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
-   * @uses   \Tfboe\FmLib\Entity\Match
-   * @uses   \Tfboe\FmLib\Entity\Phase
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
+   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
@@ -178,18 +193,22 @@ class RankingSystemServiceTest extends UnitTestCase
     $competition = new Competition();
     $competition->setName("TestCompetition")->setTournament($tournament);
     $phase = new Phase();
-    $phase->setPhaseNumber(1)->setCompetition($competition);
+    $phase->setPhaseNumber(1);
+    $phase->setCompetition($competition);
     $match = new Match();
-    $match->setMatchNumber(1)->setPhase($phase);
+    $match->setMatchNumber(1);
+    $match->setPhase($phase);
     $game = new Game();
-    $game->setGameNumber(1)->setMatch($match);
+    $game->setGameNumber(1);
+    $game->setMatch($match);
     $endTime1 = new \DateTime("2017-12-01 00:00:00");
     $game->setEndTime($endTime1);
     $game->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime1, $service->getEarliestInfluence($ranking, $tournament));
 
     $game2 = new Game();
-    $game2->setGameNumber(2)->setMatch($match);
+    $game2->setGameNumber(2);
+    $game2->setMatch($match);
     $endTime2 = new \DateTime("2017-11-01 00:00:00");
     $game2->setEndTime($endTime2);
     self::assertEquals($endTime1, $service->getEarliestInfluence($ranking, $tournament));
@@ -198,9 +217,11 @@ class RankingSystemServiceTest extends UnitTestCase
     self::assertEquals($endTime2, $service->getEarliestInfluence($ranking, $tournament));
 
     $match2 = new Match();
-    $match2->setMatchNumber(2)->setPhase($phase);
+    $match2->setMatchNumber(2);
+    $match2->setPhase($phase);
     $game3 = new Game();
-    $game3->setGameNumber(1)->setMatch($match2);
+    $game3->setGameNumber(1);
+    $game3->setMatch($match2);
     $endTime3 = new \DateTime("2017-10-01 00:00:00");
     $game3->setEndTime($endTime3);
     self::assertEquals($endTime2, $service->getEarliestInfluence($ranking, $tournament));
@@ -209,11 +230,14 @@ class RankingSystemServiceTest extends UnitTestCase
     self::assertEquals($endTime3, $service->getEarliestInfluence($ranking, $tournament));
 
     $phase2 = new Phase();
-    $phase2->setPhaseNumber(2)->setCompetition($competition);
+    $phase2->setPhaseNumber(2);
+    $phase2->setCompetition($competition);
     $match3 = new Match();
-    $match3->setMatchNumber(1)->setPhase($phase2);
+    $match3->setMatchNumber(1);
+    $match3->setPhase($phase2);
     $game4 = new Game();
-    $game4->setGameNumber(1)->setMatch($match3);
+    $game4->setGameNumber(1);
+    $game4->setMatch($match3);
     $endTime4 = new \DateTime("2017-09-01 00:00:00");
     $game4->setEndTime($endTime4);
     self::assertEquals($endTime3, $service->getEarliestInfluence($ranking, $tournament));
@@ -224,24 +248,29 @@ class RankingSystemServiceTest extends UnitTestCase
     $competition2 = new Competition();
     $competition2->setName("TestCompetition2")->setTournament($tournament);
     $phase3 = new Phase();
-    $phase3->setPhaseNumber(1)->setCompetition($competition2);
+    $phase3->setPhaseNumber(1);
+    $phase3->setCompetition($competition2);
     $match4 = new Match();
-    $match4->setMatchNumber(1)->setPhase($phase3);
+    $match4->setMatchNumber(1);
+    $match4->setPhase($phase3);
     $game5 = new Game();
-    $game5->setGameNumber(1)->setMatch($match4);
+    $game5->setGameNumber(1);
+    $game5->setMatch($match4);
     $endTime5 = new \DateTime("2017-01-01 00:00:00");
     $game5->setEndTime($endTime5);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
     $game6 = new Game();
-    $game6->setGameNumber(2)->setMatch($match4);
+    $game6->setGameNumber(2);
+    $game6->setMatch($match4);
     $endTime6 = new \DateTime("2017-10-01 00:00:00");
     $game6->setEndTime($endTime6);
     $game6->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
     $game7 = new Game();
-    $game7->setGameNumber(3)->setMatch($match4);
+    $game7->setGameNumber(3);
+    $game7->setMatch($match4);
     $endTime7 = new \DateTime("2017-08-01 00:00:00");
     $game7->setEndTime($endTime7);
     $game7->getRankingSystems()->set($ranking->getId(), $ranking);
@@ -251,7 +280,8 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
@@ -552,7 +582,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -589,7 +620,8 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -621,7 +653,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -657,7 +690,8 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -688,7 +722,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence

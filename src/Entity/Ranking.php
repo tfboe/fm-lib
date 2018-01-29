@@ -40,8 +40,8 @@ class Ranking extends BaseEntity
   private $teams;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Phase", inversedBy="rankings")
-   * @var Phase
+   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="rankings")
+   * @var PhaseInterface
    */
   private $phase;
 
@@ -71,9 +71,9 @@ class Ranking extends BaseEntity
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return Phase
+   * @return PhaseInterface
    */
-  public function getPhase(): Phase
+  public function getPhase(): PhaseInterface
   {
     return $this->phase;
   }
@@ -103,10 +103,10 @@ class Ranking extends BaseEntity
   }
 
   /**
-   * @param Phase $phase
+   * @param PhaseInterface $phase
    * @return $this|Ranking
    */
-  public function setPhase(Phase $phase): Ranking
+  public function setPhase(PhaseInterface $phase): Ranking
   {
     if ($this->phase !== null) {
       $this->phase->getRankings()->remove($this->getUniqueRank());

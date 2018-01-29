@@ -27,10 +27,12 @@ return [
       'meta' => env('DOCTRINE_METADATA', 'annotations'),
       'connection' => env('DB_CONNECTION', 'mysql'),
       'namespaces' => [
-        'Tfboe\FmLib\Entity'
+        'Tfboe\FmLib\Entity',
+        'Tfboe\FmLib\Tests\Entity',
       ],
       'paths' => [
         base_path('vendor/tfboe/fm-lib/src/Entity'),
+        base_path('tests/Entity'),
       ],
       'repository' => Doctrine\ORM\EntityRepository::class,
       'proxies' => [
@@ -102,6 +104,7 @@ return [
     //LaravelDoctrine\Extensions\Blameable\BlameableExtension::class,
     //LaravelDoctrine\Extensions\IpTraceable\IpTraceableExtension::class,
     //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
+    Tfboe\FmLib\Listeners\ResolveTargetEntityExtension::class
   ],
   /*
   |--------------------------------------------------------------------------

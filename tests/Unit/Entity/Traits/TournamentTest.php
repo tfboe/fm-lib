@@ -7,14 +7,24 @@ declare(strict_types=1);
  * Time: 1:11 PM
  */
 
-namespace Tfboe\FmLib\Tests\Unit\Entity;
+namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Tfboe\FmLib\Entity\Competition;
-use Tfboe\FmLib\Entity\Tournament;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
+use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Entity\User;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
+
+/** @noinspection PhpMultipleClassesDeclarationsInOneFile */
+abstract class Tournament extends TournamentHierarchyEntity implements TournamentInterface
+{
+  use \Tfboe\FmLib\Entity\Traits\Tournament;
+}
+
+/** @noinspection PhpMultipleClassesDeclarationsInOneFile */
 
 /**
  * Class TournamentTest
@@ -25,20 +35,20 @@ class TournamentTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::getCompetitions
-   * @covers \Tfboe\FmLib\Entity\Tournament::getChildren
-   * @uses   \Tfboe\FmLib\Entity\Competition::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getChildren
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testCompetitionsAndChildren()
   {
     $tournament = $this->tournament();
-    $competition = new Competition();
-    $competition->setName('comp name');
+    $tournament->init();
+    $competition = $this->createStub(CompetitionInterface::class, ['getName' => 'comp name']);
     self::assertEquals($tournament->getCompetitions(), $tournament->getChildren());
+    /** @var CompetitionInterface $competition */
     $tournament->getCompetitions()->set($competition->getName(), $competition);
     self::assertEquals(1, $tournament->getCompetitions()->count());
     self::assertEquals($competition, $tournament->getCompetitions()[$competition->getName()]);
@@ -46,24 +56,23 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::__construct
-   * @uses   \Tfboe\FmLib\Entity\Tournament::getCompetitions
-   * @uses   \Tfboe\FmLib\Entity\Tournament::getTournamentListId
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getTournamentListId
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testConstructor()
   {
     $tournament = $this->tournament();
-    self::assertInstanceOf(Tournament::class, $tournament);
+    $tournament->init();
     self::assertInstanceOf(ArrayCollection::class, $tournament->getCompetitions());
     self::assertEquals(0, $tournament->getCompetitions()->count());
     self::assertEquals("", $tournament->getTournamentListId());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::setCreator
-   * @covers \Tfboe\FmLib\Entity\Tournament::getCreator
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setCreator
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getCreator
    * @uses   \Tfboe\FmLib\Entity\User::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
@@ -76,9 +85,8 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::getLocalIdentifier
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getLocalIdentifier
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testGetLocalIdentifier()
@@ -90,8 +98,7 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::getLevel
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getLevel
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testLevel()
@@ -100,8 +107,7 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::getParent
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getParent
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testParent()
@@ -110,9 +116,8 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::setTournamentListId
-   * @covers \Tfboe\FmLib\Entity\Tournament::getTournamentListId
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setTournamentListId
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getTournamentListId
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testTournamentListId()
@@ -123,9 +128,8 @@ class TournamentTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Tournament::setUserIdentifier
-   * @covers \Tfboe\FmLib\Entity\Tournament::getUserIdentifier
-   * @uses   \Tfboe\FmLib\Entity\Tournament::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setUserIdentifier
+   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getUserIdentifier
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testUserIdentifier()
@@ -138,11 +142,11 @@ class TournamentTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Tournament a new tournament
+   * @return Tournament|MockObject a new tournament
    */
-  private function tournament(): Tournament
+  private function tournament(): MockObject
   {
-    return new Tournament();
+    return $this->getMockForAbstractClass(Tournament::class);
   }
 //</editor-fold desc="Private Methods">
 }

@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Service\RankingSystem;
 
 
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
-use Tfboe\FmLib\Entity\Tournament;
+use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
  * Class RecursiveEndStartTimeService
@@ -48,7 +48,7 @@ class RecursiveEndStartTimeService implements TimeServiceInterface
             $this->times[$entityId] = $this->getTime($entity->getParent());
           } else {
             //entity must be a tournament
-            /** @var Tournament $entity */
+            /** @var TournamentInterface $entity */
             $this->times[$entityId] = $entity->getUpdatedAt();
           }
         }

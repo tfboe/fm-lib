@@ -9,7 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
-use Tfboe\FmLib\Entity\Phase;
+use Doctrine\Common\Collections\ArrayCollection;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\QualificationSystem;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
@@ -23,21 +24,22 @@ class QualificationSystemTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\QualificationSystem::setNextPhase
    * @covers \Tfboe\FmLib\Entity\QualificationSystem::getNextPhase
-   * @uses   \Tfboe\FmLib\Entity\Phase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testNextPhase()
   {
     $system = $this->system();
-    $phase = new Phase();
+    $phase = $this->createStub(PhaseInterface::class, ['getPreQualifications' => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase */
     $system->setNextPhase($phase);
     self::assertEquals($phase, $system->getNextPhase());
     self::assertEquals(1, $system->getNextPhase()->getPreQualifications()->count());
     self::assertEquals($system, $system->getNextPhase()->getPreQualifications()[0]);
 
-    $phase2 = new Phase();
+    $phase2 = $this->createStub(PhaseInterface::class, ['getPreQualifications' => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase2 */
     $system->setNextPhase($phase2);
     self::assertEquals($phase2, $system->getNextPhase());
     self::assertEquals(1, $system->getNextPhase()->getPreQualifications()->count());
@@ -48,21 +50,22 @@ class QualificationSystemTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\QualificationSystem::setPreviousPhase
    * @covers \Tfboe\FmLib\Entity\QualificationSystem::getPreviousPhase
-   * @uses   \Tfboe\FmLib\Entity\Phase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testPreviousPhase()
   {
     $system = $this->system();
-    $phase = new Phase();
+    $phase = $this->createStub(PhaseInterface::class, ['getPostQualifications' => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase */
     $system->setPreviousPhase($phase);
     self::assertEquals($phase, $system->getPreviousPhase());
     self::assertEquals(1, $system->getPreviousPhase()->getPostQualifications()->count());
     self::assertEquals($system, $system->getPreviousPhase()->getPostQualifications()[0]);
 
-    $phase2 = new Phase();
+    $phase2 = $this->createStub(PhaseInterface::class, ['getPostQualifications' => new ArrayCollection()]);
 
+    /** @var PhaseInterface $phase2 */
     $system->setPreviousPhase($phase2);
     self::assertEquals($phase2, $system->getPreviousPhase());
     self::assertEquals(1, $system->getPreviousPhase()->getPostQualifications()->count());

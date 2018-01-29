@@ -1,5 +1,5 @@
 #!/bin/bash
-
+set  -e
 #set environment default values
 INTEGRATION="${INTEGRATION:-0}"
 

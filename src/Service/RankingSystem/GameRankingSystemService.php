@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Service\RankingSystem;
 
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
-use Tfboe\FmLib\Entity\Game;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Helpers\Level;
 
@@ -32,7 +32,7 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
     // query all relevant games
     $query = $this->getEntityManager()->createQueryBuilder();
     $query
-      ->from(Game::class, 'g')
+      ->from(GameInterface::class, 'g')
       ->select('g')
       ->leftJoin('g.rankingSystems', 'grs', Query\Expr\Join::WITH, $query->expr()->eq('grs', ':ranking'))
       ->innerJoin('g.match', 'm')

@@ -7,37 +7,37 @@ declare(strict_types=1);
  * Time: 10:49 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\MatchInterface;
+use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Helpers\Level;
 
+
 /**
- * Class Phase
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="games")
+ * Trait Game
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Game extends TournamentHierarchyEntity
+trait Game
 {
   use ResultEntity;
 
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToOne(targetEntity="Match", inversedBy="games")
-   * @var Match
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\MatchInterface", inversedBy="games")
+   * @var MatchInterface
    */
   private $match;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Player", indexBy="id")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Player", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersA",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
@@ -46,7 +46,7 @@ class Game extends TournamentHierarchyEntity
   private $playersA;
 
   /**
-   * @ORM\ManyToMany(targetEntity="Player", indexBy="id")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Player", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersB",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
@@ -60,18 +60,6 @@ class Game extends TournamentHierarchyEntity
    */
   private $gameNumber;
 //</editor-fold desc="Fields">
-
-//<editor-fold desc="Constructor">
-  /**
-   * Match constructor.
-   */
-  public function __construct()
-  {
-    parent::__construct();
-    $this->playersA = new ArrayCollection();
-    $this->playersB = new ArrayCollection();
-  }
-//</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
   /**
@@ -107,9 +95,9 @@ class Game extends TournamentHierarchyEntity
   }
 
   /**
-   * @return Match
+   * @return MatchInterface
    */
-  public function getMatch(): Match
+  public function getMatch(): MatchInterface
   {
     return $this->match;
   }
@@ -139,27 +127,32 @@ class Game extends TournamentHierarchyEntity
   }
 
   /**
-   * @param int $gameNumber
-   * @return $this|Game
+   * Match constructor.
    */
-  public function setGameNumber(int $gameNumber): Game
+  public function init()
   {
-    $this->gameNumber = $gameNumber;
-    return $this;
+    $this->playersA = new ArrayCollection();
+    $this->playersB = new ArrayCollection();
   }
 
   /**
-   * @param Match $match
-   * @return $this|Game
+   * @param int $gameNumber
    */
-  public function setMatch(Match $match): Game
+  public function setGameNumber(int $gameNumber)
+  {
+    $this->gameNumber = $gameNumber;
+  }
+
+  /**
+   * @param MatchInterface $match
+   */
+  public function setMatch(MatchInterface $match)
   {
     if ($this->match !== null) {
       $this->match->getGames()->remove($this->getGameNumber());
     }
     $this->match = $match;
     $match->getGames()->set($this->getGameNumber(), $this);
-    return $this;
   }
 //</editor-fold desc="Public Methods">
 }

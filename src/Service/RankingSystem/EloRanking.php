@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 use Doctrine\Common\Collections\Collection;
-use Tfboe\FmLib\Entity\Game;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Player;
@@ -54,7 +54,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    */
   protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemList $list): array
   {
-    /** @var Game $game */
+    /** @var GameInterface $game */
     $game = $entity;
     $changes = [];
 
@@ -138,15 +138,15 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param RankingSystemListEntry[] $entries
    * @param float $result
    * @param float $expectationDiff
-   * @param Game $game
+   * @param GameInterface $game
    * @param float $teamAverage
    * @param float $opponentAverage
    * @param bool $teamHasProvisory
    * @param bool $opponentHasProvisory
    */
-  private function computeChanges(array &$changes, array $entries, float $result, float $expectationDiff, Game $game,
-                                  float $teamAverage, float $opponentAverage, bool $teamHasProvisory,
-                                  bool $opponentHasProvisory)
+  private function computeChanges(array &$changes, array $entries, float $result, float $expectationDiff,
+                                  GameInterface $game, float $teamAverage, float $opponentAverage,
+                                  bool $teamHasProvisory, bool $opponentHasProvisory)
   {
     foreach ($entries as $entry) {
       $change = $this->getOrCreateChange($game, $entry->getRankingSystemList()->getRankingSystem(),

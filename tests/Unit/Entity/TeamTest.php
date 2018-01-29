@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Tfboe\FmLib\Entity\Competition;
+use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Entity\Team;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
@@ -25,7 +26,6 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Team::setCompetition
    * @covers \Tfboe\FmLib\Entity\Team::getCompetition
-   * @uses   \Tfboe\FmLib\Entity\Competition
    * @uses   \Tfboe\FmLib\Entity\Team::__construct
    * @uses   \Tfboe\FmLib\Entity\Team::getStartNumber
    * @uses   \Tfboe\FmLib\Entity\Team::setStartNumber
@@ -34,15 +34,17 @@ class TeamTest extends UnitTestCase
   public function testCompetition()
   {
     $team = $this->team();
-    $competition = new Competition();
+    $competition = $this->createStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
     $team->setStartNumber(1);
+    /** @var CompetitionInterface $competition */
     $team->setCompetition($competition);
     self::assertEquals($competition, $team->getCompetition());
     self::assertEquals(1, $team->getCompetition()->getTeams()->count());
     self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getStartNumber()]);
 
-    $competition2 = new Competition();
+    $competition2 = $this->createStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
 
+    /** @var CompetitionInterface $competition2 */
     $team->setCompetition($competition2);
     self::assertEquals($competition2, $team->getCompetition());
     self::assertEquals(1, $team->getCompetition()->getTeams()->count());
