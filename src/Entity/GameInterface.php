@@ -26,13 +26,6 @@ use Tfboe\FmLib\Exceptions\ValueNotValid;
  */
 interface GameInterface extends TournamentHierarchyInterface
 {
-//<editor-fold desc="Constructor">
-  /**
-   * Match constructor.
-   */
-  public function __construct();
-//</editor-fold desc="Constructor">
-
 //<editor-fold desc="Public Methods">
   /**
    * @return int|null
