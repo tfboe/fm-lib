@@ -28,12 +28,15 @@ class UserController extends BaseController
    */
   public function login(Request $request, Application $app): JsonResponse
   {
-    $this->validateBySpecification($request, $this->getCredentialSpecification($app));
+    $specification = $this->getCredentialSpecification($app);
+    $this->addAdditionalLoginSpecifications($specification);
+    $this->validateBySpecification($request, $specification);
 
 
     // grab credentials from the request
     $credentials = $request->only('email', 'password');
 
+    /** @var string $token */
     $token = null;
     try {
       // attempt to verify the credentials and create a token for the user
@@ -45,8 +48,8 @@ class UserController extends BaseController
       // something went wrong whilst attempting to encode the token
       throw new AuthenticationException('could not create token');
     }
-    $user = $request->user();
-    return response()->json(['id' => $user->getId()], 200, ['jwt-token' => $token]);
+    return $this->getLoginResponse($request, $token);
+
   }
 
   /**
@@ -58,23 +61,27 @@ class UserController extends BaseController
    */
   public function register(Request $request, Application $app): JsonResponse
   {
-    $userSpecification = $this->getCredentialSpecification($app);
-    $userSpecification['email']['validation'] .= '|unique:Tfboe\FmLib\Entity\User,email';
-    $userSpecification['confirmedAGBVersion'] = ['validation' => 'integer|min:0'];
+    $specification = [];
+    $specification['user'] = $this->getCredentialSpecification($app);
+    $specification['user']['email']['validation'] .= '|unique:Tfboe\FmLib\Entity\User,email';
+    $specification['user']['confirmedAGBVersion'] = ['validation' => 'integer|min:0'];
 
-    $this->validateBySpecification($request, $userSpecification);
+    $this->addAdditionalRegisterSpecifications($specification);
+
+    $this->validateBySpecification($request, array_merge(...array_values($specification)));
 
     $input = $request->input();
     /** @var User $user */
-    $user = $this->setFromSpecification(new User(), $userSpecification, $input);
-
+    $user = $this->setFromSpecification(new User(), $specification['user'], $input);
     $this->getEntityManager()->persist($user); //sets the user id
+
+    $this->createAdditionalRegisterEntities($user, $specification, $input);
+
     $this->getEntityManager()->flush();
 
     return response()->json(['id' => $user->getId()]);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * @return JsonResponse
    */
@@ -84,6 +91,49 @@ class UserController extends BaseController
     return response()->json(['id' => Auth::user()->getAuthIdentifier()]);
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Methods">
+  /**
+   * Gets additional input specifications for the login action
+   * @param array $specification the specification to add to / modify
+   */
+  protected function addAdditionalLoginSpecifications(array &$specification)
+  {
+    //do nothing by default
+  }
+
+  /**
+   * adds additional register specifications
+   * @param array $specification the specification to add to / modify
+   */
+  protected function addAdditionalRegisterSpecifications(array &$specification)
+  {
+    //do nothing by default
+  }
+
+  /**
+   * creates additional entities after registration using the specification and the given input
+   * @param User $user the newly registered user
+   * @param array $specification the specification
+   * @param array $input the given request input
+   */
+  protected function createAdditionalRegisterEntities(User $user, array $specification, array $input)
+  {
+    //do nothing by default
+  }
+
+  /**
+   * Gets the response for a successful login action
+   * @param Request $request the request
+   * @param string $token the login token
+   * @return JsonResponse the response
+   */
+  protected function getLoginResponse(Request $request, string $token): JsonResponse
+  {
+    $user = $request->user();
+    return response()->json(['id' => $user->getId()], 200, ['jwt-token' => $token]);
+  }
+//</editor-fold desc="Protected Methods">
 
 //<editor-fold desc="Private Methods">
   /**
