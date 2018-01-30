@@ -72,7 +72,8 @@ class UserController extends BaseController
 
     $input = $request->input();
     /** @var User $user */
-    $user = $this->setFromSpecification(new User(), $specification['user'], $input);
+
+    $user = $this->setFromSpecification($this->newUser(), $specification['user'], $input);
     $this->getEntityManager()->persist($user); //sets the user id
 
     $this->createAdditionalRegisterEntities($user, $specification, $input);
@@ -80,6 +81,15 @@ class UserController extends BaseController
     $this->getEntityManager()->flush();
 
     return $this->getRegisterResponse($request, $app, $user);
+  }
+
+  /**
+   * Creates a new user
+   * @return User
+   */
+  protected function newUser(): User
+  {
+    return new User();
   }
 
   /**
