@@ -79,6 +79,20 @@ class UserController extends BaseController
 
     $this->getEntityManager()->flush();
 
+    return $this->getRegisterResponse($request, $app, $user);
+  }
+
+  /**
+   * Gets the response for a successful register action
+   * @param Request $request the request
+   * @param Application $app the application
+   * @param User $user the newly registered user
+   * @return JsonResponse the json response
+   */
+  protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
+    Request $request, /** @noinspection PhpUnusedParameterInspection */
+    Application $app, User $user)
+  {
     return response()->json(['id' => $user->getId()]);
   }
 
