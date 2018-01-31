@@ -17,8 +17,8 @@ use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
-use Tfboe\FmLib\Entity\QualificationSystem;
-use Tfboe\FmLib\Entity\Ranking;
+use Tfboe\FmLib\Entity\QualificationSystemInterface;
+use Tfboe\FmLib\Entity\RankingInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
@@ -44,20 +44,20 @@ trait Phase
   private $phaseNumber;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystem", mappedBy="nextPhase")
-   * @var Collection|QualificationSystem[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="nextPhase")
+   * @var Collection|QualificationSystemInterface[]
    */
   private $preQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystem", mappedBy="previousPhase")
-   * @var Collection|QualificationSystem[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="previousPhase")
+   * @var Collection|QualificationSystemInterface[]
    */
   private $postQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\Ranking", mappedBy="group", indexBy="uniqueRank")
-   * @var Collection|Ranking[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", mappedBy="group", indexBy="uniqueRank")
+   * @var Collection|RankingInterface[]
    */
   private $rankings;
 
@@ -126,7 +126,7 @@ trait Phase
   }
 
   /**
-   * @return QualificationSystem[]|Collection
+   * @return QualificationSystemInterface[]|Collection
    */
   public function getPostQualifications(): Collection
   {
@@ -134,7 +134,7 @@ trait Phase
   }
 
   /**
-   * @return QualificationSystem[]|Collection
+   * @return QualificationSystemInterface[]|Collection
    */
   public function getPreQualifications(): Collection
   {
@@ -142,7 +142,7 @@ trait Phase
   }
 
   /**
-   * @return Ranking[]|Collection
+   * @return RankingInterface[]|Collection
    */
   public function getRankings()
   {
@@ -152,7 +152,7 @@ trait Phase
   /**
    * Competition constructor.
    */
-  public function init()
+  protected final function init()
   {
     $this->preQualifications = new ArrayCollection();
     $this->postQualifications = new ArrayCollection();

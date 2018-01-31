@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use Illuminate\Contracts\Container\Container;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class EloRankingTest

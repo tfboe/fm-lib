@@ -11,8 +11,9 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\QualificationSystem;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\QualificationSystemInterface;
+use Tfboe\FmLib\Tests\Entity\QualificationSystem;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
@@ -22,8 +23,8 @@ class QualificationSystemTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\QualificationSystem::setNextPhase
-   * @covers \Tfboe\FmLib\Entity\QualificationSystem::getNextPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::setNextPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::getNextPhase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testNextPhase()
@@ -48,8 +49,8 @@ class QualificationSystemTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\QualificationSystem::setPreviousPhase
-   * @covers \Tfboe\FmLib\Entity\QualificationSystem::getPreviousPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::setPreviousPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::getPreviousPhase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testPreviousPhase()
@@ -76,9 +77,9 @@ class QualificationSystemTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return QualificationSystem a new qualification system
+   * @return QualificationSystemInterface a new qualification system
    */
-  private function system(): QualificationSystem
+  private function system(): QualificationSystemInterface
   {
     return new QualificationSystem();
   }

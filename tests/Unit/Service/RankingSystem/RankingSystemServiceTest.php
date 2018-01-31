@@ -19,22 +19,27 @@ use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\RankingSystemChange;
-use Tfboe\FmLib\Entity\RankingSystemList;
-use Tfboe\FmLib\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 use Tfboe\FmLib\Helpers\Level;
+use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
 use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
 use Tfboe\FmLib\Tests\Entity\Match;
 use Tfboe\FmLib\Tests\Entity\Phase;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
+use Tfboe\FmLib\Tests\Entity\RankingSystemChange;
+use Tfboe\FmLib\Tests\Entity\RankingSystemList;
+use Tfboe\FmLib\Tests\Entity\RankingSystemListEntry;
 use Tfboe\FmLib\Tests\Entity\Tournament;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -57,8 +62,9 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager = $this->createMock(EntityManagerInterface::class);
     $timeService = $this->createMock(TimeServiceInterface::class);
     $entityComparer = $this->createMock(EntityComparerInterface::class);
+    $objectCreator = $this->createMock(ObjectCreatorServiceInterface::class);
     $system = $this->getMockForAbstractClass(RankingSystemService::class,
-      [$entityManager, $timeService, $entityComparer]);
+      [$entityManager, $timeService, $entityComparer, $objectCreator]);
     self::assertInstanceOf(RankingSystemService::class, $system);
     /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals($entityManager, self::getProperty(get_class($system), 'entityManager')->getValue($system));
@@ -66,6 +72,9 @@ class RankingSystemServiceTest extends UnitTestCase
     self::assertEquals($timeService, self::getProperty(get_class($system), 'timeService')->getValue($system));
     /** @noinspection PhpUnhandledExceptionInspection */
     self::assertEquals($entityComparer, self::getProperty(get_class($system), 'entityComparer')->getValue($system));
+    /** @noinspection PhpUnhandledExceptionInspection */
+    self::assertEquals($objectCreator, self::getProperty(get_class($system), 'objectCreatorService')
+      ->getValue($system));
   }
 
   /**
@@ -87,17 +96,17 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
-   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
-   * @uses   \Tfboe\FmLib\Tests\Entity\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Match
-   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -111,11 +120,12 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
         $timeService,
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->createMock(ObjectCreatorServiceInterface::class)]);
     $service->method("getLevel")->willReturn(Level::GAME);
     /** @var RankingSystemService $service */
     $tournament = new Tournament();
@@ -157,17 +167,17 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
-   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
-   * @uses   \Tfboe\FmLib\Tests\Entity\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Match
-   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -182,11 +192,12 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
         $timeService,
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->createMock(ObjectCreatorServiceInterface::class)]);
     $service->method("getLevel")->willReturn(Level::GAME);
     /** @var RankingSystemService $service */
     $tournament = new Tournament();
@@ -281,7 +292,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
@@ -296,11 +307,12 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
         $timeService,
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->createMock(ObjectCreatorServiceInterface::class)]);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
     /** @var RankingSystemService $service */
     $tournament = new Tournament();
@@ -333,7 +345,8 @@ class RankingSystemServiceTest extends UnitTestCase
     //create service mock
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class), $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->createMock(ObjectCreatorServiceInterface::class)]);
 
     //create mock for queryBuilder
     $entityList = ['e1', 'e2'];
@@ -359,7 +372,8 @@ class RankingSystemServiceTest extends UnitTestCase
   {
     $entityManager = $this->createMock(EntityManagerInterface::class);
     $service = $this->getMockForAbstractClass(RankingSystemService::class, [$entityManager,
-      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class)]);
+      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class),
+      $this->createMock(ObjectCreatorServiceInterface::class)]);
     $em = static::callProtectedMethod($service, 'getEntityManager');
     self::assertEquals($entityManager, $em);
   }
@@ -392,7 +406,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
    */
@@ -403,7 +417,7 @@ class RankingSystemServiceTest extends UnitTestCase
     [$entity, $ranking, $player] = $this->createEntities();
     [$service, $entityManager] = $this->prepareCreateChange();
     $entityManager->expects(self::once())->method('persist')->willReturnCallback(
-      function (RankingSystemChange $change) use (&$persisted, $entity, $ranking, $player) {
+      function (RankingSystemChangeInterface $change) use (&$persisted, $entity, $ranking, $player) {
         $persisted = $change;
         self::assertInstanceOf(RankingSystemChange::class, $change);
         self::assertEquals($entity, $change->getHierarchyEntity());
@@ -419,7 +433,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetOrCreateChangeCreateTwice()
@@ -439,7 +453,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetOrCreateChangeFindInRepo()
@@ -461,9 +475,9 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
@@ -490,9 +504,9 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -523,7 +537,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetOrCreateRankingSystemListEntryExistingEntry()
@@ -545,7 +559,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
    */
@@ -555,17 +569,18 @@ class RankingSystemServiceTest extends UnitTestCase
     $entries = new ArrayCollection([]);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
 
-    /** @var RankingSystemListEntry $createdEntry */
+    /** @var RankingSystemListEntryInterface $createdEntry */
     $createdEntry = null;
     $entityManager = $this->createMock(EntityManager::class);
     $entityManager->expects(self::once())->method('persist')->willReturnCallback(
-      function (RankingSystemListEntry $entry) use (&$createdEntry, $player, $list) {
+      function (RankingSystemListEntryInterface $entry) use (&$createdEntry, $player, $list) {
         $createdEntry = $entry;
       });
 
 
     $service = $this->getMockForAbstractClass(RankingSystemService::class, [$entityManager,
-      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class)]);
+      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class),
+      $this->getObjectCreator()]);
     $service->method('getAdditionalFields')->willReturn(['additional' => 0.0]);
     /** @var RankingSystemService $service */
 
@@ -583,7 +598,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -598,12 +613,11 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
-        $timeService,
-        $this->createMock(EntityComparerInterface::class)], '', true, true, true, ['updateRankingFrom']);
+        $timeService], ['updateRankingFrom']);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new \DateTime("2017-02-01 00:00:00");
     $tournament->setUpdatedAt($endedAt);
@@ -621,7 +635,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -631,14 +645,11 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testUpdateRankingForTournamentOldEarliestIsNotNullAndTournamentNotRanked()
   {
     $ranking = $this->createStubWithId(RankingSystem::class);
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new \DateTime("2017-01-01 00:00:00");
     $tournament->setUpdatedAt($endedAt);
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
-      [$this->createMock(EntityManagerInterface::class),
-        $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class)], '', true, true, true, ['updateRankingFrom']);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class, [], ['updateRankingFrom']);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
     $oldInfluence = new \DateTime("2017-02-01 00:00:00");
     $service->expects(static::once())
@@ -654,7 +665,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -664,7 +675,7 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testUpdateRankingForTournamentOldEarliestIsNull()
   {
     $ranking = $this->createStubWithId(RankingSystem::class);
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new \DateTime("2017-01-01 00:00:00");
     $tournament->setEndTime($endedAt);
@@ -674,10 +685,9 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
-        $timeService,
-        $this->createMock(EntityComparerInterface::class)], '', true, true, true, ['updateRankingFrom']);
+        $timeService], ['updateRankingFrom']);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
     $service->expects(static::once())
       ->method('updateRankingFrom')
@@ -691,7 +701,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -701,13 +711,12 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testUpdateRankingForTournamentOldEarliestIsNullAndTournamentNotRanked()
   {
     $ranking = $this->createStubWithId(RankingSystem::class);
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new \DateTime("2017-01-01 00:00:00");
     $tournament->setUpdatedAt($endedAt);
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
-      [$this->createMock(EntityManagerInterface::class), $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class)], '', true, true, true, ['updateRankingFrom']);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
+      [], ['updateRankingFrom']);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
     $service->expects(self::never())
       ->method('updateRankingFrom');
@@ -723,7 +732,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
@@ -733,7 +742,7 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testUpdateRankingForTournamentTournamentIsEarlier()
   {
     $ranking = $this->createStubWithId(RankingSystem::class);
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new \DateTime("2017-01-01");
     $tournament->setEndTime($endedAt);
@@ -743,10 +752,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
       return $entity->getEndTime();
     })->after('clearTimes');
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
-      [$this->createMock(EntityManagerInterface::class),
-        $timeService,
-        $this->createMock(EntityComparerInterface::class)], '', true, true, true, ['updateRankingFrom']);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
+      [$this->createMock(EntityManagerInterface::class), $timeService], ['updateRankingFrom']);
     $service->method("getLevel")->willReturn(Level::TOURNAMENT);
     $oldInfluence = new \DateTime("2017-02-01");
     $service->expects(static::once())
@@ -764,13 +771,13 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::cloneSubClassDataFrom
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    */
   public function testUpdateRankingFrom()
   {
@@ -824,12 +831,13 @@ class RankingSystemServiceTest extends UnitTestCase
         return $entity1->getEndTime() <=> $entity2->getEndTime();
       });
     $entityManager = $this->getEntityManagerMockForQuery([],
-      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChange c WHERE c.hierarchyEntity IN(:entities)', ['persist',
-        'remove']);
-    $service = $this->getMockForAbstractClass(RankingSystemService::class,
+      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChangeInterface c WHERE c.hierarchyEntity IN(:entities)',
+      ['persist', 'remove']);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
       [$entityManager,
         $timeService,
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->getObjectCreator()]);
 
     //create entities mocks
     $entity1 = $this->createStubWithId(TournamentHierarchyEntity::class, "e1");
@@ -864,7 +872,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $service->method('getAdditionalFields')->willReturn(['additional' => 0.0]);
 
     /** @var RankingSystemService $service */
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     /** @noinspection PhpUnhandledExceptionInspection */
     $service->updateRankingFrom($ranking, new \DateTime('2017-02-28'));
   }
@@ -873,7 +881,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -883,7 +891,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $ranking = $this->createStubWithId(RankingSystem::class);
     $service = $this->prepareUpdateRankingFrom($ranking);
 
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
 
     /** @noinspection PhpUnhandledExceptionInspection */
     $service->updateRankingFrom($ranking, new \DateTime('2017-02-28'));
@@ -898,7 +906,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
@@ -924,15 +932,17 @@ class RankingSystemServiceTest extends UnitTestCase
 
     //create service mock
     $entityManager = $this->getEntityManagerMockForQuery([],
-      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChange c WHERE c.hierarchyEntity IN(:entities)', ['persist']);
+      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChangeInterface c WHERE c.hierarchyEntity IN(:entities)',
+      ['persist']);
     $entityManager->expects(static::once())->method('persist')->willReturnCallback(
-      function (RankingSystemList $entity) {
+      function (RankingSystemListInterface $entity) {
         self::assertInstanceOf(RankingSystemList::class, $entity);
         self::assertTrue($entity->isCurrent());
         static::getProperty(get_class($entity), 'id')->setValue($entity, 'new');
       });
-    $service = $this->getMockForAbstractClass(RankingSystemService::class, [$entityManager,
-      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class)]);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class, [$entityManager,
+      $this->createMock(TimeServiceInterface::class), $this->createMock(EntityComparerInterface::class),
+      $this->getObjectCreator()]);
 
     //create query mock for getEntities
     $query = $this->createMock(AbstractQuery::class);
@@ -944,7 +954,7 @@ class RankingSystemServiceTest extends UnitTestCase
       ->with($ranking, new \DateTime("2017-01-01"))->willReturn($queryBuilder);
 
     /** @var RankingSystemService $service */
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     /** @noinspection PhpUnhandledExceptionInspection */
     /** @noinspection PhpUnhandledExceptionInspection */
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -956,7 +966,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -966,10 +976,10 @@ class RankingSystemServiceTest extends UnitTestCase
     $ranking = $this->createStubWithId(RankingSystem::class);
     $service = $this->prepareUpdateRankingFrom($ranking);
 
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
 
     /** @var RankingSystemService $service */
-    /** @var RankingSystem $ranking */
+    /** @var RankingSystemInterface $ranking */
     /** @noinspection PhpUnhandledExceptionInspection */
     $service->updateRankingFrom($ranking, new \DateTime('2017-02-28'));
   }
@@ -978,7 +988,7 @@ class RankingSystemServiceTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * Creates an empty RankingSystemChange
-   * @return MockObject|RankingSystemChange
+   * @return MockObject|RankingSystemChangeInterface
    */
   private function createEmptyChange(): MockObject
   {
@@ -989,7 +999,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * Creates an empty RankingSystemListEntry
-   * @return MockObject|RankingSystemListEntry
+   * @return MockObject|RankingSystemListEntryInterface
    */
   private function createEmptyEntry(): MockObject
   {
@@ -1024,7 +1034,8 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var $service RankingSystemService */
     $service = $this->getMockForAbstractClass(RankingSystemService::class, [
       $entityManager, $this->createMock(TimeServiceInterface::class),
-      $this->createMock(EntityComparerInterface::class)
+      $this->createMock(EntityComparerInterface::class),
+      $this->getObjectCreator()
     ]);
     return [$service, $entityManager];
   }
@@ -1042,7 +1053,8 @@ class RankingSystemServiceTest extends UnitTestCase
     }
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$entityManager, $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class),
+        $this->getObjectCreator()]);
 
     //create mocks for current lists
     $list = $this->createMock(RankingSystemList::class);

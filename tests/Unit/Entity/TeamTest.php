@@ -12,9 +12,10 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\CompetitionInterface;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\Team;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\TeamInterface;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\Team;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
@@ -24,11 +25,11 @@ class TeamTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Team::setCompetition
-   * @covers \Tfboe\FmLib\Entity\Team::getCompetition
-   * @uses   \Tfboe\FmLib\Entity\Team::__construct
-   * @uses   \Tfboe\FmLib\Entity\Team::getStartNumber
-   * @uses   \Tfboe\FmLib\Entity\Team::setStartNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::setCompetition
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::getCompetition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testCompetition()
@@ -53,9 +54,9 @@ class TeamTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Team::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
-   * @uses   \Tfboe\FmLib\Entity\Team::getPlayers
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::getPlayers
    */
   public function testConstructor()
   {
@@ -67,8 +68,8 @@ class TeamTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Team::getPlayers
-   * @uses   \Tfboe\FmLib\Entity\Team::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::getPlayers
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testPlayers()
   {
@@ -81,9 +82,9 @@ class TeamTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Team::setRank
-   * @covers \Tfboe\FmLib\Entity\Team::getRank
-   * @uses   \Tfboe\FmLib\Entity\Team::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::setRank
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::getRank
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testRank()
   {
@@ -93,9 +94,9 @@ class TeamTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Team::setStartNumber
-   * @covers \Tfboe\FmLib\Entity\Team::getStartNumber
-   * @uses   \Tfboe\FmLib\Entity\Team::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testStartNumber()
   {
@@ -108,9 +109,9 @@ class TeamTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Team a new team
+   * @return TeamInterface a new team
    */
-  private function team(): Team
+  private function team(): TeamInterface
   {
     return new Team();
   }

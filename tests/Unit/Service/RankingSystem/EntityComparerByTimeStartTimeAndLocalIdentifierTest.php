@@ -11,7 +11,7 @@ use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class EntityComparerByTimeStartTimeAndLocalIdentifierTest

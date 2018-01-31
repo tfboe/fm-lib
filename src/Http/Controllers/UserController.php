@@ -3,13 +3,15 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Http\Controllers;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Application;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
+use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 /**
@@ -19,6 +21,21 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class UserController extends BaseController
 {
 //<editor-fold desc="Public Methods">
+
+  /** @var ObjectCreatorServiceInterface $objectCreatorService */
+  private $objectCreatorService;
+
+  /**
+   * @inheritDoc
+   */
+  public function __construct(EntityManagerInterface $entityManager,
+                              ObjectCreatorServiceInterface $objectCreatorService)
+  {
+    parent::__construct($entityManager);
+    $this->objectCreatorService = $objectCreatorService;
+  }
+
+
   /**
    * login action, checks credentials and returns token
    * @param Request $request the http request
@@ -61,9 +78,10 @@ class UserController extends BaseController
    */
   public function register(Request $request, Application $app): JsonResponse
   {
+    $userClass = config('fm-lib')['entityMaps']['Tfboe\FmLib\Entity\UserInterface'];
     $specification = [];
     $specification['user'] = $this->getCredentialSpecification($app);
-    $specification['user']['email']['validation'] .= '|unique:Tfboe\FmLib\Entity\User,email';
+    $specification['user']['email']['validation'] .= '|unique:' . $userClass . ',email';
     $specification['user']['confirmedAGBVersion'] = ['validation' => 'integer|min:0'];
 
     $this->addAdditionalRegisterSpecifications($specification);
@@ -71,7 +89,7 @@ class UserController extends BaseController
     $this->validateBySpecification($request, array_merge(...array_values($specification)));
 
     $input = $request->input();
-    /** @var User $user */
+    /** @var UserInterface $user */
 
     $user = $this->setFromSpecification($this->newUser(), $specification['user'], $input);
     $this->getEntityManager()->persist($user); //sets the user id
@@ -85,23 +103,23 @@ class UserController extends BaseController
 
   /**
    * Creates a new user
-   * @return User
+   * @return UserInterface
    */
-  protected function newUser(): User
+  protected function newUser(): UserInterface
   {
-    return new User();
+    return $this->objectCreatorService->createObjectFromInterface(UserInterface::class);
   }
 
   /**
    * Gets the response for a successful register action
    * @param Request $request the request
    * @param Application $app the application
-   * @param User $user the newly registered user
+   * @param UserInterface $user the newly registered user
    * @return JsonResponse the json response
    */
   protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
     Request $request, /** @noinspection PhpUnusedParameterInspection */
-    Application $app, User $user)
+    Application $app, UserInterface $user)
   {
     return response()->json(['id' => $user->getId()]);
   }
@@ -137,11 +155,11 @@ class UserController extends BaseController
 
   /**
    * creates additional entities after registration using the specification and the given input
-   * @param User $user the newly registered user
+   * @param UserInterface $user the newly registered user
    * @param array $specification the specification
    * @param array $input the given request input
    */
-  protected function createAdditionalRegisterEntities(User $user, array $specification, array $input)
+  protected function createAdditionalRegisterEntities(UserInterface $user, array $specification, array $input)
   {
     //do nothing by default
   }

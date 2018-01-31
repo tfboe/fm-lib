@@ -16,7 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
-use Tfboe\FmLib\Entity\Player;
+use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 
@@ -37,20 +37,20 @@ trait Game
   private $match;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Player", indexBy="id")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersA",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
-   * @var Collection|Player
+   * @var Collection|PlayerInterface
    */
   private $playersA;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Player", indexBy="id")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersB",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
-   * @var Collection|Player
+   * @var Collection|PlayerInterface
    */
   private $playersB;
 
@@ -111,7 +111,7 @@ trait Game
   }
 
   /**
-   * @return Player[]|Collection
+   * @return PlayerInterface[]|Collection
    */
   public function getPlayersA()
   {
@@ -119,7 +119,7 @@ trait Game
   }
 
   /**
-   * @return Player[]|Collection
+   * @return PlayerInterface[]|Collection
    */
   public function getPlayersB()
   {
@@ -129,7 +129,7 @@ trait Game
   /**
    * Match constructor.
    */
-  public function init()
+  protected final function init()
   {
     $this->playersA = new ArrayCollection();
     $this->playersB = new ArrayCollection();

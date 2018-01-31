@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Helpers;
 
 use Tfboe\FmLib\Helpers\Logging;
 use Tfboe\FmLib\Helpers\Logs;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**

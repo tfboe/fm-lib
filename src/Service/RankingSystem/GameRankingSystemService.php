@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Service\RankingSystem;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Tfboe\FmLib\Entity\GameInterface;
-use Tfboe\FmLib\Entity\RankingSystem;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 
@@ -27,7 +27,7 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
   /**
    * @inheritDoc
    */
-  protected function getEntitiesQueryBuilder(RankingSystem $ranking, \DateTime $from): QueryBuilder
+  protected function getEntitiesQueryBuilder(RankingSystemInterface $ranking, \DateTime $from): QueryBuilder
   {
     // query all relevant games
     $query = $this->getEntityManager()->createQueryBuilder();

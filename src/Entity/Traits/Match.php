@@ -17,7 +17,7 @@ use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\Ranking;
+use Tfboe\FmLib\Entity\RankingInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
@@ -37,16 +37,16 @@ trait Match
   private $phase;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Ranking", indexBy="uniqueRank")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
    * @ORM\JoinTable(name="relation__match_rankingA")
-   * @var Collection|Ranking
+   * @var Collection|RankingInterface
    */
   private $rankingsA;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\Ranking", indexBy="uniqueRank")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
    * @ORM\JoinTable(name="relation__match_rankingB")
-   * @var Collection|Ranking
+   * @var Collection|RankingInterface
    */
   private $rankingsB;
 
@@ -121,7 +121,7 @@ trait Match
   }
 
   /**
-   * @return Ranking|Collection
+   * @return RankingInterface|Collection
    */
   public function getRankingsA()
   {
@@ -129,7 +129,7 @@ trait Match
   }
 
   /**
-   * @return Ranking|Collection
+   * @return RankingInterface|Collection
    */
   public function getRankingsB()
   {
@@ -139,7 +139,7 @@ trait Match
   /**
    * Match constructor.
    */
-  public function init()
+  protected final function init()
   {
     $this->rankingsA = new ArrayCollection();
     $this->rankingsB = new ArrayCollection();

@@ -15,10 +15,10 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\QualificationSystem;
-use Tfboe\FmLib\Entity\Ranking;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\QualificationSystem;
+use Tfboe\FmLib\Tests\Entity\Ranking;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
@@ -77,7 +77,7 @@ class PhaseTest extends UnitTestCase
   public function testInit()
   {
     $phase = $this->phase();
-    $phase->init();
+    self::callProtectedMethod($phase, 'init');
     self::assertEquals('', $phase->getName());
     self::assertInstanceOf(Collection::class, $phase->getPostQualifications());
     self::assertEquals(0, $phase->getPostQualifications()->count());
@@ -103,7 +103,7 @@ class PhaseTest extends UnitTestCase
   public function testMatchesAndChildren()
   {
     $phase = $this->phase();
-    $phase->init();
+    self::callProtectedMethod($phase, 'init');
     $match = $this->createStub(MatchInterface::class, ['getMatchNumber' => 1]);
     self::assertEquals($phase->getMatches(), $phase->getChildren());
     /** @var MatchInterface $match */
@@ -116,13 +116,13 @@ class PhaseTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPostQualifications
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
-   * @uses   \Tfboe\FmLib\Entity\QualificationSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\QualificationSystem
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testNextQualificationSystems()
   {
     $phase = $this->phase();
-    $phase->init();
+    self::callProtectedMethod($phase, 'init');
     $qualificationSystem = new QualificationSystem();
     $qualificationSystem->setPreviousPhase($phase);
     self::assertEquals(1, $phase->getPostQualifications()->count());
@@ -145,12 +145,12 @@ class PhaseTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPreQualifications
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
-   * @uses   \Tfboe\FmLib\Entity\QualificationSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\QualificationSystem
    */
   public function testPreviousQualificationSystems()
   {
     $phase = $this->phase();
-    $phase->init();
+    self::callProtectedMethod($phase, 'init');
     $qualificationSystem = new QualificationSystem();
     $qualificationSystem->setNextPhase($phase);
     self::assertEquals(1, $phase->getPreQualifications()->count());
@@ -160,13 +160,13 @@ class PhaseTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getRankings
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
-   * @uses   \Tfboe\FmLib\Entity\Ranking
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testRankings()
   {
     $phase = $this->phase();
-    $phase->init();
+    self::callProtectedMethod($phase, 'init');
     $ranking = new Ranking();
     $ranking->setUniqueRank(1);
     $phase->getRankings()->set($ranking->getUniqueRank(), $ranking);

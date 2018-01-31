@@ -7,21 +7,18 @@ declare(strict_types=1);
  * Time: 10:27 AM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 
+
 /**
- * Class Player
+ * Trait Player
  * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="players",indexes={@ORM\Index(name="unique_names_birthday",
- *   columns={"first_name","last_name","birthday"})})
  */
-class Player extends BaseEntity
+trait Player
 {
   use TimestampableEntity;
 
@@ -88,32 +85,26 @@ class Player extends BaseEntity
 
   /**
    * @param \DateTime $birthday
-   * @return $this|Player
    */
-  public function setBirthday(\DateTime $birthday): Player
+  public function setBirthday(\DateTime $birthday)
   {
     $this->birthday = $birthday;
-    return $this;
   }
 
   /**
    * @param string $firstName
-   * @return $this|Player
    */
-  public function setFirstName(string $firstName): Player
+  public function setFirstName(string $firstName)
   {
     $this->firstName = $firstName;
-    return $this;
   }
 
   /**
    * @param string $lastName
-   * @return $this|Player
    */
-  public function setLastName(string $lastName): Player
+  public function setLastName(string $lastName)
   {
     $this->lastName = $lastName;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
 }

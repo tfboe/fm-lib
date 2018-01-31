@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Exceptions;
 
 
-use Tfboe\FmLib\Entity\Player;
+use Tfboe\FmLib\Entity\PlayerInterface;
 
 /**
  * Class PlayerAlreadyExists
@@ -19,13 +19,13 @@ use Tfboe\FmLib\Entity\Player;
 class PlayerAlreadyExists extends AbstractException
 {
 //<editor-fold desc="Fields">
-  /** @var  Player[] */
+  /** @var  PlayerInterface[] */
   private $players;
 //</editor-fold desc="Fields">
 //<editor-fold desc="Constructor">
   /**
    * PlayerAlreadyExists constructor.
-   * @param Player[] $players list of already existing players
+   * @param PlayerInterface[] $players list of already existing players
    */
   public function __construct(array $players)
   {
@@ -43,7 +43,7 @@ class PlayerAlreadyExists extends AbstractException
   {
     return [
       'message' => "Some players do already exist",
-      'players' => array_map(function (Player $player) {
+      'players' => array_map(function (PlayerInterface $player) {
         return [
           "firstName" => $player->getFirstName(),
           "lastName" => $player->getLastName(),

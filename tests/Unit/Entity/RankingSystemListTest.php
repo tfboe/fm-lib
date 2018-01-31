@@ -10,11 +10,12 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\RankingSystemList;
-use Tfboe\FmLib\Entity\RankingSystemListEntry;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
+use Tfboe\FmLib\Tests\Entity\RankingSystemList;
+use Tfboe\FmLib\Tests\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -25,9 +26,9 @@ class RankingSystemListTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::__construct
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::getLastEntryTime
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::isCurrent
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
    */
   public function testConstructor()
   {
@@ -37,9 +38,9 @@ class RankingSystemListTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::setCurrent
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::isCurrent
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::setCurrent
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
    */
   public function testCurrent()
   {
@@ -49,9 +50,9 @@ class RankingSystemListTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::setLastEntryTime
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::getLastEntryTime
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
    */
   public function testLastEntry()
   {
@@ -61,15 +62,15 @@ class RankingSystemListTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::getEntries
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
    */
   public function testLists()
   {
     $entity = $this->instance();
     $entity2 = $this->createMock(RankingSystemListEntry::class);
     $player = $this->createStubWithId(Player::class, 5, 'getPlayerId');
-    /** @var Player $player */
+    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $entity2->method('getPlayer')->willReturn($player);
     $entity->getEntries()->set($player->getPlayerId(), $entity2);
     self::assertEquals(1, $entity->getEntries()->count());
@@ -77,11 +78,11 @@ class RankingSystemListTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::setRankingSystem
-   * @covers \Tfboe\FmLib\Entity\RankingSystemList::getRankingSystem
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::setRankingSystem
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::getRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystem
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    */
   public function testRankingSystem()
@@ -108,9 +109,9 @@ class RankingSystemListTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return RankingSystemList
+   * @return RankingSystemListInterface
    */
-  private function instance(): RankingSystemList
+  private function instance(): RankingSystemListInterface
   {
     return new RankingSystemList();
   }

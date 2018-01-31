@@ -14,15 +14,18 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystemChange;
-use Tfboe\FmLib\Entity\RankingSystemList;
-use Tfboe\FmLib\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
 use Tfboe\FmLib\Tests\Entity\Game;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\RankingSystemList;
+use Tfboe\FmLib\Tests\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class EloRankingTest
@@ -158,8 +161,8 @@ class EloRankingTest extends UnitTestCase
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @uses         \Tfboe\FmLib\Entity\RankingSystemChange
-   * @uses         \Tfboe\FmLib\Entity\RankingSystemListEntry
+   * @uses         \Tfboe\FmLib\Entity\Traits\RankingSystemChange
+   * @uses         \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalFields
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
@@ -174,7 +177,7 @@ class EloRankingTest extends UnitTestCase
   {
     $repository = $this->createStub(ObjectRepository::class, ['findBy' => []]);
     $entityManager = $this->createStub(EntityManagerInterface::class, ['getRepository' => $repository]);
-    $service = $this->service($entityManager);
+    $service = $this->service($entityManager, $this->getObjectCreator());
     /** @var EloRanking $player1 */
 
     /** @var Player[] $players */
@@ -203,15 +206,18 @@ class EloRankingTest extends UnitTestCase
     }
     $entries = new ArrayCollection($entriesArray);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
-    /** @var $list RankingSystemList */
+    /** @var $list RankingSystemListInterface */
     foreach ($entries as $entry) {
-      /** @var $entry RankingSystemListEntry */
+      /** @var $entry RankingSystemListEntryInterface */
       $entry->setRankingSystemList($list);
     }
     for ($i = 0; $i < count($playerInfos); $i++) {
       $info = $playerInfos[$i];
-      $list->getEntries()[$i]->setPoints($info['points'])->setPlayedGames($info['played'])
-        ->setNumberRankedEntities($info['ranked'])->setRatedGames($info['rated']);
+      $entry = $list->getEntries()[$i];
+      $entry->setPoints($info['points']);
+      $entry->setPlayedGames($info['played']);
+      $entry->setNumberRankedEntities($info['ranked']);
+      $entry->setRatedGames($info['rated']);
       if (array_key_exists('provisoryRanking', $info)) {
         $list->getEntries()[$i]->setProvisoryRanking($info['provisoryRanking']);
       }
@@ -219,7 +225,7 @@ class EloRankingTest extends UnitTestCase
     $game->method('isPlayed')->willReturn($isPlayed);
     $game->method('getResult')->willReturn($gameResult);
 
-    /** @var RankingSystemChange[] $changes */
+    /** @var RankingSystemChangeInterface[] $changes */
     $changes = static::callProtectedMethod($service, 'getChanges', [$game, $list]);
     self::assertEquals(count($playerInfos), count($changes));
     foreach ($players as $player) {
@@ -250,7 +256,7 @@ class EloRankingTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @param RankingSystemChange[] $changes
+   * @param RankingSystemChangeInterface[] $changes
    * @param array $playerInfos
    * @param TournamentHierarchyEntity $entity
    */
@@ -272,7 +278,7 @@ class EloRankingTest extends UnitTestCase
    * Creates a new ranking system list entry
    * @param EloRanking $service the elo ranking service to get additional fields
    * @param Player $player the player to use for the entry
-   * @return RankingSystemListEntry the created ranking system list entry
+   * @return RankingSystemListEntryInterface the created ranking system list entry
    */
   private function getRankingSystemListEntry(EloRanking $service, Player $player)
   {
@@ -282,19 +288,24 @@ class EloRankingTest extends UnitTestCase
   }
 
   /**
-   * Gets a elo ranking service
-   * @param EntityManagerInterface|null $entityManager the entity manager to use or null if a mock should be used
-   * @return EloRanking the created elo ranking service
+   * Gets an elo ranking service
+   * @param EntityManagerInterface|null $entityManager
+   * @param null|ObjectCreatorServiceInterface $objectCreatorService
+   * @return EloRanking
    */
-  private function service(?EntityManagerInterface $entityManager = null)
+  private function service(?EntityManagerInterface $entityManager = null,
+                           ?ObjectCreatorServiceInterface $objectCreatorService = null)
   {
     if ($entityManager === null) {
       $entityManager = $this->createMock(EntityManagerInterface::class);
     }
+    if ($objectCreatorService === null) {
+      $objectCreatorService = $this->createMock(ObjectCreatorServiceInterface::class);
+    }
     /** @noinspection PhpParamsInspection */
     return new EloRanking(
       $entityManager, $this->createMock(TimeServiceInterface::class),
-      $this->createMock(EntityComparerInterface::class)
+      $this->createMock(EntityComparerInterface::class), $objectCreatorService
     );
   }
 //</editor-fold desc="Private Methods">

@@ -5,7 +5,7 @@ namespace Tfboe\FmLib\Http\Middleware;
 
 use Closure;
 use Illuminate\Contracts\Auth\Factory as Auth;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
 use Tymon\JWTAuth\Payload;
 
@@ -54,9 +54,9 @@ class Authenticate
     }
     /** @var Payload $payload */
     $payload = $guard->getPayload();
-    /** @var User $user */
+    /** @var UserInterface $user */
     $user = $guard->getUser();
-    if (!$payload->hasKey('ver') || !($user instanceof User) || $payload->get(['ver'])[0] <
+    if (!$payload->hasKey('ver') || !($user instanceof UserInterface) || $payload->get(['ver'])[0] <
       $user->getJwtVersion()) {
       throw new AuthenticationException("Payload version expired!");
     }

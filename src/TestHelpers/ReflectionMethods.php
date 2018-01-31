@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\TestHelpers;
 
 /**
  * Trait ReflectionMethods
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 trait ReflectionMethods
 {

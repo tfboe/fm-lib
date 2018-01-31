@@ -17,7 +17,7 @@ use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\Team;
+use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Helpers\Level;
 
@@ -38,8 +38,8 @@ trait Competition
   private $tournament;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\Team", mappedBy="competition", indexBy="startNumber")
-   * @var Collection|Team[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", mappedBy="competition", indexBy="startNumber")
+   * @var Collection|TeamInterface[]
    */
   private $teams;
 
@@ -92,7 +92,7 @@ trait Competition
   }
 
   /**
-   * @return Team[]|Collection
+   * @return TeamInterface[]|Collection
    */
   public function getTeams()
   {
@@ -110,7 +110,7 @@ trait Competition
   /**
    * Competition constructor.
    */
-  public function init()
+  protected final function init()
   {
     $this->teams = new ArrayCollection();
     $this->phases = new ArrayCollection();

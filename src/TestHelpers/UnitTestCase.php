@@ -17,7 +17,7 @@ use PHPUnit\Framework\TestCase;
 
 /**
  * Class UnitTestCase
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 abstract class UnitTestCase extends TestCase
 {

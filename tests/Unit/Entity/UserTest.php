@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
-use Tfboe\FmLib\Entity\User;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\UserInterface;
+use Tfboe\FmLib\Tests\Entity\User;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class UserTest
@@ -20,10 +21,10 @@ class UserTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\User::__construct
-   * @uses   \Tfboe\FmLib\Entity\User::getJWTCustomClaims
-   * @uses   \Tfboe\FmLib\Entity\User::getJwtVersion
-   * @uses   \Tfboe\FmLib\Entity\User::getConfirmedAGBVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getJWTCustomClaims
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getJwtVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBVersion
    */
   public function testConstructor()
   {
@@ -35,9 +36,9 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\User::setEmail
-   * @covers \Tfboe\FmLib\Entity\User::getEmail
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setEmail
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getEmail
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
   public function testEmail()
   {
@@ -47,9 +48,9 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\User::getJWTCustomClaims
-   * @uses   \Tfboe\FmLib\Entity\User::setJwtVersion
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getJWTCustomClaims
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::setJwtVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
   public function testJWTCustomClaims()
   {
@@ -59,8 +60,8 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\User::getJWTIdentifier
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getJWTIdentifier
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    */
   public function testJWTIdentifier()
@@ -73,9 +74,9 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\User::getJwtVersion()
-   * @covers \Tfboe\FmLib\Entity\User::setJwtVersion
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getJwtVersion()
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setJwtVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
   public function testJwtVersion()
   {
@@ -85,9 +86,9 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\User::getConfirmedAGBVersion
-   * @covers \Tfboe\FmLib\Entity\User::setConfirmedAGBVersion
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
   public function testLastConfirmedAGBVersion()
   {
@@ -99,9 +100,9 @@ class UserTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return User a new user
+   * @return UserInterface a new user
    */
-  private function user(): User
+  private function user(): UserInterface
   {
     return new User();
   }

@@ -11,12 +11,12 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 
 
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
 use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
 use Tfboe\FmLib\Tests\Entity\Match;
 use Tfboe\FmLib\Tests\Entity\Phase;
 use Tfboe\FmLib\Tests\Entity\Tournament;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -31,7 +31,7 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
@@ -56,15 +56,15 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
-   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
-   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Traits\Match
-   * @uses   \Tfboe\FmLib\Tests\Entity\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
-   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
@@ -119,11 +119,11 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
-   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
-   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
@@ -163,7 +163,7 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId

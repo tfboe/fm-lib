@@ -13,11 +13,11 @@ use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\RankingSystemChange;
-use Tfboe\FmLib\Entity\RankingSystemList;
-use Tfboe\FmLib\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Entity\PlayerInterface;
+use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Entity\RankingSystemListInterface;
 
 /**
  * Class EloRanking
@@ -35,10 +35,6 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   const START = 1200;
 //</editor-fold desc="Fields">
 
-  /**
-   * @param Collection|Player[] $players
-   */
-
 //<editor-fold desc="Protected Methods">
   /**
    * Gets additional fields for this ranking type
@@ -52,7 +48,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   /**
    * @inheritDoc
    */
-  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemList $list): array
+  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array
   {
     /** @var GameInterface $game */
     $game = $entity;
@@ -114,13 +110,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 //<editor-fold desc="Private Methods">
   /**
-   * @param RankingSystemChange[] $changes
-   * @param Collection|Player[] $players
+   * @param RankingSystemChangeInterface[] $changes
+   * @param Collection|PlayerInterface[] $players
    * @param TournamentHierarchyEntity $entity
-   * @param \Tfboe\FmLib\Entity\RankingSystem $ranking
+   * @param RankingSystemInterface $ranking
    */
   private function addNotRatedChanges(array &$changes, Collection $players, TournamentHierarchyEntity $entity,
-                                      RankingSystem $ranking)
+                                      RankingSystemInterface $ranking)
   {
     foreach ($players as $player) {
       $change = $this->getOrCreateChange($entity, $ranking, $player);
@@ -135,7 +131,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   /** @noinspection PhpTooManyParametersInspection */ //TODO refactor this method
   /**
    * @param array $changes
-   * @param RankingSystemListEntry[] $entries
+   * @param RankingSystemListEntryInterface[] $entries
    * @param float $result
    * @param float $expectationDiff
    * @param GameInterface $game
@@ -199,7 +195,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
   /**
    * Computes the average rating of the given entries
-   * @param RankingSystemListEntry[] $entries must be nonempty
+   * @param RankingSystemListEntryInterface[] $entries must be nonempty
    * @return float
    */
   private function getEloAverage(array $entries): float
@@ -213,7 +209,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
   /**
    * Checks if the given list of entries has at least one provisory entry
-   * @param RankingSystemListEntry[] $entries
+   * @param RankingSystemListEntryInterface[] $entries
    * @return bool
    */
   private function hasProvisoryEntry(array $entries): bool

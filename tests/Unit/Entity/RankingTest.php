@@ -12,9 +12,10 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\Ranking;
-use Tfboe\FmLib\Entity\Team;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\RankingInterface;
+use Tfboe\FmLib\Tests\Entity\Ranking;
+use Tfboe\FmLib\Tests\Entity\Team;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
@@ -24,9 +25,9 @@ class RankingTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Ranking::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
-   * @uses   \Tfboe\FmLib\Entity\Ranking::getTeams
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
    */
   public function testConstructor()
   {
@@ -38,11 +39,11 @@ class RankingTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Ranking::setPhase
-   * @covers \Tfboe\FmLib\Entity\Ranking::getPhase
-   * @uses   \Tfboe\FmLib\Entity\Ranking::__construct
-   * @uses   \Tfboe\FmLib\Entity\Ranking::getUniqueRank
-   * @uses   \Tfboe\FmLib\Entity\Ranking::setUniqueRank
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getPhase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testPhase()
@@ -67,9 +68,9 @@ class RankingTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Ranking::setRank
-   * @covers \Tfboe\FmLib\Entity\Ranking::getRank
-   * @uses   \Tfboe\FmLib\Entity\Ranking::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setRank
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getRank
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testRank()
   {
@@ -79,9 +80,9 @@ class RankingTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Ranking::getTeams
-   * @uses   \Tfboe\FmLib\Entity\Ranking::__construct
-   * @uses   \Tfboe\FmLib\Entity\Team
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team
    */
   public function testTeams()
   {
@@ -94,9 +95,9 @@ class RankingTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Ranking::setUniqueRank
-   * @covers \Tfboe\FmLib\Entity\Ranking::getUniqueRank
-   * @uses   \Tfboe\FmLib\Entity\Ranking::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
+   * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testUniqueRank()
   {
@@ -108,9 +109,9 @@ class RankingTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Ranking a new ranking
+   * @return RankingInterface a new ranking
    */
-  private function ranking(): Ranking
+  private function ranking(): RankingInterface
   {
     return new Ranking();
   }

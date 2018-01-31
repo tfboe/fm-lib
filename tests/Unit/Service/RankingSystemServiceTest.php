@@ -10,17 +10,17 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
 use Tfboe\FmLib\Service\RankingSystemService;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
 use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
 use Tfboe\FmLib\Tests\Entity\Match;
 use Tfboe\FmLib\Tests\Entity\Phase;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
 use Tfboe\FmLib\Tests\Entity\Tournament;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -35,7 +35,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystemService::adaptOpenSyncFromValues
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
@@ -63,14 +63,14 @@ class RankingSystemServiceTest extends UnitTestCase
     $ranking->method('getServiceName')->willReturn("2017-01-01");
     $ranking->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-01-01 15:00:00"));
     $ranking->expects(self::once())->method('setOpenSyncFrom')->with(new \DateTime("2017-01-01"));
-    /** @var RankingSystem $ranking */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking */
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
 
     $ranking2 = $this->createStubWithId(RankingSystem::class, 'r2');
     $ranking2->method('getServiceName')->willReturn("2017-02-01");
     $ranking2->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-01-30 15:00:00"));
     $ranking2->expects(self::once())->method('setOpenSyncFrom')->with(new \DateTime("2017-01-30"));
-    /** @var RankingSystem $ranking2 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking2 */
     $tournament->getRankingSystems()->set($ranking2->getId(), $ranking2);
 
     $ranking3 = $this->createStubWithId(RankingSystem::class, 'r3');
@@ -92,7 +92,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystemService::applyRankingSystems
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -101,15 +101,15 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testApplyRankingSystems()
   {
     $tournament = new Tournament();
-    /** @var RankingSystem $ranking2 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking2 */
     $ranking2 = $this->createStubWithId(RankingSystem::class, 's2');
     $tournament->getRankingSystems()->set($ranking2->getId(), $ranking2);
-    /** @var RankingSystem $ranking3 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking3 */
     $ranking3 = $this->createStubWithId(RankingSystem::class, 's3');
 
     $tournament->getRankingSystems()->set($ranking3->getId(), $ranking3);
 
-    /** @var RankingSystem $ranking4 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking4 */
     $ranking4 = $this->createStubWithId(RankingSystem::class, 's4');
 
     $oldInfluences = [
@@ -156,15 +156,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
-   * @uses   \Tfboe\FmLib\Tests\Entity\Competition
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
-   * @uses   \Tfboe\FmLib\Tests\Entity\Game
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Traits\Match
-   * @uses   \Tfboe\FmLib\Tests\Entity\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
-   * @uses   \Tfboe\FmLib\Tests\Entity\Phase
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
-   * @uses   \Tfboe\FmLib\Tests\Entity\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
@@ -188,7 +188,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $tournament = new Tournament();
     $ranking2 = $this->createStubWithId(RankingSystem::class, 'r2');
     $ranking2->method('getServiceName')->willReturn("2017-04-01");
-    /** @var RankingSystem $ranking2 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking2 */
     $tournament->getRankingSystems()->set($ranking2->getId(), $ranking2);
 
     $competition = new Competition();
@@ -198,7 +198,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $phase->setCompetition($competition);
     $ranking3 = $this->createStubWithId(RankingSystem::class, 'r3');
     $ranking3->method('getServiceName')->willReturn("2017-02-01");
-    /** @var RankingSystem $ranking3 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking3 */
 
     $phase->getRankingSystems()->set($ranking3->getId(), $ranking3);
 
@@ -210,7 +210,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game->setMatch($match);
     $ranking4 = $this->createStubWithId(RankingSystem::class, 'r4');
     $ranking4->method('getServiceName')->willReturn("2017-03-01");
-    /** @var RankingSystem $ranking4 */
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking4 */
     $game->getRankingSystems()->set($ranking4->getId(), $ranking4);
 
 
@@ -241,7 +241,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $first = 'SELECT s';
     $second = ' FROM Tfboe';
     $third = 'FmLib';
-    $rest = 'RankingSystem s WHERE s.openSyncFrom IS NOT NULL';
+    $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL';
     $entityManager = $this->getEntityManagerMockForQuery([$rs1, $rs2],
       $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest);
     $dsls = $this->getMockForAbstractClass(DynamicServiceLoadingServiceInterface::class);

@@ -18,7 +18,7 @@ use Tfboe\FmLib\Entity\CategoryTraits\OrganizingMode;
 use Tfboe\FmLib\Entity\CategoryTraits\ScoreMode;
 use Tfboe\FmLib\Entity\CategoryTraits\Table;
 use Tfboe\FmLib\Entity\CategoryTraits\TeamMode;
-use Tfboe\FmLib\Entity\RankingSystem;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 
 /**
  * @ORM\Entity
@@ -38,12 +38,12 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
 //<editor-fold desc="Fields">
   /**
    * @ORM\ManyToMany(
-   *     targetEntity="\Tfboe\FmLib\Entity\RankingSystem",
+   *     targetEntity="\Tfboe\FmLib\Entity\RankingSystemInterface",
    *     inversedBy="hierarchyEntries",
    *     indexBy="id"
    * )
    * @ORM\JoinTable(name="relation__hierarchy_entities_ranking_systems")
-   * @var Collection|RankingSystem[]
+   * @var Collection|RankingSystemInterface[]
    */
   private $rankingSystems;
 //</editor-fold desc="Fields">
@@ -60,7 +60,7 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return RankingSystem[]|Collection
+   * @return RankingSystemInterface[]|Collection
    */
   public function getRankingSystems()
   {

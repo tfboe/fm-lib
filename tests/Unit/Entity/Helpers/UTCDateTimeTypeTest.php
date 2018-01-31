@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class UTCDateTimeTypeTest

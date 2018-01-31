@@ -11,31 +11,25 @@ namespace Tfboe\FmLib\Entity\Helpers;
 
 
 use Doctrine\Common\Collections\Collection;
-use Tfboe\FmLib\Entity\RankingSystem;
+use Tfboe\FmLib\Entity\CategoryTraits\GameModeInterface;
+use Tfboe\FmLib\Entity\CategoryTraits\OrganizingModeInterface;
+use Tfboe\FmLib\Entity\CategoryTraits\ScoreModeInterface;
+use Tfboe\FmLib\Entity\CategoryTraits\TableInterface;
+use Tfboe\FmLib\Entity\CategoryTraits\TeamModeInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 
 /**
  * Interface TournamentHierarchyInterface
  * @package Tfboe\FmLib\Entity\Helpers
  */
-interface TournamentHierarchyInterface
+interface TournamentHierarchyInterface extends BaseEntityInterface, GameModeInterface, TeamModeInterface,
+  OrganizingModeInterface, ScoreModeInterface, TableInterface, TimeEntityInterface, UUIDEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**
    * @return Collection|TournamentHierarchyInterface[]
    */
   public function getChildren(): Collection;
-
-  /**
-   * The end time of the entity
-   * @return \DateTime
-   */
-  public function getEndTime(): ?\DateTime;
-
-  /**
-   * Gets the id of the entity
-   * @return string
-   */
-  public function getId(): string;
 
   /**
    * Gets the level of the entity (see Level Enum)
@@ -54,14 +48,8 @@ interface TournamentHierarchyInterface
   public function getParent(): ?TournamentHierarchyInterface;
 
   /**
-   * @return RankingSystem[]|Collection
+   * @return RankingSystemInterface[]|Collection
    */
   public function getRankingSystems();
-
-  /**
-   * The start time of the entity
-   * @return \DateTime
-   */
-  public function getStartTime(): ?\DateTime;
 //</editor-fold desc="Public Methods">
 }

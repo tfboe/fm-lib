@@ -7,32 +7,31 @@ declare(strict_types=1);
  * Time: 5:55 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\PhaseInterface;
+
 
 /**
- * Class QualificationSystem
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="qualificationSystems")
+ * Trait QualificationSystem
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class QualificationSystem extends BaseEntity
+trait QualificationSystem
 {
   use UUIDEntity;
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="postQualifications")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", inversedBy="postQualifications")
    * @var PhaseInterface
    */
   private $previousPhase;
 
   /**
-   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="preQualifications")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", inversedBy="preQualifications")
    * @var PhaseInterface
    */
   private $nextPhase;
@@ -57,30 +56,26 @@ class QualificationSystem extends BaseEntity
 
   /**
    * @param PhaseInterface $nextPhase
-   * @return $this|QualificationSystem
    */
-  public function setNextPhase(PhaseInterface $nextPhase): QualificationSystem
+  public function setNextPhase(PhaseInterface $nextPhase)
   {
     if ($this->nextPhase !== null) {
       $this->nextPhase->getPreQualifications()->removeElement($this);
     }
     $this->nextPhase = $nextPhase;
     $nextPhase->getPreQualifications()->add($this);
-    return $this;
   }
 
   /**
    * @param PhaseInterface $previousPhase
-   * @return $this|QualificationSystem
    */
-  public function setPreviousPhase(PhaseInterface $previousPhase): QualificationSystem
+  public function setPreviousPhase(PhaseInterface $previousPhase)
   {
     if ($this->previousPhase !== null) {
       $this->previousPhase->getPostQualifications()->removeElement($this);
     }
     $this->previousPhase = $previousPhase;
     $previousPhase->getPostQualifications()->add($this);
-    return $this;
   }
 //</editor-fold desc="Public Methods">
 }

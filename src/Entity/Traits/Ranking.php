@@ -7,25 +7,21 @@ declare(strict_types=1);
  * Time: 12:30 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\PhaseInterface;
+use Tfboe\FmLib\Entity\TeamInterface;
 
 /**
- * Class Ranking
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="rankings")
- *
- * Method hint for getName, since it will never throw an exception (name gets initialized empty)
- * @method string getName()
+ * Trait Ranking
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Ranking extends BaseEntity
+trait Ranking
 {
   use UUIDEntity;
   use NameEntity;
@@ -33,14 +29,14 @@ class Ranking extends BaseEntity
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToMany(targetEntity="Team", indexBy="startNumber")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", indexBy="startNumber")
    * @ORM\JoinTable(name="relation__ranking_teams")
-   * @var Collection|Team[]
+   * @var Collection|TeamInterface[]
    */
   private $teams;
 
   /**
-   * @ORM\ManyToOne(targetEntity="PhaseInterface", inversedBy="rankings")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", inversedBy="rankings")
    * @var PhaseInterface
    */
   private $phase;
@@ -59,14 +55,6 @@ class Ranking extends BaseEntity
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * Team constructor.
-   */
-  public function __construct()
-  {
-    $this->teams = new ArrayCollection();
-    $this->name = "";
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
@@ -87,7 +75,7 @@ class Ranking extends BaseEntity
   }
 
   /**
-   * @return Team[]|Collection
+   * @return TeamInterface[]|Collection
    */
   public function getTeams(): Collection
   {
@@ -104,38 +92,43 @@ class Ranking extends BaseEntity
 
   /**
    * @param PhaseInterface $phase
-   * @return $this|Ranking
    */
-  public function setPhase(PhaseInterface $phase): Ranking
+  public function setPhase(PhaseInterface $phase)
   {
     if ($this->phase !== null) {
       $this->phase->getRankings()->remove($this->getUniqueRank());
     }
     $this->phase = $phase;
     $phase->getRankings()->set($this->getUniqueRank(), $this);
-    return $this;
   }
 
   /**
    * @param int $rank
-   * @return $this|Ranking
    */
-  public function setRank(int $rank): Ranking
+  public function setRank(int $rank)
   {
     $this->rank = $rank;
-    return $this;
   }
 
   /**
    * @param int $uniqueRank
-   * @return $this|Ranking
    */
-  public function setUniqueRank(int $uniqueRank): Ranking
+  public function setUniqueRank(int $uniqueRank)
   {
     $this->uniqueRank = $uniqueRank;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Ranking init
+   */
+  protected final function init()
+  {
+    $this->teams = new ArrayCollection();
+    $this->name = "";
+  }
+//</editor-fold desc="Protected Final Methods">
 
 
 }

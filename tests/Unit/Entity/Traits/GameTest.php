@@ -13,10 +13,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\MatchInterface;
-use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Entity\Traits\Game;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -34,7 +34,7 @@ class GameTest extends UnitTestCase
   public function testChildren()
   {
     $game = $this->game();
-    $game->init();
+    self::callProtectedMethod($game, 'init');
     self::assertEmpty($game->getChildren());
   }
 
@@ -61,7 +61,7 @@ class GameTest extends UnitTestCase
   public function testInit()
   {
     $game = $this->game();
-    $game->init();
+    self::callProtectedMethod($game, 'init');
     self::assertInstanceOf(Collection::class, $game->getPlayersA());
     self::assertInstanceOf(Collection::class, $game->getPlayersB());
     self::assertEquals(0, $game->getPlayersA()->count());
@@ -119,7 +119,7 @@ class GameTest extends UnitTestCase
   public function testPlayersA()
   {
     $game = $this->game();
-    $game->init();
+    self::callProtectedMethod($game, 'init');
     /** @var Player $player */
     $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
     $game->getPlayersA()->set($player->getPlayerId(), $player);
@@ -135,7 +135,7 @@ class GameTest extends UnitTestCase
   public function testPlayersB()
   {
     $game = $this->game();
-    $game->init();
+    self::callProtectedMethod($game, 'init');
     /** @var Player $player */
     $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
     $game->getPlayersB()->set($player->getPlayerId(), $player);

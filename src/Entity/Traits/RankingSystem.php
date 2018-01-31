@@ -7,27 +7,26 @@ declare(strict_types=1);
  * Time: 8:47 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
- * Class RankingSystemService
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="rankingSystems")
+ * Trait RankingSystem
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class RankingSystem extends BaseEntity
+trait RankingSystem
 {
   use SubClassData;
   use TimestampableEntity;
@@ -70,26 +69,14 @@ class RankingSystem extends BaseEntity
    */
   private $openSyncFrom;
   /**
-   * @ORM\OneToMany(targetEntity="RankingSystemList", mappedBy="rankingSystem", indexBy="id")
-   * @var Collection|RankingSystemList[]
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingSystemListInterface", mappedBy="rankingSystem",
+   *   indexBy="id")
+   * @var Collection|RankingSystemListInterface[]
    */
   private $lists;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * TournamentRankingSystem constructor.
-   * @param string[] $keys the keys of the subclass properties
-   */
-  public function __construct(array $keys)
-  {
-    $this->initSubClassData($keys);
-    $this->generationInterval = AutomaticInstanceGeneration::OFF;
-    $this->defaultForLevel = null;
-    $this->openSyncFrom = null;
-    $this->lists = new ArrayCollection();
-    $this->hierarchyEntries = new ArrayCollection();
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
@@ -118,7 +105,7 @@ class RankingSystem extends BaseEntity
   }
 
   /**
-   * @return RankingSystemList[]|Collection
+   * @return RankingSystemListInterface[]|Collection
    */
   public function getLists(): Collection
   {
@@ -143,48 +130,56 @@ class RankingSystem extends BaseEntity
 
   /**
    * @param int|null $defaultForLevel
-   * @return $this|RankingSystem
    * @throws ValueNotValid
    */
-  public function setDefaultForLevel(?int $defaultForLevel): RankingSystem
+  public function setDefaultForLevel(?int $defaultForLevel)
   {
     if ($defaultForLevel !== null) {
       Level::ensureValidValue($defaultForLevel);
     }
     $this->defaultForLevel = $defaultForLevel;
-    return $this;
   }
 
   /**
    * @param int $generationInterval
-   * @return $this|RankingSystem
    * @throws \Tfboe\FmLib\Exceptions\ValueNotValid
    */
-  public function setGenerationInterval(int $generationInterval): RankingSystem
+  public function setGenerationInterval(int $generationInterval)
   {
     AutomaticInstanceGeneration::ensureValidValue($generationInterval);
     $this->generationInterval = $generationInterval;
-    return $this;
   }
 
   /**
    * @param \DateTime|null $openSyncFrom
-   * @return $this|RankingSystem
    */
-  public function setOpenSyncFrom(?\DateTime $openSyncFrom): RankingSystem
+  public function setOpenSyncFrom(?\DateTime $openSyncFrom)
   {
     $this->openSyncFrom = $openSyncFrom;
-    return $this;
   }
 
   /**
    * @param string $serviceName
-   * @return $this|RankingSystem
    */
-  public function setServiceName(string $serviceName): RankingSystem
+  public function setServiceName(string $serviceName)
   {
     $this->serviceName = $serviceName;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * RankingSystem init
+   * @param string[] $keys the keys of the subclass properties
+   */
+  protected final function init(array $keys)
+  {
+    $this->initSubClassData($keys);
+    $this->generationInterval = AutomaticInstanceGeneration::OFF;
+    $this->defaultForLevel = null;
+    $this->openSyncFrom = null;
+    $this->lists = new ArrayCollection();
+    $this->hierarchyEntries = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

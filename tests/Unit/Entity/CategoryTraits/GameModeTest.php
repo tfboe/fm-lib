@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
 use Tfboe\FmLib\Entity\Categories\GameMode;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class GameModeTest

@@ -11,7 +11,7 @@ use Laravel\Lumen\Testing\TestCase;
 
 /**
  * Class TestCase
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 abstract class LumenTestCase extends TestCase
 {

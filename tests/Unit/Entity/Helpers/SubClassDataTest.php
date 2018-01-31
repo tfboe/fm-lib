@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Exceptions\MethodNotExistingException;
 use Tfboe\FmLib\Exceptions\PropertyNotExistingException;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class SubClassDataTest

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
-use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
@@ -24,28 +23,29 @@ interface RankingSystemInterface
    * The earliest influence date of the given tournament for the ranking system.
    * This method must be called before a tournament changes and the result must then be used for the
    * earliest_old_influence parameter in the updateRankingForTournament method.
-   * @param RankingSystem $ranking
+   * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
    * @param TournamentInterface $tournament
    * @return \DateTime|null the earliest influence or null iff no entity above the level of this ranking has the ranking
    *                        in its rankingSystems
    */
-  public function getEarliestInfluence(RankingSystem $ranking, TournamentInterface $tournament): ?\DateTime;
+  public function getEarliestInfluence(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking,
+                                       TournamentInterface $tournament): ?\DateTime;
 
   /**
    * Updates the rankings for this tournament
-   * @param RankingSystem $ranking
+   * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
    * @param TournamentInterface $tournament
    * @param \DateTime|null $oldInfluence if the tournament changed this is the earliest influence of the
    *                       tournament before the change
    */
-  public function updateRankingForTournament(RankingSystem $ranking, TournamentInterface $tournament,
-                                             ?\DateTime $oldInfluence);
+  public function updateRankingForTournament(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking,
+                                             TournamentInterface $tournament, ?\DateTime $oldInfluence);
 
   /**
    * Updates the rankings assuming all changes happened after $from.
-   * @param RankingSystem $ranking
+   * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
    * @param \DateTime $from
    */
-  public function updateRankingFrom(RankingSystem $ranking, \DateTime $from);
+  public function updateRankingFrom(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking, \DateTime $from);
 //</editor-fold desc="Public Methods">
 }

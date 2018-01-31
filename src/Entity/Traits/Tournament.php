@@ -18,7 +18,7 @@ use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
@@ -43,8 +43,8 @@ trait Tournament
    */
   private $tournamentListId;
   /**
-   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\User")
-   * @var User
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\UserInterface")
+   * @var UserInterface
    */
   private $creator;
   /**
@@ -72,9 +72,9 @@ trait Tournament
   }
 
   /**
-   * @return User
+   * @return UserInterface
    */
-  public function getCreator(): User
+  public function getCreator(): UserInterface
   {
     return $this->creator;
   }
@@ -122,17 +122,17 @@ trait Tournament
   /**
    * Tournament constructor.
    */
-  public function init()
+  protected final function init()
   {
     $this->tournamentListId = "";
     $this->competitions = new ArrayCollection();
   }
 
   /**
-   * @param User $creator
+   * @param UserInterface $creator
    * @return TournamentInterface|Tournament
    */
-  public function setCreator(User $creator)
+  public function setCreator(UserInterface $creator)
   {
     $this->creator = $creator;
     return $this;

@@ -11,10 +11,12 @@ namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\Entity\RankingSystemChange;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
+use Tfboe\FmLib\Tests\Entity\RankingSystemChange;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -27,7 +29,7 @@ class RankingSystemChangeTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testConstructor()
@@ -37,7 +39,7 @@ class RankingSystemChangeTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
@@ -49,25 +51,25 @@ class RankingSystemChangeTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::getPlayer
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::setPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::getPlayer
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testPlayer()
   {
     $entity = $this->instance();
-    /** @var Player $player */
+    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $player = $this->createMock(Player::class);
     $entity->setPlayer($player);
     self::assertEquals($player, $entity->getPlayer());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::setPointsAfterwards
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::getPointsAfterwards
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPointsAfterwards
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::getPointsAfterwards
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    */
   public function testPointsAfterwards()
   {
@@ -78,10 +80,10 @@ class RankingSystemChangeTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::setPointsChange
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::getPointsChange
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPointsChange
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::getPointsChange
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    */
   public function testPointsChange()
   {
@@ -92,25 +94,25 @@ class RankingSystemChangeTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::setRankingSystem
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::getRankingSystem
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setRankingSystem
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::getRankingSystem
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    */
   public function testRankingSystem()
   {
     $entity = $this->instance();
-    /** @var RankingSystem $rankingSystem */
+    /** @var RankingSystemInterface $rankingSystem */
     $rankingSystem = $this->createMock(RankingSystem::class);
     $entity->setRankingSystem($rankingSystem);
     self::assertEquals($rankingSystem, $entity->getRankingSystem());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::setHierarchyEntity
-   * @covers \Tfboe\FmLib\Entity\RankingSystemChange::getHierarchyEntity
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setHierarchyEntity
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemChange::getHierarchyEntity
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemChange::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    */
   public function testTournamentHierarchyEntity()
   {
@@ -124,9 +126,9 @@ class RankingSystemChangeTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return RankingSystemChange
+   * @return RankingSystemChangeInterface
    */
-  private function instance(): RankingSystemChange
+  private function instance(): RankingSystemChangeInterface
   {
     return new RankingSystemChange([]);
   }

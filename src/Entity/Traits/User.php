@@ -7,23 +7,22 @@ declare(strict_types=1);
  * Time: 10:48 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Illuminate\Contracts\Auth\Authenticatable;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
-use Tymon\JWTAuth\Contracts\JWTSubject;
+
 
 /**
- * @ORM\Entity
- * @ORM\Table(name="users")
+ * Trait User
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class User extends BaseEntity implements Authenticatable, JWTSubject
+trait User
 {
-  use \LaravelDoctrine\ORM\Auth\Authenticatable;
+  use Authenticatable;
   use TimestampableEntity;
   use UUIDEntity;
 
@@ -49,14 +48,6 @@ class User extends BaseEntity implements Authenticatable, JWTSubject
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * User constructor.
-   */
-  public function __construct()
-  {
-    $this->jwtVersion = 1;
-    $this->confirmedAGBVersion = 0;
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
@@ -108,32 +99,37 @@ class User extends BaseEntity implements Authenticatable, JWTSubject
 
   /**
    * @param mixed $confirmedAGBVersion
-   * @return $this|User
    */
-  public function setConfirmedAGBVersion($confirmedAGBVersion): User
+  public function setConfirmedAGBVersion($confirmedAGBVersion)
   {
     $this->confirmedAGBVersion = $confirmedAGBVersion;
-    return $this;
   }
 
   /**
    * @param mixed $email
-   * @return $this|User
    */
-  public function setEmail($email): User
+  public function setEmail($email)
   {
     $this->email = $email;
-    return $this;
   }
 
   /**
    * @param mixed $jwtVersion
-   * @return $this|User
    */
-  public function setJwtVersion($jwtVersion): User
+  public function setJwtVersion($jwtVersion)
   {
     $this->jwtVersion = $jwtVersion;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * User init
+   */
+  protected final function init()
+  {
+    $this->jwtVersion = 1;
+    $this->confirmedAGBVersion = 0;
+  }
+//</editor-fold desc="Protected Final Methods">
 }

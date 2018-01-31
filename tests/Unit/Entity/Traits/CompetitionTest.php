@@ -12,12 +12,12 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use Tfboe\FmLib\Entity\Team;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Entity\Traits\Competition;
 use Tfboe\FmLib\Entity\Traits\Phase;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Team;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
@@ -46,7 +46,7 @@ class CompetitionTest extends UnitTestCase
   public function testInit()
   {
     $competition = $this->competition();
-    $competition->init();
+    self::callProtectedMethod($competition, 'init');
     self::assertInstanceOf(Collection::class, $competition->getTeams());
     self::assertInstanceOf(Collection::class, $competition->getPhases());
     self::assertEquals(0, $competition->getTeams()->count());
@@ -71,7 +71,7 @@ class CompetitionTest extends UnitTestCase
   public function testPhasesAndChildren()
   {
     $competition = $this->competition();
-    $competition->init();
+    self::callProtectedMethod($competition, 'init');
     /** @var Phase $phase */
     $phase = $this->getMockForTrait(Phase::class);
     $phase->setPhaseNumber(1);
@@ -86,12 +86,12 @@ class CompetitionTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Competition::getTeams
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Team
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team
    */
   public function testTeams()
   {
     $competition = $this->competition();
-    $competition->init();
+    self::callProtectedMethod($competition, 'init');
     $team = new Team();
     $team->setStartNumber(1);
     $competition->getTeams()->set($team->getStartNumber(), $team);

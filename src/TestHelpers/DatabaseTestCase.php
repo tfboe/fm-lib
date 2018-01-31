@@ -9,13 +9,13 @@ namespace Tfboe\FmLib\TestHelpers;
 
 use Faker\Factory;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\Team;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\PlayerInterface;
+use Tfboe\FmLib\Entity\TeamInterface;
+use Tfboe\FmLib\Entity\UserInterface;
 
 /**
  * Class DatabaseTestCase
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 abstract class DatabaseTestCase extends LumenTestCase
 {
@@ -71,13 +71,13 @@ abstract class DatabaseTestCase extends LumenTestCase
   /**
    * Creates an array of players.
    * @param int $number the number of players
-   * @return Player[] the created player array
+   * @return PlayerInterface[] the created player array
    */
   protected function createPlayers(int $number = 1): array
   {
     $result = [];
     for ($i = 0; $i < $number; $i++) {
-      $result[] = entity(Player::class)->create();
+      $result[] = entity($this->resolveEntity(PlayerInterface::class))->create();
     }
     return $result;
   }
@@ -86,14 +86,15 @@ abstract class DatabaseTestCase extends LumenTestCase
    * Creates an array of teams with ranks and start numbers
    * @param int $number the number of teams to create
    * @param int $playerPerTeam the number of players per team
-   * @return Team[] the created team array
+   * @return TeamInterface[] the created team array
    */
   protected function createTeams(int $number, $playerPerTeam = 1): array
   {
     $result = [];
     for ($i = 0; $i < $number; $i++) {
-      /** @var Team $team */
-      $team = entity(Team::class)->create(['startNumber' => $i + 1, 'rank' => $number - $i]);
+      /** @var TeamInterface $team */
+      $team = entity($this->resolveEntity(TeamInterface::class))->create(
+        ['startNumber' => $i + 1, 'rank' => $number - $i]);
       foreach ($this->createPlayers($playerPerTeam) as $player) {
         $team->getPlayers()->add($player);
       }
@@ -109,8 +110,8 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function createUser()
   {
     $password = $this->newPassword();
-    /** @var User $user */
-    $user = entity(User::class)->create(['originalPassword' => $password]);
+    /** @var UserInterface $user */
+    $user = entity($this->resolveEntity(UserInterface::class))->create(['originalPassword' => $password]);
     return [
       'password' => $password,
       'user' => $user
@@ -166,6 +167,26 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function workOnDatabaseSetUp()
   {
 
+  }
+
+  /**
+   * Resolve className according to fm-lib config
+   * @param string $className
+   * @return string
+   */
+  protected final function resolveEntity(string $className): string
+  {
+    //resolve class name according to fm-lib config
+    if (config()->has('fm-lib')) {
+      $config = config('fm-lib');
+      if (array_key_exists('entityMaps', $config)) {
+        $classMap = $config['entityMaps'];
+        if (array_key_exists($className, $classMap)) {
+          return $classMap[$className];
+        }
+      }
+    }
+    return $className;
   }
 //</editor-fold desc="Protected Methods">
 }

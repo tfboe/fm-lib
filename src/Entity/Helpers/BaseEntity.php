@@ -14,7 +14,7 @@ namespace Tfboe\FmLib\Entity\Helpers;
  * Class BaseEntity
  * @package Tfboe\FmLib\Entity\Helpers
  */
-abstract class BaseEntity
+abstract class BaseEntity implements BaseEntityInterface
 {
 
 //<editor-fold desc="Public Methods">

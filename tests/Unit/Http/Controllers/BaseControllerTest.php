@@ -14,11 +14,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
-use Tfboe\FmLib\Entity\User;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\Http\Controllers\UserController;
 use Tfboe\FmLib\TestHelpers\TestEnum;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\User;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class BaseControllerTest

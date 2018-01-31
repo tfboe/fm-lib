@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\TestHelpers\TestEnum;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class ValueNotValidTest

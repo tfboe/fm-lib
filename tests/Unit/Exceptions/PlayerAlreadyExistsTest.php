@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
-use Tfboe\FmLib\Entity\Player;
 use Tfboe\FmLib\Exceptions\PlayerAlreadyExists;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class ValueNotValidTest
@@ -34,7 +34,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::getJsonMessage
    * @uses   \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::__construct
-   * @uses   \Tfboe\FmLib\Entity\Player
+   * @uses   \Tfboe\FmLib\Entity\Traits\Player
    */
   public function testJsonMessage()
   {

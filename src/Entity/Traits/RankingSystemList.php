@@ -7,29 +7,29 @@ declare(strict_types=1);
  * Time: 10:54 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+
 
 /**
- * Class RankingSystemList
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="rankingSystemLists")
+ * Trait RankingSystemList
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class RankingSystemList extends BaseEntity
+trait RankingSystemList
 {
   use UUIDEntity;
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="RankingSystem", inversedBy="lists")
-   * @var RankingSystem
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\RankingSystemInterface", inversedBy="lists")
+   * @var RankingSystemInterface
    */
   private $rankingSystem;
   /**
@@ -44,27 +44,19 @@ class RankingSystemList extends BaseEntity
   private $lastEntryTime;
 
   /**
-   * @ORM\OneToMany(targetEntity="RankingSystemListEntry", mappedBy="rankingSystemList", indexBy="player_id")
-   * @var RankingSystemListEntry[]|Collection
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingSystemListEntryInterface", mappedBy="rankingSystemList",
+   *   indexBy="player_id")
+   * @var RankingSystemListEntryInterface[]|Collection
    */
   private $entries;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * RankingSystemList constructor.
-   */
-  public function __construct()
-  {
-    $this->lastEntryTime = new \DateTime("2000-01-01");
-    $this->current = false;
-    $this->entries = new ArrayCollection();
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return RankingSystemListEntry[]|Collection
+   * @return RankingSystemListEntryInterface[]|Collection
    */
   public function getEntries(): Collection
   {
@@ -80,9 +72,9 @@ class RankingSystemList extends BaseEntity
   }
 
   /**
-   * @return RankingSystem
+   * @return RankingSystemInterface
    */
-  public function getRankingSystem(): RankingSystem
+  public function getRankingSystem(): RankingSystemInterface
   {
     return $this->rankingSystem;
   }
@@ -97,37 +89,42 @@ class RankingSystemList extends BaseEntity
 
   /**
    * @param bool $current
-   * @return $this|RankingSystemList
    */
-  public function setCurrent(bool $current): RankingSystemList
+  public function setCurrent(bool $current)
   {
     $this->current = $current;
-    return $this;
   }
 
   /**
    * @param \DateTime $lastEntryTime
-   * @return $this|RankingSystemList
    */
-  public function setLastEntryTime(\DateTime $lastEntryTime): RankingSystemList
+  public function setLastEntryTime(\DateTime $lastEntryTime)
   {
     $this->lastEntryTime = $lastEntryTime;
-    return $this;
   }
 
   /**
-   * @param RankingSystem $rankingSystem
-   * @return $this|RankingSystemList
+   * @param RankingSystemInterface $rankingSystem
    */
-  public function setRankingSystem(RankingSystem $rankingSystem): RankingSystemList
+  public function setRankingSystem(RankingSystemInterface $rankingSystem)
   {
     if ($this->rankingSystem !== null) {
       $this->rankingSystem->getLists()->remove($this->getId());
     }
     $this->rankingSystem = $rankingSystem;
     $rankingSystem->getLists()->set($this->getId(), $this);
-
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * RankingSystemList init
+   */
+  protected final function init()
+  {
+    $this->lastEntryTime = new \DateTime("2000-01-01");
+    $this->current = false;
+    $this->entries = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

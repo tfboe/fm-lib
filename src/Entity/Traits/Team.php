@@ -7,25 +7,21 @@ declare(strict_types=1);
  * Time: 12:30 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 
+
 /**
- * Class Team
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="teams")
- *
- * Method hint for getName, since it will never throw an exception (name gets initialized empty)
- * @method string getName()
+ * Trait Team
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class Team extends BaseEntity
+trait Team
 {
   use UUIDEntity;
   use NameEntity;
@@ -33,7 +29,7 @@ class Team extends BaseEntity
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToMany(targetEntity="Player", indexBy="playerId")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="playerId")
    * @ORM\JoinTable(name="relation__team_players",
    *      joinColumns={@ORM\JoinColumn(name="team_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")}
@@ -44,7 +40,7 @@ class Team extends BaseEntity
   private $players;
 
   /**
-   * @ORM\ManyToOne(targetEntity="CompetitionInterface", inversedBy="teams")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", inversedBy="teams")
    * @var CompetitionInterface
    */
   private $competition;
@@ -63,14 +59,6 @@ class Team extends BaseEntity
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * Team constructor.
-   */
-  public function __construct()
-  {
-    $this->players = new ArrayCollection();
-    $this->name = "";
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
@@ -108,36 +96,41 @@ class Team extends BaseEntity
 
   /**
    * @param CompetitionInterface $competition
-   * @return $this|Team
    */
-  public function setCompetition(CompetitionInterface $competition): Team
+  public function setCompetition(CompetitionInterface $competition)
   {
     if ($this->competition !== null) {
       $this->competition->getTeams()->remove($this->getStartNumber());
     }
     $this->competition = $competition;
     $this->competition->getTeams()->set($this->getStartNumber(), $this);
-    return $this;
   }
 
   /**
    * @param int $rank
-   * @return $this|Team
    */
-  public function setRank(int $rank): Team
+  public function setRank(int $rank)
   {
     $this->rank = $rank;
-    return $this;
   }
 
   /**
    * @param int $startNumber
-   * @return $this|Team
    */
-  public function setStartNumber(int $startNumber): Team
+  public function setStartNumber(int $startNumber)
   {
     $this->startNumber = $startNumber;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Team init
+   */
+  protected final function init()
+  {
+    $this->players = new ArrayCollection();
+    $this->name = "";
+  }
+//</editor-fold desc="Protected Final Methods">
 }

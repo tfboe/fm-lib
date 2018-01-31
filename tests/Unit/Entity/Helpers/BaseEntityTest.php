@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class BaseEntityTest

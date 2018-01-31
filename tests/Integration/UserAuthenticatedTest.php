@@ -11,8 +11,9 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Integration;
 
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\TestHelpers\AuthenticatedTestCase;
+use Tfboe\FmLib\Tests\Entity\User;
 use Tfboe\FmLib\Tests\Helpers\ApplicationGetter;
 
 /**
@@ -26,7 +27,7 @@ class UserAuthenticatedTest extends AuthenticatedTestCase
 //<editor-fold desc="Public Methods">
   public function testInvalidateToken()
   {
-    /** @var User $user */
+    /** @var UserInterface $user */
     /** @noinspection PhpUndefinedMethodInspection */
     $user = EntityManager::find(User::class, $this->user->getId());
     $user->setJwtVersion(2);

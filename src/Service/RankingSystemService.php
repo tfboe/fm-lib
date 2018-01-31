@@ -12,7 +12,7 @@ namespace Tfboe\FmLib\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
-use Tfboe\FmLib\Entity\RankingSystem;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
@@ -62,7 +62,7 @@ class RankingSystemService implements RankingSystemServiceInterface
       }
     }
     foreach ($earliestInfluences as $arr) {
-      /** @var RankingSystem $ranking */
+      /** @var RankingSystemInterface $ranking */
       $ranking = $arr["rankingSystem"];
       $earliestInfluence = $arr["earliestInfluence"];
       if ($ranking->getOpenSyncFrom() === null || $ranking->getOpenSyncFrom() > $earliestInfluence) {
@@ -86,7 +86,7 @@ class RankingSystemService implements RankingSystemServiceInterface
       }
     }
     foreach ($earliestInfluences as $arr) {
-      /** @var RankingSystem $ranking */
+      /** @var RankingSystemInterface $ranking */
       $ranking = $arr["rankingSystem"];
       $earliestInfluence = $arr["earliestInfluence"];
       $service = $this->dsls->loadRankingSystemService($ranking->getServiceName());
@@ -121,10 +121,10 @@ class RankingSystemService implements RankingSystemServiceInterface
   {
     $query = $this->entityManager->createQueryBuilder();
     $query
-      ->from(RankingSystem::class, 's')
+      ->from(RankingSystemInterface::class, 's')
       ->select('s')
       ->where($query->expr()->isNotNull('s.openSyncFrom'));
-    /** @var RankingSystem[] $rankingSystems */
+    /** @var RankingSystemInterface[] $rankingSystems */
     $rankingSystems = $query->getQuery()->getResult();
     foreach ($rankingSystems as $rankingSystem) {
       $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
@@ -137,7 +137,7 @@ class RankingSystemService implements RankingSystemServiceInterface
 //<editor-fold desc="Private Methods">
   /**
    * @param TournamentHierarchyInterface $entity
-   * @return RankingSystem[]
+   * @return RankingSystemInterface[]
    */
   private function getRankingSystems(TournamentHierarchyInterface $entity): array
   {

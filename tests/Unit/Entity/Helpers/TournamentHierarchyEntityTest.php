@@ -12,8 +12,9 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\RankingSystem;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class BaseEntityTest
@@ -40,7 +41,7 @@ class TournamentHierarchyEntityTest extends UnitTestCase
   public function testRankingSystems()
   {
     $entity = $this->entity();
-    /** @var $system RankingSystem */
+    /** @var $system RankingSystemInterface */
     $system = $this->createStubWithId(RankingSystem::class);
     $entity->getRankingSystems()->set($system->getId(), $system);
     self::assertEquals(1, $entity->getRankingSystems()->count());

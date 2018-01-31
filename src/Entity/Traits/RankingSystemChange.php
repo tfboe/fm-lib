@@ -7,39 +7,30 @@ declare(strict_types=1);
  * Time: 10:54 PM
  */
 
-namespace Tfboe\FmLib\Entity;
+namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\PlayerInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 
 /**
- * Class RankingSystemList
- * @package Tfboe\FmLib\Entity
- * @ORM\Entity
- * @ORM\Table(name="rankingSystemChanges")
- *
- * Dynamic method hints for Elo ranking
- * @method int getPlayedGames()
- * @method setPlayedGames(int $playedGames)
- * @method int getRatedGames()
- * @method setRatedGames(int $ratedGames)
- * @method float getProvisoryRanking()
- * @method setProvisoryRanking(float $provisoryRanking)
+ * Trait RankingSystemChange
+ * @package Tfboe\FmLib\Entity\Traits
  */
-class RankingSystemChange extends BaseEntity
+trait RankingSystemChange
 {
   use UUIDEntity;
   use SubClassData;
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="RankingSystem", inversedBy="changes")
-   * @var RankingSystem
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\RankingSystemInterface", inversedBy="changes")
+   * @var RankingSystemInterface
    */
   private $rankingSystem;
 
@@ -56,9 +47,9 @@ class RankingSystemChange extends BaseEntity
   private $pointsAfterwards;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Player")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface")
    * @ORM\JoinColumn(referencedColumnName="player_id")
-   * @var Player
+   * @var PlayerInterface
    */
   private $player;
 
@@ -70,14 +61,6 @@ class RankingSystemChange extends BaseEntity
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
-  /**
-   * RankingSystemChange constructor.
-   * @param string[] $keys list of additional fields
-   */
-  public function __construct(array $keys)
-  {
-    $this->initSubClassData($keys);
-  }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
@@ -90,9 +73,9 @@ class RankingSystemChange extends BaseEntity
   }
 
   /**
-   * @return Player
+   * @return PlayerInterface
    */
-  public function getPlayer(): Player
+  public function getPlayer(): PlayerInterface
   {
     return $this->player;
   }
@@ -114,62 +97,63 @@ class RankingSystemChange extends BaseEntity
   }
 
   /**
-   * @return RankingSystem
+   * @return RankingSystemInterface
    */
-  public function getRankingSystem(): RankingSystem
+  public function getRankingSystem(): RankingSystemInterface
   {
     return $this->rankingSystem;
   }
 
   /**
    * @param TournamentHierarchyInterface $hierarchyEntity
-   * @return $this|RankingSystemChange
    */
-  public function setHierarchyEntity(TournamentHierarchyInterface $hierarchyEntity): RankingSystemChange
+  public function setHierarchyEntity(TournamentHierarchyInterface $hierarchyEntity)
   {
     $this->hierarchyEntity = $hierarchyEntity;
-    return $this;
   }
 
   /**
-   * @param Player $player
-   * @return $this|RankingSystemChange
+   * @param PlayerInterface $player
    */
-  public function setPlayer(Player $player): RankingSystemChange
+  public function setPlayer(PlayerInterface $player)
   {
     $this->player = $player;
-    return $this;
   }
 
   /**
    * @param float $pointsAfterwards
-   * @return $this|RankingSystemChange
    */
-  public function setPointsAfterwards(float $pointsAfterwards): RankingSystemChange
+  public function setPointsAfterwards(float $pointsAfterwards)
   {
     $this->pointsAfterwards = $pointsAfterwards;
-    return $this;
   }
 
   /**
    * @param float $pointsChange
-   * @return $this|RankingSystemChange
    */
-  public function setPointsChange(float $pointsChange): RankingSystemChange
+  public function setPointsChange(float $pointsChange)
   {
     $this->pointsChange = $pointsChange;
-    return $this;
   }
 
   /**
-   * @param RankingSystem $rankingSystem
-   * @return $this|RankingSystemChange
+   * @param RankingSystemInterface $rankingSystem
    */
-  public function setRankingSystem(RankingSystem $rankingSystem): RankingSystemChange
+  public function setRankingSystem(RankingSystemInterface $rankingSystem)
   {
     $this->rankingSystem = $rankingSystem;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * RankingSystemChange init
+   * @param string[] $keys list of additional fields
+   */
+  protected final function init(array $keys)
+  {
+    $this->initSubClassData($keys);
+  }
+//</editor-fold desc="Protected Final Methods">
 
 }

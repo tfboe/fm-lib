@@ -13,11 +13,11 @@ namespace Tfboe\FmLib\TestHelpers;
 use Doctrine\DBAL\Connection;
 use Illuminate\Support\Facades\Auth;
 use LaravelDoctrine\ORM\Facades\EntityManager;
-use Tfboe\FmLib\Entity\User;
+use Tfboe\FmLib\Entity\UserInterface;
 
 /**
  * Class AuthenticatedTestCase
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 abstract class AuthenticatedTestCase extends DatabaseTestCase
 {
@@ -30,7 +30,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
   /**
    * User corresponding to authentication token if logged in
-   * @var \Tfboe\FmLib\Entity\User
+   * @var UserInterface
    */
   protected $user;
 //</editor-fold desc="Fields">
@@ -61,12 +61,12 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     $this->clearUsers();
     parent::workOnDatabaseSetUp();
     $password = $this->newPassword();
-    $this->user = entity(User::class)->create(['originalPassword' => $password]);
+    $this->user = entity($this->resolveEntity(UserInterface::class))->create(['originalPassword' => $password]);
     /** @noinspection PhpUnhandledExceptionInspection */
     $this->token = Auth::attempt(['email' => $this->user->getEmail(), 'password' => $password]);
     $this->refreshApplication();
     /** @noinspection PhpUndefinedMethodInspection */
-    $this->user = EntityManager::find(User::class, $this->user->getId());
+    $this->user = EntityManager::find(UserInterface::class, $this->user->getId());
   }
 //</editor-fold desc="Protected Methods">
 

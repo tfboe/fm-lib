@@ -14,9 +14,9 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Entity\User;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\User;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
 abstract class Tournament extends TournamentHierarchyEntity implements TournamentInterface
@@ -45,7 +45,7 @@ class TournamentTest extends UnitTestCase
   public function testCompetitionsAndChildren()
   {
     $tournament = $this->tournament();
-    $tournament->init();
+    self::callProtectedMethod($tournament, 'init');
     $competition = $this->createStub(CompetitionInterface::class, ['getName' => 'comp name']);
     self::assertEquals($tournament->getCompetitions(), $tournament->getChildren());
     /** @var CompetitionInterface $competition */
@@ -64,7 +64,7 @@ class TournamentTest extends UnitTestCase
   public function testConstructor()
   {
     $tournament = $this->tournament();
-    $tournament->init();
+    self::callProtectedMethod($tournament, 'init');
     self::assertInstanceOf(ArrayCollection::class, $tournament->getCompetitions());
     self::assertEquals(0, $tournament->getCompetitions()->count());
     self::assertEquals("", $tournament->getTournamentListId());
@@ -73,7 +73,7 @@ class TournamentTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setCreator
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getCreator
-   * @uses   \Tfboe\FmLib\Entity\User::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testCreator()

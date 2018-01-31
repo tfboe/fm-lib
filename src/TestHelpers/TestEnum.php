@@ -14,7 +14,7 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 
 /**
  * Class TestEnum
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 abstract class TestEnum extends BasicEnum
 {

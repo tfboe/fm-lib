@@ -14,10 +14,10 @@ use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\Ranking;
 use Tfboe\FmLib\Entity\Traits\Match;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Ranking;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
@@ -36,7 +36,7 @@ class MatchTest extends UnitTestCase
   public function testGamesAndChildren()
   {
     $match = $this->match();
-    $match->init();
+    self::callProtectedMethod($match, 'init');
     $game = $this->createMock(GameInterface::class);
     $game->method('getGameNumber')->willReturn(1);
     /** @var GameInterface $game */
@@ -57,7 +57,7 @@ class MatchTest extends UnitTestCase
   public function testInit()
   {
     $match = $this->match();
-    $match->init();
+    self::callProtectedMethod($match, 'init');
     self::assertInstanceOf(Collection::class, $match->getRankingsA());
     self::assertInstanceOf(Collection::class, $match->getRankingsB());
     self::assertInstanceOf(Collection::class, $match->getGames());
@@ -120,13 +120,13 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
-   * @uses   \Tfboe\FmLib\Entity\Ranking
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    */
   public function testRankingsA()
   {
     $match = $this->match();
-    $match->init();
+    self::callProtectedMethod($match, 'init');
     $ranking = new Ranking();
     $ranking->setUniqueRank(1);
     $match->getRankingsA()->set($ranking->getUniqueRank(), $ranking);
@@ -136,13 +136,13 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
-   * @uses   \Tfboe\FmLib\Entity\Ranking
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    */
   public function testRankingsB()
   {
     $match = $this->match();
-    $match->init();
+    self::callProtectedMethod($match, 'init');
     $ranking = new Ranking();
     $ranking->setUniqueRank(1);
     $match->getRankingsB()->set($ranking->getUniqueRank(), $ranking);

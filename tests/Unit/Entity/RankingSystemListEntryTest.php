@@ -10,10 +10,11 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
 
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\Entity\RankingSystemList;
-use Tfboe\FmLib\Entity\RankingSystemListEntry;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Entity\RankingSystemList;
+use Tfboe\FmLib\Tests\Entity\RankingSystemListEntry;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
@@ -26,7 +27,7 @@ class RankingSystemListEntryTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testConstructor()
@@ -36,7 +37,7 @@ class RankingSystemListEntryTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
@@ -48,10 +49,10 @@ class RankingSystemListEntryTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::setNumberRankedEntities
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::getNumberRankedEntities
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setNumberRankedEntities
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getNumberRankedEntities
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
    */
   public function testNumberOfRankedEntities()
   {
@@ -62,25 +63,25 @@ class RankingSystemListEntryTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::getPlayer
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::setPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testPlayer()
   {
     $entity = $this->instance();
-    /** @var Player $player */
+    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $player = $this->createMock(Player::class);
     $entity->setPlayer($player);
     self::assertEquals($player, $entity->getPlayer());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::setPoints
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::getPoints
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPoints
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPoints
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
    */
   public function testPoints()
   {
@@ -91,13 +92,13 @@ class RankingSystemListEntryTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::setRankingSystemList
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::getRankingSystemList
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemList
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getRankingSystemList
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::getPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::setPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    */
   public function testRankingSystemList()
   {
@@ -105,7 +106,7 @@ class RankingSystemListEntryTest extends UnitTestCase
     $rankingSystemList = new RankingSystemList();
     $player = $this->createMock(Player::class);
     $player->method('getPlayerId')->willReturn(5);
-    /** @var Player $player */
+    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $entity->setPlayer($player);
 
     $entity->setRankingSystemList($rankingSystemList);
@@ -115,13 +116,13 @@ class RankingSystemListEntryTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::setRankingSystemList
-   * @covers \Tfboe\FmLib\Entity\RankingSystemListEntry::getRankingSystemList
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemList
+   * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getRankingSystemList
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::__construct
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::getPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemListEntry::setPlayer
-   * @uses   \Tfboe\FmLib\Entity\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    */
   public function testRankingSystemListRemoveFromOld()
   {
@@ -146,9 +147,9 @@ class RankingSystemListEntryTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return RankingSystemListEntry
+   * @return RankingSystemListEntryInterface
    */
-  private function instance(): RankingSystemListEntry
+  private function instance(): RankingSystemListEntryInterface
   {
     return new RankingSystemListEntry([]);
   }

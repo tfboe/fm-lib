@@ -14,7 +14,7 @@ use Tfboe\FmLib\Helpers\Logging;
 
 /**
  * Trait OnlyTestLogging
- * @package Tests\Helpers
+ * @package Tfboe\FmLib\TestHelpers
  */
 trait OnlyTestLogging
 {

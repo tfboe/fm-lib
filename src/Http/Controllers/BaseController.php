@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Http\Controllers;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 
 /**
  * Class Controllers
@@ -88,12 +88,12 @@ abstract class BaseController extends Controller
 
   /**
    * Fills an object with the information of inputArray
-   * @param BaseEntity $object the object to fill
+   * @param BaseEntityInterface $object the object to fill
    * @param array $specification the specification how to fill the object
    * @param array $inputArray the input array
    * @return mixed the object
    */
-  protected function setFromSpecification(BaseEntity $object, array $specification, array $inputArray)
+  protected function setFromSpecification(BaseEntityInterface $object, array $specification, array $inputArray)
   {
     foreach ($specification as $key => $values) {
       if (!array_key_exists('ignore', $values) || $values['ignore'] != true) {

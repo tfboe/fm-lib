@@ -9,8 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity;
 
-use Tfboe\FmLib\Entity\Player;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class PlayerTest
@@ -20,8 +20,8 @@ class PlayerTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Player::setBirthday
-   * @covers \Tfboe\FmLib\Entity\Player::getBirthday
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::setBirthday
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::getBirthday
    */
   public function testBirthday()
   {
@@ -31,8 +31,8 @@ class PlayerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Player::setFirstName
-   * @covers \Tfboe\FmLib\Entity\Player::getFirstName
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::setFirstName
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::getFirstName
    */
   public function testFirstName()
   {
@@ -42,7 +42,7 @@ class PlayerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Player::getPlayerId
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::getPlayerId
    */
   public function testId()
   {
@@ -54,8 +54,8 @@ class PlayerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Player::setLastName
-   * @covers \Tfboe\FmLib\Entity\Player::getLastName
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::setLastName
+   * @covers \Tfboe\FmLib\Entity\Traits\Player::getLastName
    */
   public function testLastName()
   {
@@ -67,7 +67,7 @@ class PlayerTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Player a new player
+   * @return \Tfboe\FmLib\Tests\Entity\Player a new player
    */
   private function player(): Player
   {

@@ -12,12 +12,13 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Tfboe\FmLib\Entity\RankingSystem;
 use Tfboe\FmLib\Helpers\Level;
+use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\TestHelpers\UnitTestCase;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class GameRankingSystemTest
@@ -37,7 +38,7 @@ class GameRankingSystemTest extends UnitTestCase
     $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '', false);
     $system = $this->getMockForAbstractClass(GameRankingSystemService::class, [$entityManager,
       $this->createMock(TimeServiceInterface::class),
-      $this->createMock(EntityComparerInterface::class)]);
+      $this->createMock(EntityComparerInterface::class), $this->createMock(ObjectCreatorServiceInterface::class)]);
     $rankingSystem = $this->createMock(RankingSystem::class);
     $rankingSystem->method('getId')->willReturn('ranking-system-id');
     /** @var QueryBuilder $builder */
@@ -77,7 +78,7 @@ class GameRankingSystemTest extends UnitTestCase
     $system = $this->getMockForAbstractClass(GameRankingSystemService::class,
       [$this->createMock(EntityManagerInterface::class),
         $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class)]);
+        $this->createMock(EntityComparerInterface::class), $this->createMock(ObjectCreatorServiceInterface::class)]);
     self::assertEquals(Level::GAME, self::callProtectedMethod($system, "getLevel"));
   }
 //</editor-fold desc="Public Methods">

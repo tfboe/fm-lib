@@ -22,6 +22,8 @@ use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
+use Tfboe\FmLib\Service\ObjectCreatorService;
+use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EloRankingInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
@@ -88,10 +90,15 @@ class FmLibServiceProvider extends ServiceProvider
         $app->make(EntityManagerInterface::class));
     });
 
+    $this->app->singleton(ObjectCreatorServiceInterface::class, function () {
+      return new ObjectCreatorService();
+    });
+
     $this->app->singleton(EloRankingInterface::class, function (Container $app) {
       $timeService = new RecursiveEndStartTimeService();
       $entityComparer = new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService);
-      return new EloRanking($app->make(EntityManagerInterface::class), $timeService, $entityComparer);
+      return new EloRanking($app->make(EntityManagerInterface::class), $timeService, $entityComparer,
+        $app->make(ObjectCreatorServiceInterface::class));
     });
   }
 //</editor-fold desc="Public Methods">
