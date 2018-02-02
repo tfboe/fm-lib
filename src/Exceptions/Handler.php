@@ -60,7 +60,7 @@ class Handler extends ExceptionHandler
       return $exception->getResponse()->getStatusCode();
     }
     return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() :
-      ($exception->getCode() != 0 ? $exception->getCode() : 500);
+      ($exception->getCode() > 0 ? $exception->getCode() : 500);
   }
 
   /**
