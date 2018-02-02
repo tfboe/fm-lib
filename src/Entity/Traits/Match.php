@@ -39,14 +39,14 @@ trait Match
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
    * @ORM\JoinTable(name="relation__match_rankingA")
-   * @var Collection|RankingInterface
+   * @var Collection|RankingInterface[]
    */
   private $rankingsA;
 
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
    * @ORM\JoinTable(name="relation__match_rankingB")
-   * @var Collection|RankingInterface
+   * @var Collection|RankingInterface[]
    */
   private $rankingsB;
 
@@ -121,7 +121,7 @@ trait Match
   }
 
   /**
-   * @return RankingInterface|Collection
+   * @return RankingInterface[]|Collection
    */
   public function getRankingsA()
   {
@@ -129,7 +129,7 @@ trait Match
   }
 
   /**
-   * @return RankingInterface|Collection
+   * @return RankingInterface[]|Collection
    */
   public function getRankingsB()
   {
