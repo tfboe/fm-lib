@@ -31,11 +31,6 @@ trait Tournament
   use NameEntity;
 
 //<editor-fold desc="Fields">
-  /**
-   * @ORM\Column(type="string")
-   * @var string
-   */
-  private $userIdentifier;
 
   /**
    * @ORM\Column(type="string")
@@ -112,14 +107,6 @@ trait Tournament
   }
 
   /**
-   * @return string
-   */
-  public function getUserIdentifier(): string
-  {
-    return $this->userIdentifier;
-  }
-
-  /**
    * Tournament constructor.
    */
   protected final function init()
@@ -145,16 +132,6 @@ trait Tournament
   public function setTournamentListId(string $tournamentListId)
   {
     $this->tournamentListId = $tournamentListId;
-    return $this;
-  }
-
-  /**
-   * @param string $userIdentifier
-   * @return TournamentInterface|Tournament
-   */
-  public function setUserIdentifier(string $userIdentifier)
-  {
-    $this->userIdentifier = $userIdentifier;
     return $this;
   }
 //</editor-fold desc="Public Methods">

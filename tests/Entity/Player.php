@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use Tfboe\FmLib\Entity\Helpers\NumericalPlayerId;
 use Tfboe\FmLib\Entity\PlayerInterface;
 
 /**
@@ -24,5 +25,6 @@ use Tfboe\FmLib\Entity\PlayerInterface;
 class Player extends BaseEntity implements PlayerInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Player;
+  use NumericalPlayerId;
 //</editor-fold desc="Public Methods">
 }

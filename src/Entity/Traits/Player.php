@@ -23,13 +23,6 @@ trait Player
   use TimestampableEntity;
 
 //<editor-fold desc="Fields">
-  /**
-   * @ORM\Id
-   * @ORM\GeneratedValue
-   * @ORM\Column(type="integer")
-   * @var int
-   */
-  private $playerId;
 
   /**
    * @ORM\Column(type="string", nullable=false)
@@ -73,14 +66,6 @@ trait Player
   public function getLastName(): string
   {
     return $this->lastName;
-  }
-
-  /**
-   * @return int
-   */
-  public function getPlayerId(): int
-  {
-    return $this->playerId;
   }
 
   /**

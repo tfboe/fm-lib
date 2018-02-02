@@ -42,18 +42,6 @@ class PlayerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Player::getPlayerId
-   */
-  public function testId()
-  {
-    $player = $this->player();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $idProperty = self::getProperty(Player::class, 'playerId');
-    $idProperty->setValue($player, 0);
-    self::assertEquals(0, $player->getPlayerId());
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Entity\Traits\Player::setLastName
    * @covers \Tfboe\FmLib\Entity\Traits\Player::getLastName
    */

@@ -126,18 +126,6 @@ class TournamentTest extends UnitTestCase
     $tournament->setTournamentListId("Changed");
     self::assertEquals("Changed", $tournament->getTournamentListId());
   }
-
-  /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setUserIdentifier
-   * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getUserIdentifier
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   */
-  public function testUserIdentifier()
-  {
-    $tournament = $this->tournament();
-    $tournament->setUserIdentifier("UserIdentifier");
-    self::assertEquals("UserIdentifier", $tournament->getUserIdentifier());
-  }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">

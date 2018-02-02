@@ -40,7 +40,6 @@ class DBPersistenceTest extends DatabaseTestCase
   public function testDatetimeWithTimezone()
   {
     $tournament = new Tournament();
-    $tournament->setUserIdentifier("test");
     $tournament->setName("TestTournament");
     $startTime = new \DateTime("2017-12-31 15:23:20 +02:00");
     $endTime = new \DateTime("2017-12-31 16:23:20 +03:00");

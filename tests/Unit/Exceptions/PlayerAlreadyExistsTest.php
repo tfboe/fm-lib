@@ -34,6 +34,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::getJsonMessage
    * @uses   \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NumericalPlayerId::getPlayerId
    * @uses   \Tfboe\FmLib\Entity\Traits\Player
    */
   public function testJsonMessage()

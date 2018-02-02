@@ -38,11 +38,6 @@ interface TournamentInterface extends TournamentHierarchyInterface, Timestampabl
   public function getTournamentListId(): string;
 
   /**
-   * @return string
-   */
-  public function getUserIdentifier(): string;
-
-  /**
    * Checks if the given method exists
    * @param string $method the method to search
    * @return bool true if it exists and false otherwise
@@ -60,11 +55,5 @@ interface TournamentInterface extends TournamentHierarchyInterface, Timestampabl
    * @return $this|TournamentInterface
    */
   public function setTournamentListId(string $tournamentListId);
-
-  /**
-   * @param string $userIdentifier
-   * @return $this|TournamentInterface
-   */
-  public function setUserIdentifier(string $userIdentifier);
 //</editor-fold desc="Public Methods">
 }
