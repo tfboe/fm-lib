@@ -56,7 +56,7 @@ trait Phase
   private $postQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", mappedBy="group", indexBy="uniqueRank")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", mappedBy="phase", indexBy="uniqueRank")
    * @var Collection|RankingInterface[]
    */
   private $rankings;
