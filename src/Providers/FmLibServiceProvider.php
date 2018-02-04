@@ -49,7 +49,9 @@ class FmLibServiceProvider extends ServiceProvider
   {
     app()->configure('fm-lib');
 
-    Validator::extend('IntegerType', function ($attribute, $value, $parameters, $validator) {
+    /** @noinspection PhpUndefinedMethodInspection */
+    Validator::extend('IntegerType', function (/** @noinspection PhpUnusedParameterInspection */
+      $attribute, $value, $parameters, $validator) {
       return is_int($value);
     }, 'The :attribute must be an integer.');
 
