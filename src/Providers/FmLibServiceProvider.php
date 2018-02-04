@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\ServiceProvider;
 use Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider;
 use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
@@ -47,6 +48,10 @@ class FmLibServiceProvider extends ServiceProvider
   public function boot()
   {
     app()->configure('fm-lib');
+
+    Validator::extend('IntegerType', function ($attribute, $value, $parameters, $validator) {
+      return is_int($value);
+    }, 'The :attribute must be an integer.');
 
     include __DIR__ . '/../routes.php';
   }

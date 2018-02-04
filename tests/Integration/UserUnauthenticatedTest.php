@@ -235,6 +235,17 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     self::assertEquals(5, $user->getConfirmedAGBVersion());
   }
 
+  public function testRegistrationWithStringAsLastConfirmedAGBVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedAGBVersion' => "5"
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
+      ["confirmedAGBVersion" => ["The confirmed a g b version must be an integer."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
+
   public function testTooShortPassword()
   {
     $this->json('POST', '/register', [

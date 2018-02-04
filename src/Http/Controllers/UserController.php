@@ -82,7 +82,7 @@ class UserController extends BaseController
     $specification = [];
     $specification['user'] = $this->getCredentialSpecification($app);
     $specification['user']['email']['validation'] .= '|unique:' . $userClass . ',email';
-    $specification['user']['confirmedAGBVersion'] = ['validation' => 'integer|min:0'];
+    $specification['user']['confirmedAGBVersion'] = ['validation' => 'integer-type|integer|min:0'];
 
     $this->addAdditionalRegisterSpecifications($specification);
 
