@@ -95,6 +95,18 @@ class HandlerTest extends UnitTestCase
     /** @var JsonResponse $res */
     self::assertEquals(['status' => 409, 'message' => 'Some players do already exist',
       'name' => 'PlayerAlreadyExistsException', 'players' => []], $res->getData(true));
+
+    // test trace in debug mode
+
+    $exception = new PlayerAlreadyExists([]);
+    $res = $handler->render($this->request(), $exception, true);
+    self::assertInstanceOf(JsonResponse::class, $res);
+    /** @var JsonResponse $res */
+    $data = $res->getData(true);
+    self::assertArraySubset(['status' => 409, 'message' => 'Some players do already exist',
+      'name' => 'PlayerAlreadyExistsException', 'players' => []], $data);
+    self::assertArrayHasKey('trace', $data);
+    self::assertNotEmpty($data['trace']);
   }
 
   /**
