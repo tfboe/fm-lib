@@ -119,7 +119,7 @@ class Handler extends ExceptionHandler
 
     if ($printTrace || env('APP_DEBUG') === true) {
       //attach trace back
-      $result['trace'] = $exception->getTrace();
+      $result['trace'] = $exception->getTraceAsString();
     }
 
     return $result;
