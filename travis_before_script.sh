@@ -50,7 +50,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp ../${directory}/.env.test .env
     composer config repositories.fm-lib vcs ${REPOSITORY_LOCATION}
     composer require ${LIB_NAME} --prefer-dist
-    composer require phpunit/phpcov:^4.0 --prefer-dist
+    composer require phpunit/phpcov:^5.0 --prefer-dist
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\
 '/$app->register(Tfboe\\FmLib\\Providers\\FmLibServiceProvider::class);/g' bootstrap/app.php
