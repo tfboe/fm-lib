@@ -25,11 +25,13 @@ trait TeamMembership
 //<editor-fold desc="Fields">
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", inversedBy="memberships")
+   * @ORM\JoinColumn(name="team_id", referencedColumnName="id", nullable=false)
    * @var TeamInterface
    */
   private $team;
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface")
+   * @ORM\JoinColumn(name="player_id", referencedColumnName="id", nullable=false)
    * @var PlayerInterface
    */
   private $player;
