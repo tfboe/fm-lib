@@ -11,6 +11,7 @@ use Faker\Factory;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
+use Tfboe\FmLib\Entity\TeamMembershipInterface;
 use Tfboe\FmLib\Entity\UserInterface;
 
 /**
@@ -96,7 +97,10 @@ abstract class DatabaseTestCase extends LumenTestCase
       $team = entity($this->resolveEntity(TeamInterface::class))->create(
         ['startNumber' => $i + 1, 'rank' => $number - $i]);
       foreach ($this->createPlayers($playerPerTeam) as $player) {
-        $team->getPlayers()->add($player);
+        /** @var TeamMembershipInterface $teamMembership */
+        $teamMembership = entity($this->resolveEntity(TeamMembershipInterface::class))->create(
+          ['team' => $team, 'player' => $player]);
+        $team->getMemberships()->set($teamMembership->getId(), $teamMembership);
       }
       $result[] = $team;
     }

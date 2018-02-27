@@ -15,6 +15,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
+use Tfboe\FmLib\Entity\TeamMembershipInterface;
 
 
 /**
@@ -27,17 +28,19 @@ trait Team
   use NameEntity;
 
 //<editor-fold desc="Fields">
+  /**
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\TeamMembershipInterface", mappedBy="team", indexBy="id")
+   * @var Collection|TeamMembershipInterface[]
+   */
+  private $memberships;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
-   * @ORM\JoinTable(name="relation__team_players",
-   *      joinColumns={@ORM\JoinColumn(name="team_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="id")}
-   *      )
-   *
-   * @var Collection|Player[]
+   * @return Collection|TeamMembershipInterface[]
    */
-  private $players;
+  public function getMemberships(): Collection
+  {
+    return $this->memberships;
+  }
 
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", inversedBy="teams")
@@ -68,14 +71,6 @@ trait Team
   public function getCompetition(): CompetitionInterface
   {
     return $this->competition;
-  }
-
-  /**
-   * @return Player[]|Collection
-   */
-  public function getPlayers()
-  {
-    return $this->players;
   }
 
   /**
@@ -129,7 +124,7 @@ trait Team
    */
   protected final function init()
   {
-    $this->players = new ArrayCollection();
+    $this->memberships = new ArrayCollection();
     $this->name = "";
   }
 //</editor-fold desc="Protected Final Methods">

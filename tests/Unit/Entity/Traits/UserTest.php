@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 1:11 PM
  */
 
-namespace Tfboe\FmLib\Tests\Unit\Entity;
+namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Tests\Entity\User;

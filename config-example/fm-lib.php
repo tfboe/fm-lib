@@ -17,5 +17,6 @@ return [
     'Tfboe\\FmLib\\Entity\\TeamInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Team',
     'Tfboe\\FmLib\\Entity\\TournamentInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Tournament',
     'Tfboe\\FmLib\\Entity\\UserInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\User',
+    'Tfboe\\FmLib\\Entity\\TeamMembershipInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\TeamMembership',
   ]
 ];

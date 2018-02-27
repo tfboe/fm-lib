@@ -7,7 +7,7 @@ declare(strict_types=1);
  * Time: 10:39 AM
  */
 
-namespace Tfboe\FmLib\Tests\Unit\Entity;
+namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;

@@ -7,13 +7,13 @@ declare(strict_types=1);
  * Time: 1:11 PM
  */
 
-namespace Tfboe\FmLib\Tests\Unit\Entity;
+namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
-use Tfboe\FmLib\Tests\Entity\Player;
+use Tfboe\FmLib\Entity\TeamMembershipInterface;
 use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -56,29 +56,29 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
-   * @uses   \Tfboe\FmLib\Entity\Traits\Team::getPlayers
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::getMemberships
    */
   public function testConstructor()
   {
     $team = $this->team();
     self::assertInstanceOf(Team::class, $team);
-    self::assertInstanceOf(Collection::class, $team->getPlayers());
-    self::assertEquals(0, $team->getPlayers()->count());
+    self::assertInstanceOf(Collection::class, $team->getMemberships());
+    self::assertEquals(0, $team->getMemberships()->count());
     self::assertEquals("", $team->getName());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Team::getPlayers
+   * @covers \Tfboe\FmLib\Entity\Traits\Team::getMemberships
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testPlayers()
   {
     $team = $this->team();
-    /** @var Player $player */
-    $player = $this->createStubWithId(Player::class, 1, 'getId');
-    $team->getPlayers()->set($player->getId(), $player);
-    self::assertEquals(1, $team->getPlayers()->count());
-    self::assertEquals($player, $team->getPlayers()[$player->getId()]);
+    /** @var TeamMembershipInterface $membership */
+    $membership = $this->createStubWithId(TeamMembershipInterface::class, 1, 'getId');
+    $team->getMemberships()->set($membership->getId(), $membership);
+    self::assertEquals(1, $team->getMemberships()->count());
+    self::assertEquals($membership, $team->getMemberships()[$membership->getId()]);
   }
 
   /**

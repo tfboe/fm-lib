@@ -28,9 +28,9 @@ interface TeamInterface extends BaseEntityInterface, UUIDEntityInterface, NameEn
   public function getCompetition(): CompetitionInterface;
 
   /**
-   * @return PlayerInterface[]|Collection
+   * @return Collection|TeamMembershipInterface[]
    */
-  public function getPlayers();
+  public function getMemberships(): Collection;
 
   /**
    * @return int
