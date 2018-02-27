@@ -240,7 +240,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   {
     $key1 = $entity->getId();
     $key2 = $ranking->getId();
-    $key3 = $player->getPlayerId();
+    $key3 = $player->getId();
     if (!array_key_exists($key1, $this->changes) || !array_key_exists($key2, $this->changes[$key1]) ||
       !array_key_exists($key3, $this->changes[$key1][$key2])) {
       /** @var RankingSystemChangeInterface[] $changes */
@@ -250,7 +250,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       foreach ($changes as $change) {
 
         $newKey2 = $change->getRankingSystem()->getId();
-        $newKey3 = $change->getPlayer()->getPlayerId();
+        $newKey3 = $change->getPlayer()->getId();
         if (!array_key_exists($key1, $this->deletedChanges) || !array_key_exists($key2, $this->deletedChanges[$key1]) ||
           !array_key_exists($key3, $this->deletedChanges[$key1][$key2])) {
           if (!array_key_exists($newKey2, $this->changes)) {
@@ -292,7 +292,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   protected final function getOrCreateRankingSystemListEntry(RankingSystemListInterface $list,
                                                              PlayerInterface $player): RankingSystemListEntryInterface
   {
-    $playerId = $player->getPlayerId();
+    $playerId = $player->getId();
     if (!$list->getEntries()->containsKey($playerId)) {
       /** @var RankingSystemListEntryInterface $entry */
       $entry = $this->objectCreatorService->createObjectFromInterface(RankingSystemListEntryInterface::class,
@@ -372,7 +372,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     $clonedPlayers = [];
 
     foreach ($base->getEntries() as $entry) {
-      $playerId = $entry->getPlayer()->getPlayerId();
+      $playerId = $entry->getPlayer()->getId();
       $clonedPlayers[$playerId] = true;
       if (!$list->getEntries()->containsKey($playerId)) {
         //create new entry
@@ -417,7 +417,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       ->getQuery()->getResult();
     foreach ($changes as $change) {
       $this->deletedChanges[$change->getHierarchyEntity()->getId()][$ranking
-        ->getId()][$change->getPlayer()->getPlayerId()] = $change;
+        ->getId()][$change->getPlayer()->getId()] = $change;
       $this->entityManager->remove($change);
     }
   }

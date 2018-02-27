@@ -121,10 +121,10 @@ class GameTest extends UnitTestCase
     $game = $this->game();
     self::callProtectedMethod($game, 'init');
     /** @var Player $player */
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
-    $game->getPlayersA()->set($player->getPlayerId(), $player);
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
+    $game->getPlayersA()->set($player->getId(), $player);
     self::assertEquals(1, $game->getPlayersA()->count());
-    self::assertEquals($player, $game->getPlayersA()[$player->getPlayerId()]);
+    self::assertEquals($player, $game->getPlayersA()[$player->getId()]);
   }
 
   /**
@@ -137,10 +137,10 @@ class GameTest extends UnitTestCase
     $game = $this->game();
     self::callProtectedMethod($game, 'init');
     /** @var Player $player */
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
-    $game->getPlayersB()->set($player->getPlayerId(), $player);
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
+    $game->getPlayersB()->set($player->getId(), $player);
     self::assertEquals(1, $game->getPlayersB()->count());
-    self::assertEquals($player, $game->getPlayersB()[$player->getPlayerId()]);
+    self::assertEquals($player, $game->getPlayersB()[$player->getId()]);
   }
 //</editor-fold desc="Public Methods">
 

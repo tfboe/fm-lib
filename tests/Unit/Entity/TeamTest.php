@@ -75,10 +75,10 @@ class TeamTest extends UnitTestCase
   {
     $team = $this->team();
     /** @var Player $player */
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
-    $team->getPlayers()->set($player->getPlayerId(), $player);
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
+    $team->getPlayers()->set($player->getId(), $player);
     self::assertEquals(1, $team->getPlayers()->count());
-    self::assertEquals($player, $team->getPlayers()[$player->getPlayerId()]);
+    self::assertEquals($player, $team->getPlayers()[$player->getId()]);
   }
 
   /**

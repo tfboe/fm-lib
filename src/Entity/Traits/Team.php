@@ -29,10 +29,10 @@ trait Team
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="playerId")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__team_players",
    *      joinColumns={@ORM\JoinColumn(name="team_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")}
+   *      inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")}
    *      )
    *
    * @var Collection|Player[]

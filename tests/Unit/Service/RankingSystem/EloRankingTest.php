@@ -185,7 +185,7 @@ class EloRankingTest extends UnitTestCase
     $playersAArray = [];
     $playersBArray = [];
     for ($i = 0; $i < count($playerInfos); $i++) {
-      $players[$i] = $this->createStub(Player::class, ['getPlayerId' => $i]);
+      $players[$i] = $this->createStub(Player::class, ['getId' => $i]);
       if ($i < count($playerInfos) / 2) {
         $playersAArray[] = $players[$i];
       } else {

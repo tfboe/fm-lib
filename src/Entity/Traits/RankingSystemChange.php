@@ -48,7 +48,7 @@ trait RankingSystemChange
 
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface")
-   * @ORM\JoinColumn(referencedColumnName="player_id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    * @var PlayerInterface
    */
   private $player;

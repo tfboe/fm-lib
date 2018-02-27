@@ -47,7 +47,7 @@ class PlayerAlreadyExists extends AbstractException
         return [
           "firstName" => $player->getFirstName(),
           "lastName" => $player->getLastName(),
-          "id" => $player->getPlayerId(),
+          "id" => $player->getId(),
           "birthday" => $player->getBirthday()->format("Y-m-d")];
       }, $this->players)
     ];

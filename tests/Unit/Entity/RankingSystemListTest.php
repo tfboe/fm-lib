@@ -69,12 +69,12 @@ class RankingSystemListTest extends UnitTestCase
   {
     $entity = $this->instance();
     $entity2 = $this->createMock(RankingSystemListEntry::class);
-    $player = $this->createStubWithId(Player::class, 5, 'getPlayerId');
+    $player = $this->createStubWithId(Player::class, 5, 'getId');
     /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $entity2->method('getPlayer')->willReturn($player);
-    $entity->getEntries()->set($player->getPlayerId(), $entity2);
+    $entity->getEntries()->set($player->getId(), $entity2);
     self::assertEquals(1, $entity->getEntries()->count());
-    self::assertEquals($entity2, $entity->getEntries()[$player->getPlayerId()]);
+    self::assertEquals($entity2, $entity->getEntries()[$player->getId()]);
   }
 
   /**

@@ -105,7 +105,7 @@ class RankingSystemListEntryTest extends UnitTestCase
     $entity = $this->instance();
     $rankingSystemList = new RankingSystemList();
     $player = $this->createMock(Player::class);
-    $player->method('getPlayerId')->willReturn(5);
+    $player->method('getId')->willReturn(5);
     /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
     $entity->setPlayer($player);
 
@@ -129,7 +129,7 @@ class RankingSystemListEntryTest extends UnitTestCase
     $entity = $this->instance();
     $rankingSystemList = new RankingSystemList();
     $player = $this->createMock(Player::class);
-    $player->method('getPlayerId')->willReturn(5);
+    $player->method('getId')->willReturn(5);
     /** @var Player $player */
     $entity->setPlayer($player);
 

@@ -11,10 +11,10 @@ namespace Tfboe\FmLib\Entity\Helpers;
 
 
 /**
- * Trait NumericalPlayerId
+ * Trait NumericalId
  * @package Tfboe\FmLib\Entity\Helpers
  */
-trait NumericalPlayerId
+trait NumericalId
 {
 //<editor-fold desc="Fields">
   /**
@@ -23,16 +23,16 @@ trait NumericalPlayerId
    * @ORM\Column(type="integer")
    * @var int
    */
-  private $playerId;
+  private $id;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
   /**
    * @return int
    */
-  public function getPlayerId(): int
+  public function getId(): int
   {
-    return $this->playerId;
+    return $this->id;
   }
 //</editor-fold desc="Public Methods">
 }

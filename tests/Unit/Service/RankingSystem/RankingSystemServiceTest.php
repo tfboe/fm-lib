@@ -395,8 +395,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $entries = new ArrayCollection([1 => $entry1, 2 => $entry2, 3 => $entry3]);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
 
-    $player1 = $this->createStub(Player::class, ['getPlayerId' => 1]);
-    $player3 = $this->createStub(Player::class, ['getPlayerId' => 3]);
+    $player1 = $this->createStub(Player::class, ['getId' => 1]);
+    $player3 = $this->createStub(Player::class, ['getId' => 3]);
 
     $returnedEntries = static::callProtectedMethod($service, 'getEntriesOfPlayers',
       [new ArrayCollection([$player1, $player3]), $list]);
@@ -542,7 +542,7 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   public function testGetOrCreateRankingSystemListEntryExistingEntry()
   {
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
     $entries = new ArrayCollection([]);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
     $entry = $this->createStub(RankingSystemListEntry::class,
@@ -565,7 +565,7 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   public function testGetOrCreateRankingSystemListEntryNewEntry()
   {
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
     $entries = new ArrayCollection([]);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
 
@@ -1016,7 +1016,7 @@ class RankingSystemServiceTest extends UnitTestCase
   {
     $entity = $this->createStubWithId(TournamentHierarchyEntity::class, 'h1');
     $ranking = $this->createStubWithId(RankingSystem::class, 'r1');
-    $player = $this->createStubWithId(Player::class, 1, 'getPlayerId');
+    $player = $this->createStubWithId(Player::class, 1, 'getId');
     return [$entity, $ranking, $player];
   }
 

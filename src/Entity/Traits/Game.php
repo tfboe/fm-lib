@@ -40,7 +40,7 @@ trait Game
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersA",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
+   *      inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")})
    * @var Collection|PlayerInterface
    */
   private $playersA;
@@ -49,7 +49,7 @@ trait Game
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersB",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
-   *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="player_id")})
+   *      inverseJoinColumns={@ORM\JoinColumn(name="id", referencedColumnName="id")})
    * @var Collection|PlayerInterface
    */
   private $playersB;

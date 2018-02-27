@@ -46,7 +46,7 @@ trait RankingSystemListEntry
 
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface")
-   * @ORM\JoinColumn(referencedColumnName="player_id")
+   * @ORM\JoinColumn(referencedColumnName="id")
    * @var PlayerInterface
    */
   private $player;
@@ -118,10 +118,10 @@ trait RankingSystemListEntry
   public function setRankingSystemList(RankingSystemListInterface $rankingSystemList)
   {
     if ($this->rankingSystemList !== null) {
-      $this->rankingSystemList->getEntries()->remove($this->getPlayer()->getPlayerId());
+      $this->rankingSystemList->getEntries()->remove($this->getPlayer()->getId());
     }
     $this->rankingSystemList = $rankingSystemList;
-    $rankingSystemList->getEntries()->set($this->getPlayer()->getPlayerId(), $this);
+    $rankingSystemList->getEntries()->set($this->getPlayer()->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 

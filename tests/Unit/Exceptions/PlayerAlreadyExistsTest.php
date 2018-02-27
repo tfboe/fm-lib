@@ -34,7 +34,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::getJsonMessage
    * @uses   \Tfboe\FmLib\Exceptions\PlayerAlreadyExists::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\NumericalPlayerId::getPlayerId
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NumericalId::getId
    * @uses   \Tfboe\FmLib\Entity\Traits\Player
    */
   public function testJsonMessage()
@@ -48,7 +48,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
     $player->setBirthday(new \DateTime('1990-02-02'));
     /** @noinspection PhpUnhandledExceptionInspection */
     /** @noinspection PhpUnhandledExceptionInspection */
-    $idProperty = self::getProperty(Player::class, 'playerId');
+    $idProperty = self::getProperty(Player::class, 'id');
     $idProperty->setValue($player, 0);
 
     $exc2 = new PlayerAlreadyExists([$player]);
