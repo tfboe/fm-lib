@@ -19,10 +19,11 @@ class ObjectCreatorService implements ObjectCreatorServiceInterface
 //<editor-fold desc="Public Methods">
   /**
    * @inheritDoc
+   * @param array|null config used config array, if null config('fm-lib') is used. Mainly used for testing purposes
    */
-  public function createObjectFromInterface(string $interface, $args = [])
+  public function createObjectFromInterface(string $interface, $args = [], $config = null)
   {
-    $class = config('fm-lib')['entityMaps'][$interface];
+    $class = ($config == null ? config('fm-lib') : $config)['entityMaps'][$interface];
     return new $class(...$args);
   }
 //</editor-fold desc="Public Methods">
