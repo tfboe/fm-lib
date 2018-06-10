@@ -23,6 +23,9 @@ abstract class BasicEnum
 
   /** @var null|string[][] */
   private static $constCacheArrayCaseMapping = NULL;
+
+  /** @var null|string[][] */
+  private static $nameArray = NULL;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
@@ -37,6 +40,22 @@ abstract class BasicEnum
     if (!self::isValidValue($value, $strict)) {
       throw new ValueNotValid($value, get_called_class());
     }
+  }
+
+  /**
+   * Gets the name of the given value, throwing an exception if the value is not valid
+   * @param mixed $value the value to get the name for
+   * @return string the name of the value
+   * @throws ValueNotValid if the value is not valid
+   */
+  public static function getName($value): string
+  {
+    $names = self::getNamesArray();
+    if (array_key_exists($value, $names)) {
+      return $names[$value];
+    }
+
+    throw new ValueNotValid($value, get_called_class());
   }
 
   /**
@@ -137,14 +156,17 @@ abstract class BasicEnum
   /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * Gets a dictionary of all constants in this enum
+   * @param string|null $calledClass
    * @return mixed[]
    */
-  private static function getConstants(): array
+  private static function getConstants($calledClass = null): array
   {
     if (self::$constCacheArray == NULL) {
       self::$constCacheArray = [];
     }
-    $calledClass = get_called_class();
+    if ($calledClass === null) {
+      $calledClass = get_called_class();
+    }
     if (!array_key_exists($calledClass, self::$constCacheArray)) {
       // ReflectionException => whe know that calledClass is a valid class since it is the result of get_called_class
       /** @noinspection PhpUnhandledExceptionInspection */
@@ -154,6 +176,25 @@ abstract class BasicEnum
       self::$constCacheArray[$calledClass] = $array;
     }
     return self::$constCacheArray[$calledClass];
+  }
+
+  /**
+   * Gets a dictionary mapping values to names in this enum
+   * @param string|null $calledClass
+   * @return string[]
+   */
+  private static function getNamesArray($calledClass = null): array
+  {
+    if (self::$nameArray == NULL) {
+      self::$nameArray = [];
+    }
+    if ($calledClass === null) {
+      $calledClass = get_called_class();
+    }
+    if (!array_key_exists($calledClass, self::$nameArray)) {
+      self::$nameArray[$calledClass] = array_flip(self::getConstants($calledClass));
+    }
+    return self::$nameArray[$calledClass];
   }
 //</editor-fold desc="Private Methods">
 }
