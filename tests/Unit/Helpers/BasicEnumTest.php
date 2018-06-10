@@ -49,6 +49,35 @@ class BasicEnumTest extends UnitTestCase
   }
 
   /**
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getName
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNamesArray
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   */
+  public function testGetName()
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    self::assertEquals("KEY", TestEnum::getName(TestEnum::KEY));
+    /** @noinspection PhpUnhandledExceptionInspection */
+    self::assertEquals("INT_KEY", TestEnum::getName(TestEnum::INT_KEY));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getName
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNamesArray
+   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   */
+  public function testGetNameException()
+  {
+    $this->expectException(ValueNotValid::class);
+    $this->expectExceptionMessage('The following value is not valid: "int_key" in Tfboe\FmLib\TestHelpers\TestEnum.' .
+      ' Possible values: "value", 1.');
+    /** @noinspection PhpUnhandledExceptionInspection */
+    TestEnum::getName('int_key');
+  }
+
+  /**
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getValue
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getCaseMapping
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
