@@ -56,6 +56,11 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     parent::workOnDatabaseDestroy();
   }
 
+  protected function getUserDb()
+  {
+    return "users";
+  }
+
   protected function workOnDatabaseSetUp()
   {
     $this->clearUsers();
@@ -76,7 +81,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     /** @var Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
-    $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;', "users");
+    $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;', $this->getUserDb());
     /** @noinspection PhpUnhandledExceptionInspection */
     $connection->query($sql);
   }
