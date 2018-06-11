@@ -473,7 +473,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
         $nextEntityIndex = $i;
         return;
       }
-      $changes = $this->getChanges($entities[$nextEntityIndex], $list);
+      $changes = $this->getChanges($entities[$i], $list);
       foreach ($changes as $change) {
         $entry = $this->getOrCreateRankingSystemListEntry($list, $change->getPlayer());
         $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
