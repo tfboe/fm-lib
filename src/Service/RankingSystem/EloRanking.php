@@ -32,7 +32,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   const NO_NEG = true;
   const NUM_PROVISORY_GAMES = 20;
   const PROVISORY_PARTNER_FACTOR = 0.5;
-  const START = 1200;
+  const START = 1200.0;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Protected Methods">
@@ -42,7 +42,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    */
   protected function getAdditionalFields(): array
   {
-    return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => 1200.0];
+    return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => self::START];
   }
 
   /**
@@ -103,7 +103,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    */
   protected function startPoints(): float
   {
-    return 1200.0;
+    return 0.0;
   }
 //</editor-fold desc="Protected Methods">
 
@@ -149,7 +149,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $entry->getPlayer());
       $change->setPlayedGames(1);
       $factor = 2 * $result - 1;
-      if ($entry->getPlayedGames() < self::NUM_PROVISORY_GAMES) {
+      if ($entry->getPlayedGames() <= self::NUM_PROVISORY_GAMES) {
         //provisory entry => recalculate
         if (count($entries) > 1) {
           $teamMatesAverage = ($teamAverage * count($entries) - $entry->getProvisoryRanking()) /
@@ -178,10 +178,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $change->setProvisoryRanking(($performance - $entry->getProvisoryRanking()) / ($entry->getRatedGames() + 1));
         $change->setPointsChange(0.0);
         $change->setRatedGames(1);
+        if ($entry->getPlayedGames() == self::NUM_PROVISORY_GAMES) {
+          $change->setPointsChange(max(self::START, $entry->getProvisoryRanking()) - $entry->getPoints());
+        }
       } else if (!$teamHasProvisory && !$opponentHasProvisory) {
         //real elo ranking
         $change->setProvisoryRanking(0.0);
-        $change->setPointsChange(self::K * $expectationDiff);
+        $change->setPointsChange(max(self::K * $expectationDiff, self::START - $entry->getPoints()));
         $change->setRatedGames(1);
       } else {
         //does not get rated
