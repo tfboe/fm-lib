@@ -59,7 +59,7 @@ class EloRankingTest extends UnitTestCase
           "ratedGamesChange" => 1, "playedChange" => 1],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => -7.8605068927035,
           "ratedGamesChange" => 1, "playedChange" => 1],
-        ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => -7.8605068927035,
+        ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 0.0,
           "ratedGamesChange" => 1, "playedChange" => 1],
       ]],
       [true, Result::TEAM_B_WINS, [
@@ -103,7 +103,7 @@ class EloRankingTest extends UnitTestCase
           "ratedGamesChange" => 0, "playedChange" => 0],
       ]],
       [true, Result::TEAM_A_WINS, [
-        ["points" => 0.0, "rated" => 15, "played" => 15, "ranked" => 20, "pointChange" => 0.0,
+        ["points" => 0.0, "rated" => 15, "played" => 19, "ranked" => 20, "pointChange" => 1515.78125,
           "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 14.78125],
         ["points" => 1300.0, "rated" => 20, "played" => 20, "ranked" => 26, "pointChange" => 0.0,
           "ratedGamesChange" => 0, "playedChange" => 1],
@@ -250,7 +250,7 @@ class EloRankingTest extends UnitTestCase
   {
     $service = $this->service();
     $startPoints = static::callProtectedMethod($service, 'startPoints', []);
-    self::assertEquals(1200.0, $startPoints);
+    self::assertEquals(0.0, $startPoints);
   }
 //</editor-fold desc="Public Methods">
 

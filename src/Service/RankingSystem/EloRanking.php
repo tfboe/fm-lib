@@ -179,7 +179,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $change->setPointsChange(0.0);
         $change->setRatedGames(1);
         if ($entry->getPlayedGames() == self::NUM_PROVISORY_GAMES - 1) {
-          $change->setPointsChange(max(self::START, $entry->getProvisoryRanking()) - $entry->getPoints());
+          $change->setPointsChange(max(self::START, $entry->getProvisoryRanking() + $change->getProvisoryRanking())
+            - $entry->getPoints());
         }
       } else if (!$teamHasProvisory && !$opponentHasProvisory) {
         //real elo ranking

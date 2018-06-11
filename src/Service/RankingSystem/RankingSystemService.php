@@ -13,6 +13,7 @@ namespace Tfboe\FmLib\Service\RankingSystem;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
@@ -139,6 +140,10 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       }
     }
 
+    if ($current !== null && $current->getLastEntryTime() < $from) {
+      $lastReusable = $current;
+    }
+
     if ($lastReusable === null) {
       $lastReusable = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
     }
@@ -158,8 +163,17 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
     $nextEntityIndex = 0;
     foreach ($toUpdate as $list) {
-      $this->recomputeBasedOn($list, $lastReusable, $entities, $nextEntityIndex);
+      $lastListTime = $lastReusable->getLastEntryTime();
+      if (count($entities) > 0) {
+        $lastListTime = max($lastListTime, $this->timeService->getTime($entities[0]));
+      }
+      $this->recomputeBasedOn($list, $lastReusable, $entities, $nextEntityIndex, $lastListTime);
       $lastReusable = $list;
+    }
+
+    $lastListTime = $lastReusable->getLastEntryTime();
+    if (count($entities) > 0) {
+      $lastListTime = max($lastListTime, $this->timeService->getTime($entities[0]));
     }
 
     if ($current === null) {
@@ -169,7 +183,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       $this->entityManager->persist($current);
       $current->setRankingSystem($ranking);
     }
-    $this->recomputeBasedOn($current, $lastReusable, $entities, $nextEntityIndex);
+    $this->recomputeBasedOn($current, $lastReusable, $entities, $nextEntityIndex, $lastListTime);
   }
 //</editor-fold desc="Public Methods">
 
@@ -453,6 +467,29 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     return $result;
   }
 
+  /**
+   * @param \DateTime $time the time of the last list
+   * @param int $generationLevel the list generation level
+   * @return \DateTime the time of the next list generation
+   */
+  private function getNextGenerationTime(\DateTime $time, int $generationLevel): \DateTime
+  {
+    $year = (int)$time->format('Y');
+    $month = (int)$time->format('m');
+    if ($generationLevel === AutomaticInstanceGeneration::MONTHLY) {
+      $month += 1;
+      if ($month == 13) {
+        $month = 1;
+        $year += 1;
+      }
+    } else if ($generationLevel === AutomaticInstanceGeneration::OFF) {
+      return (new \DateTime())->add(new \DateInterval('P100Y'));
+    } else {
+      $year += 1;
+    }
+    return (new \DateTime())->setDate($year, $month, 1)->setTime(0, 0, 0);
+  }
+
   /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * Recomputes the given ranking list by using base as base list and applying the changes for the given entities
@@ -462,16 +499,29 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @param RankingSystemListInterface $base the list to use as base
    * @param TournamentHierarchyEntity[] $entities the list of entities to use for the computation
    * @param int $nextEntityIndex the first index in the entities list to consider
+   * @param \DateTime $lastListTime the time of the last list or the first entry
    */
   private function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base, array $entities,
-                                    int &$nextEntityIndex)
+                                    int &$nextEntityIndex, \DateTime $lastListTime)
   {
+    $nextGeneration = $this->getNextGenerationTime($lastListTime, $list->getRankingSystem()->getGenerationInterval());
     $this->cloneInto($list, $base);
     for ($i = $nextEntityIndex; $i < count($entities); $i++) {
       $time = $this->timeService->getTime($entities[$i]);
       if (!$list->isCurrent() && $time > $list->getLastEntryTime()) {
         $nextEntityIndex = $i;
         return;
+      }
+      if ($nextGeneration < $time) {
+        /** @var RankingSystemListInterface $newList */
+        $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
+        $newList->setCurrent(false);
+        $newList->setLastEntryTime($nextGeneration);
+        $this->entityManager->persist($newList);
+        $newList->setRankingSystem($list->getRankingSystem());
+        $this->cloneInto($newList, $list);
+        $nextGeneration = $this->getNextGenerationTime($nextGeneration,
+          $list->getRankingSystem()->getGenerationInterval());
       }
       $changes = $this->getChanges($entities[$i], $list);
       foreach ($changes as $change) {
