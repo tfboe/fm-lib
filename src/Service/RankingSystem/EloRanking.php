@@ -149,7 +149,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $entry->getPlayer());
       $change->setPlayedGames(1);
       $factor = 2 * $result - 1;
-      if ($entry->getPlayedGames() <= self::NUM_PROVISORY_GAMES) {
+      if ($entry->getPlayedGames() < self::NUM_PROVISORY_GAMES) {
         //provisory entry => recalculate
         if (count($entries) > 1) {
           $teamMatesAverage = ($teamAverage * count($entries) - $entry->getProvisoryRanking()) /
@@ -178,7 +178,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $change->setProvisoryRanking(($performance - $entry->getProvisoryRanking()) / ($entry->getRatedGames() + 1));
         $change->setPointsChange(0.0);
         $change->setRatedGames(1);
-        if ($entry->getPlayedGames() == self::NUM_PROVISORY_GAMES) {
+        if ($entry->getPlayedGames() == self::NUM_PROVISORY_GAMES - 1) {
           $change->setPointsChange(max(self::START, $entry->getProvisoryRanking()) - $entry->getPoints());
         }
       } else if (!$teamHasProvisory && !$opponentHasProvisory) {
