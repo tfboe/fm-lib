@@ -168,6 +168,9 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
         $lastListTime = max($lastListTime, $this->timeService->getTime($entities[0]));
       }
       $this->recomputeBasedOn($list, $lastReusable, $entities, $nextEntityIndex, $lastListTime);
+      //clear entityManager to save memory
+      $this->entityManager->flush();
+      $this->entityManager->clear();
       $lastReusable = $list;
     }
 
@@ -522,6 +525,9 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
         $this->cloneInto($newList, $list);
         $nextGeneration = $this->getNextGenerationTime($nextGeneration,
           $list->getRankingSystem()->getGenerationInterval());
+        //clear entityManager to save memory
+        $this->entityManager->flush();
+        $this->entityManager->clear();
       }
       $changes = $this->getChanges($entities[$i], $list);
       foreach ($changes as $change) {

@@ -45,20 +45,8 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
       ->leftJoin('t.rankingSystems', 'trs', Query\Expr\Join::WITH, $query->expr()->eq('trs', ':ranking'))
       ->setParameter('ranking', $ranking)
       ->setParameter('from', $from);
-    $times = ['g.endTime', 'g.startTime', 'm.endTime', 'm.startTime', 'p.endTime', 'p.startTime', 'c.endTime',
-      'c.startTime', 't.endTime', 't.startTime', 't.updatedAt'];
-    $orExpr = $query->expr()->orX();
-    for ($i = 0; $i < count($times); $i++) {
-      $expr = $query->expr()->gt($times[$i], ':from');
-      if ($i > 0) {
-        $expr = $query->expr()->andX($expr);
-        for ($j = 0; $j < $i; $j++) {
-          $expr->add($query->expr()->isNull($times[$i]));
-        }
-      }
-      $orExpr->add($expr);
-    }
-    $query->andWhere($orExpr);
+    $query->andWhere("COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime,
+      c.startTime, t.endTime, t.startTime, t.updatedAt) > :from");
     $query->andWhere($query->expr()->orX(
       $query->expr()->isNotNull('grs.id'),
       $query->expr()->isNotNull('mrs.id'),
