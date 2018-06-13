@@ -27,7 +27,7 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
   /**
    * @inheritDoc
    */
-  protected function getEntitiesQueryBuilder(RankingSystemInterface $ranking, \DateTime $from): QueryBuilder
+  protected function getEntitiesQueryBuilder(RankingSystemInterface $ranking, \DateTime $from, \DateTime $to): QueryBuilder
   {
     // query all relevant games
     $query = $this->getEntityManager()->createQueryBuilder();
@@ -44,16 +44,19 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
       ->innerJoin('c.tournament', 't')
       ->leftJoin('t.rankingSystems', 'trs', Query\Expr\Join::WITH, $query->expr()->eq('trs', ':ranking'))
       ->setParameter('ranking', $ranking)
-      ->setParameter('from', $from);
-    $query->andWhere("COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime,
-      c.startTime, t.endTime, t.startTime, t.updatedAt) > :from");
-    $query->andWhere($query->expr()->orX(
-      $query->expr()->isNotNull('grs.id'),
-      $query->expr()->isNotNull('mrs.id'),
-      $query->expr()->isNotNull('prs.id'),
-      $query->expr()->isNotNull('crs.id'),
-      $query->expr()->isNotNull('trs.id')
-    ));
+      ->andWhere("COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime, " .
+        "c.startTime, t.endTime, t.startTime, t.updatedAt) > :from")
+      ->setParameter('from', $from)
+      ->andWhere("COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime, " .
+        "c.startTime, t.endTime, t.startTime, t.updatedAt) <= :to")
+      ->setParameter('to', $to)
+      ->andWhere($query->expr()->orX(
+        $query->expr()->isNotNull('grs.id'),
+        $query->expr()->isNotNull('mrs.id'),
+        $query->expr()->isNotNull('prs.id'),
+        $query->expr()->isNotNull('crs.id'),
+        $query->expr()->isNotNull('trs.id')
+      ));
 
     return $query;
   }

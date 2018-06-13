@@ -133,9 +133,6 @@ class RankingSystemService implements RankingSystemServiceInterface
       $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
       $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFrom());
       $rankingSystem->setOpenSyncFrom(null);
-      //clear entityManager to save memory
-      $this->entityManager->flush();
-      $this->entityManager->clear();
     }
   }
 //</editor-fold desc="Public Methods">

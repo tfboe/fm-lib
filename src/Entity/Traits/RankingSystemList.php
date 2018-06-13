@@ -45,7 +45,7 @@ trait RankingSystemList
 
   /**
    * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingSystemListEntryInterface", mappedBy="rankingSystemList",
-   *   indexBy="id")
+   *   indexBy="player_id")
    * @var RankingSystemListEntryInterface[]|Collection
    */
   private $entries;

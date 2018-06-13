@@ -62,25 +62,30 @@ abstract class UnitTestCase extends TestCase
    * @return MockObject the mocked entity manager
    */
   protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
-                                                  array $otherMockedMethods = [])
+                                                  array $otherMockedMethods = [], $amount = 1)
   {
     $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '',
       false, true, true, array_merge($otherMockedMethods, ['createQueryBuilder']));
-    $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
-      '', true, true, true, ['getQuery']);
-    $query = $this->createMock(AbstractQuery::class);
-    $query->expects(static::once())->method('getResult')->willReturn($result);
-    if ($expectedQuery !== null) {
-      $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
-        function () use ($queryBuilder, $query, $expectedQuery) {
-          /** @var QueryBuilder $queryBuilder */
-          self::assertEquals($expectedQuery, $queryBuilder->getDQL());
-          return $query;
-        });
-    } else {
-      $queryBuilder->expects(static::once())->method('getQuery')->willReturn($query);
-    }
-    $entityManager->expects(static::once())->method('createQueryBuilder')->willReturn($queryBuilder);
+
+    $entityManager->expects(static::exactly($amount))->method('createQueryBuilder')->willReturnCallback(
+      function () use ($entityManager, $result, $expectedQuery) {
+        $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
+          '', true, true, true, ['getQuery']);
+        $query = $this->createMock(AbstractQuery::class);
+        $query->expects(static::once())->method('getResult')->willReturn($result);
+        if ($expectedQuery !== null) {
+          $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
+            function () use ($queryBuilder, $query, $expectedQuery) {
+              /** @var QueryBuilder $queryBuilder */
+              self::assertEquals($expectedQuery, $queryBuilder->getDQL());
+              return $query;
+            });
+        } else {
+          $queryBuilder->expects(static::once())->method('getQuery')->willReturn($query);
+        }
+        return $queryBuilder;
+      }
+    );
     return $entityManager;
   }
 

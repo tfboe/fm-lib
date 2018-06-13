@@ -43,29 +43,16 @@ class GameRankingSystemTest extends UnitTestCase
     $rankingSystem->method('getId')->willReturn('ranking-system-id');
     /** @var QueryBuilder $builder */
     $builder = self::callProtectedMethod($system, "getEntitiesQueryBuilder",
-      [$rankingSystem, new \DateTime("2000-01-01")]);
+      [$rankingSystem, new \DateTime("2000-01-01"), new \DateTime("2001-01-01")]);
     self::assertEquals(
       'SELECT g FROM Tfboe\FmLib\Entity\GameInterface g LEFT JOIN g.rankingSystems grs WITH grs = :ranking ' .
-      'INNER JOIN g.match ' .
-      'm LEFT JOIN m.rankingSystems mrs WITH mrs = :ranking INNER JOIN m.phase p LEFT JOIN p.rankingSystems prs WITH ' .
-      'prs = :ranking INNER JOIN p.competition c LEFT JOIN c.rankingSystems crs WITH crs = :ranking INNER JOIN ' .
-      'c.tournament t LEFT JOIN t.rankingSystems trs WITH trs = :ranking WHERE (g.endTime > :from OR (g.startTime > ' .
-      ':from AND g.startTime IS NULL) OR (m.endTime > :from AND m.endTime IS NULL AND m.endTime IS NULL) OR ' .
-      '(m.startTime > :from AND m.startTime IS NULL AND m.startTime IS NULL AND m.startTime IS NULL) OR (p.endTime ' .
-      '> :from AND p.endTime IS NULL AND p.endTime IS NULL AND p.endTime IS NULL AND p.endTime IS NULL) OR ' .
-      '(p.startTime > :from AND p.startTime IS NULL AND p.startTime IS NULL AND p.startTime IS NULL AND p.startTime ' .
-      'IS NULL AND p.startTime IS NULL) OR (c.endTime > :from AND c.endTime IS NULL AND c.endTime IS NULL AND ' .
-      'c.endTime IS NULL AND c.endTime IS NULL AND c.endTime IS NULL AND c.endTime IS NULL) OR (c.startTime > :from ' .
-      'AND c.startTime IS NULL AND c.startTime IS NULL AND c.startTime IS NULL AND c.startTime IS NULL AND ' .
-      'c.startTime IS NULL AND c.startTime IS NULL AND c.startTime IS NULL) OR (t.endTime > :from AND t.endTime IS ' .
-      'NULL AND t.endTime IS NULL AND t.endTime IS NULL AND t.endTime IS NULL AND t.endTime IS NULL AND t.endTime IS ' .
-      'NULL AND t.endTime IS NULL AND t.endTime IS NULL) OR (t.startTime > :from AND t.startTime IS NULL AND ' .
-      't.startTime IS NULL AND t.startTime IS NULL AND t.startTime IS NULL AND t.startTime IS NULL AND t.startTime IS' .
-      ' NULL AND t.startTime IS NULL AND t.startTime IS NULL AND t.startTime IS NULL) OR (t.updatedAt > :from AND ' .
-      't.updatedAt IS NULL AND t.updatedAt IS NULL AND t.updatedAt IS NULL AND t.updatedAt IS NULL AND t.updatedAt IS' .
-      ' NULL AND t.updatedAt IS NULL AND t.updatedAt IS NULL AND t.updatedAt IS NULL AND t.updatedAt IS NULL AND ' .
-      't.updatedAt IS NULL)) AND (grs.id IS NOT NULL OR mrs.id IS NOT NULL OR prs.id IS NOT NULL OR crs.id IS NOT ' .
-      'NULL OR trs.id IS NOT NULL)',
+      'INNER JOIN g.match m LEFT JOIN m.rankingSystems mrs WITH mrs = :ranking INNER JOIN m.phase p LEFT JOIN ' .
+      'p.rankingSystems prs WITH prs = :ranking INNER JOIN p.competition c LEFT JOIN c.rankingSystems crs WITH ' .
+      'crs = :ranking INNER JOIN c.tournament t LEFT JOIN t.rankingSystems trs WITH trs = :ranking WHERE ' .
+      'COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime, c.startTime, ' .
+      't.endTime, t.startTime, t.updatedAt) > :from AND COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, ' .
+      'p.endTime, p.startTime, c.endTime, c.startTime, t.endTime, t.startTime, t.updatedAt) <= :to AND (grs.id IS ' .
+      'NOT NULL OR mrs.id IS NOT NULL OR prs.id IS NOT NULL OR crs.id IS NOT NULL OR trs.id IS NOT NULL)',
       $builder->getDQL());
   }
 

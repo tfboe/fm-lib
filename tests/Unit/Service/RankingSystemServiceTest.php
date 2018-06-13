@@ -243,7 +243,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $third = 'FmLib';
     $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL';
     $entityManager = $this->getEntityManagerMockForQuery([$rs1, $rs2],
-      $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest);
+      $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest, ['flush', 'clear']);
     $dsls = $this->getMockForAbstractClass(DynamicServiceLoadingServiceInterface::class);
     $service = $this->getMockForAbstractClass(RankingSystemInterface::class);
     $service->expects(self::exactly(2))->method('updateRankingFrom')
