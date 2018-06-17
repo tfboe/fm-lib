@@ -65,8 +65,8 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   {
     $this->clearUsers();
     parent::workOnDatabaseSetUp();
-    $password = $this->newPassword();
-    $this->user = entity($this->resolveEntity(UserInterface::class))->create(['originalPassword' => $password]);
+
+    $this->user = $this->createUser();
     /** @noinspection PhpUnhandledExceptionInspection */
     $this->token = Auth::attempt(['email' => $this->user->getEmail(), 'password' => $password]);
     $this->refreshApplication();

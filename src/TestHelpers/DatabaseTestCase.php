@@ -115,11 +115,21 @@ abstract class DatabaseTestCase extends LumenTestCase
   {
     $password = $this->newPassword();
     /** @var UserInterface $user */
-    $user = entity($this->resolveEntity(UserInterface::class))->create(['originalPassword' => $password]);
+    $attributes = ['originalPassword' => $password];
+    $this->addAdditionalNewUserAttributes($attributes);
+    $user = entity($this->resolveEntity(UserInterface::class))->create($attributes);
     return [
       'password' => $password,
       'user' => $user
     ];
+  }
+
+  /**
+   * Adds additional attributes given to the create entity method
+   * @param mixed[] $attributes
+   */
+  protected function addAdditionalNewUserAttributes(array &$attributes)
+  {
   }
 
   /**
