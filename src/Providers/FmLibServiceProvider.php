@@ -21,10 +21,16 @@ use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
+use Tfboe\FmLib\Service\DeletionService;
+use Tfboe\FmLib\Service\DeletionServiceInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
+use Tfboe\FmLib\Service\LoadingService;
+use Tfboe\FmLib\Service\LoadingServiceInterface;
 use Tfboe\FmLib\Service\ObjectCreatorService;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
+use Tfboe\FmLib\Service\PlayerService;
+use Tfboe\FmLib\Service\PlayerServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EloRankingInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
@@ -103,9 +109,28 @@ class FmLibServiceProvider extends ServiceProvider
 
     $this->app->singleton(EloRankingInterface::class, function (Container $app) {
       $timeService = new RecursiveEndStartTimeService();
-      $entityComparer = new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService);
-      return new EloRanking($app->make(EntityManagerInterface::class), $timeService, $entityComparer,
+      return new EloRanking(
+        $app->make(EntityManagerInterface::class),
+        $timeService,
+        new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService),
         $app->make(ObjectCreatorServiceInterface::class));
+    });
+
+    $this->app->singleton(LoadingServiceInterface::class, function (Container $app) {
+      return new LoadingService($app->make(EntityManagerInterface::class));
+    });
+
+    $this->app->singleton(DeletionServiceInterface::class, function (Container $app) {
+      return new DeletionService($app->make(EntityManagerInterface::class));
+    });
+
+    $this->app->singleton(PlayerServiceInterface::class, function (Container $app) {
+      return new PlayerService(
+        $app->make(EntityManagerInterface::class),
+        $app->make(LoadingServiceInterface::class),
+        $app->make(DeletionServiceInterface::class),
+        $app->make(RankingSystemServiceInterface::class)
+      );
     });
   }
 //</editor-fold desc="Public Methods">

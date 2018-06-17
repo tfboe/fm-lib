@@ -34,5 +34,13 @@ trait NumericalId
   {
     return $this->id;
   }
+
+  /**
+   * @return string|int
+   */
+  public function getEntityId()
+  {
+    return $this->id;
+  }
 //</editor-fold desc="Public Methods">
 }

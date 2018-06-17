@@ -14,7 +14,7 @@ namespace Tfboe\FmLib\Entity\Helpers;
  * Interface BaseEntityInterface
  * @package Tfboe\FmLib\Entity\Helpers
  */
-interface BaseEntityInterface
+interface BaseEntityInterface extends IdAble
 {
 //<editor-fold desc="Public Methods">
   /**

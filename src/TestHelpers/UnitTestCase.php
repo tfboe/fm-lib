@@ -32,7 +32,7 @@ abstract class UnitTestCase extends TestCase
    * @param array $methodResults a dictionary mapping method names to results of this methods
    * @return MockObject the configured stub
    */
-  protected function createStub(string $class, array $methodResults): MockObject
+  protected function createStub(string $class, array $methodResults = []): MockObject
   {
     $entity = $this->createMock($class);
     foreach ($methodResults as $method => $result) {
@@ -64,20 +64,35 @@ abstract class UnitTestCase extends TestCase
   protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
                                                   array $otherMockedMethods = [], $amount = 1)
   {
+    return $this->getEntityManagerMockForQueries(array_fill(0, $amount, $result),
+      $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);
+  }
+
+  /**
+   * Gets a mock for an entity manager which creates a query builder which will return a query which will return the
+   * given result.
+   * @param array $results the result arrays the queries should return
+   * @param string[] $expectedQueries the expected queries if set
+   * @param string[] $otherMockedMethods list of other methods to mock
+   * @return MockObject the mocked entity manager
+   */
+  protected function getEntityManagerMockForQueries(array $results, array $expectedQueries = [],
+                                                    array $otherMockedMethods = [])
+  {
     $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '',
       false, true, true, array_merge($otherMockedMethods, ['createQueryBuilder']));
-
-    $entityManager->expects(static::exactly($amount))->method('createQueryBuilder')->willReturnCallback(
-      function () use ($entityManager, $result, $expectedQuery) {
+    assert($expectedQueries == [] || count($results) === count($expectedQueries));
+    $entityManager->expects(static::exactly(count($results)))->method('createQueryBuilder')->willReturnCallback(
+      function () use ($entityManager, &$results, &$expectedQueries) {
         $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
           '', true, true, true, ['getQuery']);
         $query = $this->createMock(AbstractQuery::class);
-        $query->expects(static::once())->method('getResult')->willReturn($result);
-        if ($expectedQuery !== null) {
+        $query->expects(static::once())->method('getResult')->willReturn(array_shift($results));
+        if ($expectedQueries !== []) {
           $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
-            function () use ($queryBuilder, $query, $expectedQuery) {
+            function () use ($queryBuilder, $query, &$expectedQueries) {
               /** @var QueryBuilder $queryBuilder */
-              self::assertEquals($expectedQuery, $queryBuilder->getDQL());
+              self::assertEquals(array_shift($expectedQueries), $queryBuilder->getDQL());
               return $query;
             });
         } else {
