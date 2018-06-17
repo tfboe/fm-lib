@@ -27,9 +27,6 @@ class PlayerService implements PlayerServiceInterface
   /** @var LoadingServiceInterface */
   private $ls;
 
-  /** @var DeletionServiceInterface */
-  private $deletionService;
-
   /** @var RankingSystemServiceInterface */
   private $rankingSystemService;
 //</editor-fold desc="Fields">
@@ -40,19 +37,16 @@ class PlayerService implements PlayerServiceInterface
    * PlayerService constructor.
    * @param EntityManagerInterface $em
    * @param LoadingServiceInterface $ls
-   * @param DeletionServiceInterface $deletionService
    * @param RankingSystemServiceInterface $rankingSystemService
    */
   public function __construct(
     EntityManagerInterface $em,
     LoadingServiceInterface $ls,
-    DeletionServiceInterface $deletionService,
     RankingSystemServiceInterface $rankingSystemService
   )
   {
     $this->em = $em;
     $this->ls = $ls;
-    $this->deletionService = $deletionService;
     $this->rankingSystemService = $rankingSystemService;
   }
 //</editor-fold desc="Constructor">
@@ -133,8 +127,6 @@ class PlayerService implements PlayerServiceInterface
         }
       }
     }
-
-    $this->deletionService->deletePlayer($toMerge);
 
     return true;
   }

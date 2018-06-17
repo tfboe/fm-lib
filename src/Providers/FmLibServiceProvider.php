@@ -120,15 +120,10 @@ class FmLibServiceProvider extends ServiceProvider
       return new LoadingService($app->make(EntityManagerInterface::class));
     });
 
-    $this->app->singleton(DeletionServiceInterface::class, function (Container $app) {
-      return new DeletionService($app->make(EntityManagerInterface::class));
-    });
-
     $this->app->singleton(PlayerServiceInterface::class, function (Container $app) {
       return new PlayerService(
         $app->make(EntityManagerInterface::class),
         $app->make(LoadingServiceInterface::class),
-        $app->make(DeletionServiceInterface::class),
         $app->make(RankingSystemServiceInterface::class)
       );
     });

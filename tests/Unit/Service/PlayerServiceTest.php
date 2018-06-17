@@ -44,11 +44,9 @@ class PlayerServiceTest extends UnitTestCase
     $em = $this->createMock(EntityManagerInterface::class);
     /** @var LoadingServiceInterface $ls */
     $ls = $this->createMock(LoadingServiceInterface::class);
-    /** @var DeletionServiceInterface $deletionService */
-    $deletionService = $this->createMock(DeletionServiceInterface::class);
     /** @var RankingSystemServiceInterface $rankingSystemService */
     $rankingSystemService = $this->createMock(RankingSystemServiceInterface::class);
-    $service = new PlayerService($em, $ls, $deletionService, $rankingSystemService);
+    $service = new PlayerService($em, $ls, $rankingSystemService);
     self::assertInstanceOf(PlayerService::class, $service);
   }
 
@@ -89,7 +87,6 @@ class PlayerServiceTest extends UnitTestCase
 
     $service = new PlayerService($em,
       $this->createStub(LoadingServiceInterface::class),
-      $this->createStub(DeletionServiceInterface::class),
       $this->createStub(RankingSystemServiceInterface::class)
     );
 
@@ -110,7 +107,6 @@ class PlayerServiceTest extends UnitTestCase
     $service = new PlayerService(
       $this->createStub(EntityManagerInterface::class),
       $this->createStub(LoadingServiceInterface::class),
-      $this->createStub(DeletionServiceInterface::class),
       $this->createStub(RankingSystemServiceInterface::class)
     );
 
@@ -172,14 +168,12 @@ class PlayerServiceTest extends UnitTestCase
         $t = $a[0];
         $t->method('getCompetitions')->willReturn(new ArrayCollection([$competition]));
       });
-    /** @var DeletionServiceInterface|MockObject $deletionService */
-    $deletionService = $this->createMock(DeletionServiceInterface::class);
-    $deletionService->expects(self::once())->method('deletePlayer')->with($player2);
+
     /** @var RankingSystemServiceInterface|MockObject $rankingSystemService */
     $rankingSystemService = $this->createMock(RankingSystemServiceInterface::class);
     $rankingSystemService->method('adaptOpenSyncFromValues')->with($tournament, []);
 
-    $service = new PlayerService($em, $ls, $deletionService, $rankingSystemService);
+    $service = new PlayerService($em, $ls, $rankingSystemService);
 
     self::assertEquals(true, $service->mergePlayers($player1, $player2));
 
