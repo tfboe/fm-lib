@@ -90,7 +90,7 @@ class PlayerServiceTest extends UnitTestCase
       $this->createStub(RankingSystemServiceInterface::class)
     );
 
-    self::assertEquals('Player 1 and player 2 both attended the tournament Tournament(01.01.2000 12:01, id=\'t\')',
+    self::assertEquals('Player 1 and player 2 both attended the tournament Tournament(01.01.2000 00:00, id=\'t\')',
       $service->mergePlayers($player1, $player2));
   }
 

@@ -89,7 +89,7 @@ class PlayerService implements PlayerServiceInterface
           foreach ($team->getMemberships() as $membership) {
             if ($membership->getPlayer()->getId() == $player->getId()) {
               return "Player 1 and player 2 both attended the tournament " . $tournament->getName() .
-                "(" . $tournament->getStartTime()->format('d.m.Y h:m') . ", id='" . $tournament->getId() . "')";
+                "(" . $tournament->getStartTime()->format('d.m.Y H:i') . ", id='" . $tournament->getId() . "')";
             }
           }
         }
