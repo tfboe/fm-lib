@@ -409,6 +409,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields()
    */
   public function testGetOrCreateChangeCreateNewOne()
   {
@@ -435,6 +436,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields()
    */
   public function testGetOrCreateChangeCreateTwice()
   {

@@ -289,7 +289,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       //create new change
       /** @var RankingSystemChangeInterface $change */
       $change = $this->objectCreatorService->createObjectFromInterface(RankingSystemChangeInterface::class,
-        [array_keys($this->getAdditionalFields())]);
+        [array_merge(array_keys($this->getAdditionalFields()), $this->getAdditionalChangeFields())]);
       foreach ($this->getAdditionalFields() as $field => $value) {
         // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
         /** @noinspection PhpUnhandledExceptionInspection */
@@ -348,6 +348,15 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @return string[] list of additional fields
    */
   protected abstract function getAdditionalFields(): array;
+
+  /**
+   * Gets additional fields for this ranking type mapped to its start value
+   * @return string[] list of additional fields
+   */
+  protected function getAdditionalChangeFields(): array
+  {
+    return [];
+  }
 
   /**
    * Gets all ranking changes for the given entity for the given list. Must return a change for each involved player.

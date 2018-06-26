@@ -26,6 +26,10 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
  * @method setRatedGames(int $ratedGames)
  * @method float getProvisoryRanking()
  * @method setProvisoryRanking(float $provisoryRanking)
+ * @method setTeamElo(float $teamElo)
+ * @method float getTeamElo()
+ * @method setOpponentElo(float $opponentElo)
+ * @method float getOpponentElo()
  */
 interface RankingSystemChangeInterface extends BaseEntityInterface, UUIDEntityInterface, SubClassDataInterface
 {

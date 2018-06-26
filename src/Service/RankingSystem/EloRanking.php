@@ -120,12 +120,22 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   {
     foreach ($players as $player) {
       $change = $this->getOrCreateChange($entity, $ranking, $player);
+      $change->setTeamElo(0.0);
+      $change->setOpponentElo(0.0);
       $change->setPointsChange(0.0);
       $change->setPlayedGames(0);
       $change->setRatedGames(0);
       $change->setProvisoryRanking(0.0);
       $changes[] = $change;
     }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  protected function getAdditionalChangeFields(): array
+  {
+    return ['teamElo', 'opponentElo'];
   }
 
   /** @noinspection PhpTooManyParametersInspection */ //TODO refactor this method
@@ -148,6 +158,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
       $change = $this->getOrCreateChange($game, $entry->getRankingSystemList()->getRankingSystem(),
         $entry->getPlayer());
       $change->setPlayedGames(1);
+      $change->setTeamElo($teamHasProvisory ? 0.0 : $teamAverage);
+      $change->setOpponentElo($opponentHasProvisory ? 0.0 : $opponentAverage);
       $factor = 2 * $result - 1;
       if ($entry->getPlayedGames() < self::NUM_PROVISORY_GAMES) {
         //provisory entry => recalculate
@@ -187,6 +199,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $change->setProvisoryRanking(0.0);
         $change->setPointsChange(max(self::K * $expectationDiff, self::START - $entry->getPoints()));
         $change->setRatedGames(1);
+
       } else {
         //does not get rated
         $change->setProvisoryRanking(0.0);
