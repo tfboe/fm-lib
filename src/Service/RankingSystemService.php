@@ -164,7 +164,7 @@ class RankingSystemService implements RankingSystemServiceInterface
           $lastRecalculation->setStartTime(new \DateTime());
           foreach ($rankingSystems as $rankingSystem) {
             $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-            $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFrom());
+            $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFromInProcess());
             $rankingSystem->setOpenSyncFromInProcess(null);
           }
           $lastRecalculation->setEndTime(new \DateTime());
