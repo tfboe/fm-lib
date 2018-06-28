@@ -21,6 +21,8 @@ use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
+use Tfboe\FmLib\Service\AsyncExecuterService;
+use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
 use Tfboe\FmLib\Service\DeletionService;
 use Tfboe\FmLib\Service\DeletionServiceInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
@@ -126,6 +128,10 @@ class FmLibServiceProvider extends ServiceProvider
         $app->make(LoadingServiceInterface::class),
         $app->make(RankingSystemServiceInterface::class)
       );
+    });
+
+    $this->app->singleton(AsyncExecuterServiceInterface::class, function () {
+      return new AsyncExecuterService();
     });
   }
 //</editor-fold desc="Public Methods">
