@@ -30,8 +30,7 @@ interface LastRecalculationInterface extends BaseEntityInterface, TimeEntityInte
 
   /**
    * @param int $version
-   * @return $this|LastRecalculationInterface
    */
-  public function setVersion(int $version): LastRecalculationInterface;
+  public function setVersion(int $version);
 //</editor-fold desc="Public Methods">
 }

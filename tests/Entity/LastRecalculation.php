@@ -17,7 +17,7 @@ use Tfboe\FmLib\Entity\LastRecalculationInterface;
  * Class Game
  * @package Tfboe\FmLib\Tests\Entity
  * @ORM\Entity
- * @ORM\Table(name="games")
+ * @ORM\Table(name="lastRecalculation")
  */
 class LastRecalculation extends BaseEntity implements LastRecalculationInterface
 {

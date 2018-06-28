@@ -41,12 +41,10 @@ trait LastRecalculation
 
   /**
    * @param int $version
-   * @return $this|LastRecalculation
    */
-  public function setVersion(int $version): LastRecalculation
+  public function setVersion(int $version)
   {
     $this->version = $version;
-    return $this;
   }
 //</editor-fold desc="Public Methods">
 }
