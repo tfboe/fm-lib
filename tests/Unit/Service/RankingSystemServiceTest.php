@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
@@ -229,21 +230,29 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   public function testRecalculateRankingSystems()
   {
-    $rs1 = $this->createMock(RankingSystem::class);
+    $rs1 = $this->createMock(\Tfboe\FmLib\Entity\RankingSystemInterface::class);
     $rs1->expects(self::once())->method('getServiceName')->willReturn('service');
-    $rs1->expects(self::once())->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-02-01"));
+    $rs1->expects(self::exactly(3))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-02-01"));
     $rs1->expects(self::once())->method('setOpenSyncFrom')->with(null);
-    $rs2 = $this->createMock(RankingSystem::class);
+    $rs1->expects(self::once())->method('setOpenSyncFromInProcess')->with(null);
+    $rs2 = $this->createMock(\Tfboe\FmLib\Entity\RankingSystemInterface::class);
     $rs2->expects(self::once())->method('getServiceName')->willReturn('service');
-    $rs2->expects(self::once())->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-05-01"));
+    $rs2->expects(self::exactly(3))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-05-01"));
     $rs2->expects(self::once())->method('setOpenSyncFrom')->with(null);
+    $rs2->expects(self::once())->method('setOpenSyncFromInProcess')->with(null);
     $slash = '\\';
     $first = 'SELECT s';
     $second = ' FROM Tfboe';
     $third = 'FmLib';
-    $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL';
+    $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL OR s.openSyncFromInProcess IS NOT NULL';
     $entityManager = $this->getEntityManagerMockForQuery([$rs1, $rs2],
-      $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest, ['flush', 'clear']);
+      $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest, ['flush', 'clear', 'transactional',
+        'find']);
+    $entityManager->method('transactional')->willReturnCallback(function ($f) use ($entityManager) {
+      return $f($entityManager);
+    });
+    $lastRecalculation = $this->createMock(LastRecalculationInterface::class);
+    $entityManager->method('find')->willReturn($lastRecalculation);
     $dsls = $this->getMockForAbstractClass(DynamicServiceLoadingServiceInterface::class);
     $service = $this->getMockForAbstractClass(RankingSystemInterface::class);
     $service->expects(self::exactly(2))->method('updateRankingFrom')

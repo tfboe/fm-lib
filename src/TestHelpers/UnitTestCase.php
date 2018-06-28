@@ -86,8 +86,15 @@ abstract class UnitTestCase extends TestCase
       function () use ($entityManager, &$results, &$expectedQueries) {
         $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
           '', true, true, true, ['getQuery']);
-        $query = $this->createMock(AbstractQuery::class);
+        $query = $this->getMockBuilder(AbstractQuery::class)
+          ->disableOriginalConstructor()
+          ->disableOriginalClone()
+          ->disableArgumentCloning()
+          ->disallowMockingUnknownTypes()
+          ->setMethods(['setLockMode', 'getSQL', '_doExecute', 'getResult'])
+          ->getMock();
         $query->expects(static::once())->method('getResult')->willReturn(array_shift($results));
+        $query->method('setLockMode')->willReturn($query);
         if ($expectedQueries !== []) {
           $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
             function () use ($queryBuilder, $query, &$expectedQueries) {
