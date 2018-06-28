@@ -598,7 +598,6 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
         }
         $this->entityManager->persist($change);
       }
-      $list->getRankingSystem()->setOpenSyncFrom($time);
     }
     $current = count($entities);
     $this->flushAndForgetEntities($entities, $current);

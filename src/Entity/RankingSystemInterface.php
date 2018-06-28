@@ -52,11 +52,6 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
   public function getOpenSyncFrom(): ?\DateTime;
 
   /**
-   * @return \DateTime|null
-   */
-  public function getOpenSyncFromInProcess(): ?\DateTime;
-
-  /**
    * @return string
    */
   public function getServiceName(): string;
@@ -77,11 +72,6 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
    * @param \DateTime|null $openSyncFrom
    */
   public function setOpenSyncFrom(?\DateTime $openSyncFrom);
-
-  /**
-   * @param \DateTime|null $openSyncFromInProcess
-   */
-  public function setOpenSyncFromInProcess(?\DateTime $openSyncFromInProcess);
 
   /**
    * @param string $serviceName

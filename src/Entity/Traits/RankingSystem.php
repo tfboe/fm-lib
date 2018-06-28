@@ -70,12 +70,6 @@ trait RankingSystem
   private $openSyncFrom;
 
   /**
-   * @ORM\Column(type="datetime", nullable=true)
-   * @var \DateTime|null
-   */
-  private $openSyncFromInProcess;
-
-  /**
    * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingSystemListInterface", mappedBy="rankingSystem",
    *   indexBy="id")
    * @var Collection|RankingSystemListInterface[]
@@ -128,14 +122,6 @@ trait RankingSystem
   }
 
   /**
-   * @return \DateTime|null
-   */
-  public function getOpenSyncFromInProcess(): ?\DateTime
-  {
-    return $this->openSyncFromInProcess;
-  }
-
-  /**
    * @return string
    */
   public function getServiceName(): string
@@ -171,14 +157,6 @@ trait RankingSystem
   public function setOpenSyncFrom(?\DateTime $openSyncFrom)
   {
     $this->openSyncFrom = $openSyncFrom;
-  }
-
-  /**
-   * @param \DateTime|null $openSyncFromInProcess
-   */
-  public function setOpenSyncFromInProcess(?\DateTime $openSyncFromInProcess)
-  {
-    $this->openSyncFromInProcess = $openSyncFromInProcess;
   }
 
   /**

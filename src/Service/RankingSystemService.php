@@ -17,6 +17,7 @@ use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Helpers\Logging;
 
 /**
  * Class RankingSystemService
@@ -135,16 +136,14 @@ class RankingSystemService implements RankingSystemServiceInterface
         $query
           ->from(RankingSystemInterface::class, 's')
           ->select('s')
-          ->where($query->expr()->isNotNull('s.openSyncFrom'))
-          ->orWhere($query->expr()->isNotNull('s.openSyncFromInProcess'));
+          ->where($query->expr()->isNotNull('s.openSyncFrom'));
         /** @var RankingSystemInterface[] $rankingSystems */
         $rankingSystems = $query->getQuery()->setLockMode(LockMode::PESSIMISTIC_WRITE)->getResult();
         foreach ($rankingSystems as $rankingSystem) {
-          if ($rankingSystem->getOpenSyncFrom() !== null && ($rankingSystem->getOpenSyncFromInProcess() === null ||
-              $rankingSystem->getOpenSyncFrom() < $rankingSystem->getOpenSyncFromInProcess())) {
-            $rankingSystemOpenSyncFroms[$rankingSystem->getId()] = $rankingSystem->getOpenSyncFrom();
-            $rankingSystem->setOpenSyncFrom(null);
-          }
+          $rankingSystemOpenSyncFroms[$rankingSystem->getId()] = $rankingSystem->getOpenSyncFrom();
+          Logging::log("Update Ranking System " . $rankingSystem->getName() . " from " .
+            $rankingSystem->getOpenSyncFrom()->format("Y-m-d H:i:s"));
+          $rankingSystem->setOpenSyncFrom(null);
         }
       }
     );
@@ -154,18 +153,11 @@ class RankingSystemService implements RankingSystemServiceInterface
         function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
           /** @var LastRecalculationInterface $lastRecalculation */
           $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
-          foreach ($rankingSystems as $rankingSystem) {
-            if (array_key_exists($rankingSystem->getId(), $rankingSystemOpenSyncFroms) &&
-              $rankingSystemOpenSyncFroms[$rankingSystem->getId()] < $rankingSystem->getOpenSyncFromInProcess()) {
-              $rankingSystem->setOpenSyncFromInProcess($rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
-            }
-          }
           $em->flush();
           $lastRecalculation->setStartTime(new \DateTime());
           foreach ($rankingSystems as $rankingSystem) {
             $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-            $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFromInProcess());
-            $rankingSystem->setOpenSyncFromInProcess(null);
+            $service->updateRankingFrom($rankingSystem, $rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
           }
           $lastRecalculation->setEndTime(new \DateTime());
           $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);
