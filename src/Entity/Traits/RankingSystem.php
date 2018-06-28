@@ -175,12 +175,10 @@ trait RankingSystem
 
   /**
    * @param \DateTime|null $openSyncFromInProcess
-   * @return $this|RankingSystem
    */
-  public function setOpenSyncFromInProcess(?\DateTime $openSyncFromInProcess): RankingSystem
+  public function setOpenSyncFromInProcess(?\DateTime $openSyncFromInProcess)
   {
     $this->openSyncFromInProcess = $openSyncFromInProcess;
-    return $this;
   }
 
   /**

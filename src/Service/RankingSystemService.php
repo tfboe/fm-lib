@@ -149,27 +149,29 @@ class RankingSystemService implements RankingSystemServiceInterface
       }
     );
 
-    $this->entityManager->transactional(
-      function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
-        /** @var LastRecalculationInterface $lastRecalculation */
-        $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
-        foreach ($rankingSystems as $rankingSystem) {
-          if (array_key_exists($rankingSystem->getId(), $rankingSystemOpenSyncFroms) &&
-            $rankingSystemOpenSyncFroms[$rankingSystem->getId()] < $rankingSystem->getOpenSyncFromInProcess()) {
-            $rankingSystem->setOpenSyncFromInProcess($rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
+    if (count($rankingSystems) > 0) {
+      $this->entityManager->transactional(
+        function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
+          /** @var LastRecalculationInterface $lastRecalculation */
+          $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
+          foreach ($rankingSystems as $rankingSystem) {
+            if (array_key_exists($rankingSystem->getId(), $rankingSystemOpenSyncFroms) &&
+              $rankingSystemOpenSyncFroms[$rankingSystem->getId()] < $rankingSystem->getOpenSyncFromInProcess()) {
+              $rankingSystem->setOpenSyncFromInProcess($rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
+            }
           }
+          $em->flush();
+          $lastRecalculation->setStartTime(new \DateTime());
+          foreach ($rankingSystems as $rankingSystem) {
+            $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
+            $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFrom());
+            $rankingSystem->setOpenSyncFromInProcess(null);
+          }
+          $lastRecalculation->setEndTime(new \DateTime());
+          $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);
         }
-        $em->flush();
-        $lastRecalculation->setStartTime(new \DateTime());
-        foreach ($rankingSystems as $rankingSystem) {
-          $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-          $service->updateRankingFrom($rankingSystem, $rankingSystem->getOpenSyncFrom());
-          $rankingSystem->setOpenSyncFromInProcess(null);
-        }
-        $lastRecalculation->setEndTime(new \DateTime());
-        $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);
-      }
-    );
+      );
+    }
   }
 //</editor-fold desc="Public Methods">
 
