@@ -33,6 +33,12 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
    * @var UserInterface
    */
   protected $user;
+
+  /**
+   * Password corresponding to logged in user
+   * @var string
+   */
+  protected $userPassword;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Protected Methods">
@@ -56,11 +62,6 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     parent::workOnDatabaseDestroy();
   }
 
-  protected function getUserDb()
-  {
-    return "users";
-  }
-
   protected function workOnDatabaseSetUp()
   {
     $this->clearUsers();
@@ -68,6 +69,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
     $userInfo = $this->createUser();
     $this->user = $userInfo['user'];
+    $this->userPassword = $userInfo['password'];
     /** @noinspection PhpUnhandledExceptionInspection */
     $this->token = Auth::attempt(['email' => $this->user->getEmail(), 'password' => $userInfo['password']]);
     $this->refreshApplication();
@@ -82,9 +84,19 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     /** @var Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
-    $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;', $this->getUserDb());
+    $this->clearClassTables($this->getClassesToClear());
+    $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;',
+      EntityManager::getClassMetadata(UserInterface::class)->getTableName());
     /** @noinspection PhpUnhandledExceptionInspection */
     $connection->query($sql);
+  }
+
+  /**
+   * @return string[]
+   */
+  protected function getClassesToClear(): array
+  {
+    return [UserInterface::class];
   }
 //</editor-fold desc="Private Methods">
 }

@@ -49,6 +49,7 @@ class UserController extends BaseController
     $this->addAdditionalLoginSpecifications($specification);
     $this->validateBySpecification($request, $specification);
 
+    $this->preLogin($request);
 
     // grab credentials from the request
     $credentials = $request->only('email', 'password');
@@ -67,6 +68,15 @@ class UserController extends BaseController
     }
     return $this->getLoginResponse($request, $token);
 
+  }
+
+  /**
+   * Method called before login token gets generated.
+   * Can be used to modify token generation parameters.
+   * @param Request $request
+   */
+  protected function preLogin(Request $request)
+  {
   }
 
   /**

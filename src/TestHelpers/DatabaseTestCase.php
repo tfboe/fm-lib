@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\TestHelpers;
 
+use Doctrine\DBAL\Schema\Table;
 use Faker\Factory;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Tfboe\FmLib\Entity\PlayerInterface;
@@ -60,13 +61,41 @@ abstract class DatabaseTestCase extends LumenTestCase
     /** @var \Doctrine\DBAL\Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
+    $this->clearTables(array_map(function (Table $t) {
+      return $t->getName();
+    },
+      $connection->getSchemaManager()->listTables()));
+  }
+
+  /**
+   * @param string[] $tables
+   * @throws \Doctrine\DBAL\DBALException
+   */
+  protected function clearTables(array $tables)
+  {
+    /** @var \Doctrine\DBAL\Connection $connection */
+    /** @noinspection PhpUndefinedMethodInspection */
+    $connection = EntityManager::getConnection();
     $connection->query(sprintf('SET FOREIGN_KEY_CHECKS = 0;'));
-    $tables = $connection->getSchemaManager()->listTables();
     foreach ($tables as $table) {
-      $sql = sprintf('TRUNCATE TABLE %s', $table->getName());
+      $sql = sprintf('TRUNCATE TABLE %s', $table);
       $connection->query($sql);
     }
     $connection->query(sprintf('SET FOREIGN_KEY_CHECKS = 1;'));
+  }
+
+  /**
+   * @param string[] $classNames
+   * @throws \Doctrine\DBAL\DBALException
+   */
+  protected function clearClassTables(array $classNames)
+  {
+    $this->clearTables(array_map(
+      function (string $class) {
+        /** @noinspection PhpUndefinedMethodInspection */
+        return EntityManager::getClassMetadata($class)->getTableName();
+      }, $classNames
+    ));
   }
 
   /**
