@@ -94,7 +94,7 @@ return [
   |
   */
   'extensions' => [
-    //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
+    LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
     LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
     //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
     //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
