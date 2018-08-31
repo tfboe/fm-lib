@@ -21,7 +21,7 @@ trait AGB
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\Column(type="blob")
+   * @ORM\Column(type="text")
    * @var string
    */
   private $text;
