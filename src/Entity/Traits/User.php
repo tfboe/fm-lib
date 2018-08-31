@@ -44,21 +44,19 @@ trait User
    * @ORM\Column(type="integer")
    * @var int
    */
-  private $confirmedAGBVersion;
+  private $confirmedAGBMajorVersion;
+
+  /**
+   * @ORM\Column(type="integer")
+   * @var int
+   */
+  private $confirmedAGBMinorVersion;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
-  /**
-   * @return int
-   */
-  public function getConfirmedAGBVersion(): int
-  {
-    return $this->confirmedAGBVersion;
-  }
-
   /**
    * @return string
    */
@@ -98,11 +96,35 @@ trait User
   }
 
   /**
-   * @param mixed $confirmedAGBVersion
+   * @return int
    */
-  public function setConfirmedAGBVersion($confirmedAGBVersion)
+  public function getConfirmedAGBMajorVersion(): int
   {
-    $this->confirmedAGBVersion = $confirmedAGBVersion;
+    return $this->confirmedAGBMajorVersion;
+  }
+
+  /**
+   * @param int $confirmedAGBMajorVersion
+   */
+  public function setConfirmedAGBMajorVersion(int $confirmedAGBMajorVersion)
+  {
+    $this->confirmedAGBMajorVersion = $confirmedAGBMajorVersion;
+  }
+
+  /**
+   * @return int
+   */
+  public function getConfirmedAGBMinorVersion(): int
+  {
+    return $this->confirmedAGBMinorVersion;
+  }
+
+  /**
+   * @param int $confirmedAGBMinorVersion
+   */
+  public function setConfirmedAGBMinorVersion(int $confirmedAGBMinorVersion)
+  {
+    $this->confirmedAGBMinorVersion = $confirmedAGBMinorVersion;
   }
 
   /**
@@ -129,7 +151,8 @@ trait User
   protected final function init()
   {
     $this->jwtVersion = 1;
-    $this->confirmedAGBVersion = 0;
+    $this->confirmedAGBMinorVersion = 0;
+    $this->confirmedAGBMajorVersion = 0;
   }
 //</editor-fold desc="Protected Final Methods">
 }

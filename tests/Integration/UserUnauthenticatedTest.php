@@ -130,14 +130,25 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     self::assertNull($this->response->headers->get('jwt-token'));
   }
 
-  public function testInvalidLastConfirmedAGBVersion()
+  public function testInvalidLastConfirmedAGBMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBVersion' => 'noInt',
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBVersion" =>
-      ["The confirmed a g b version must be an integer."]],
+      'confirmedAGBMinorVersion' => 'noInt',
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMinorVersion" =>
+      ["The confirmed a g b minor version must be an integer."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
+
+  public function testInvalidLastConfirmedAGBMajorVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedAGBMajorVersion' => 'noInt',
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMajorVersion" =>
+      ["The confirmed a g b major version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -164,14 +175,25 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       ], "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
-  public function testNegativeLastConfirmedAGBVersion()
+  public function testNegativeLastConfirmedAGBMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBVersion' => -1,
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBVersion" =>
-      ["The confirmed a g b version must be at least 0."]],
+      'confirmedAGBMinorVersion' => -1,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMinorVersion" =>
+      ["The confirmed a g b minor version must be at least 0."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
+
+  public function testZeroLastConfirmedAGBMajorVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedAGBMajorVersion' => 0,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMajorVersion" =>
+      ["The confirmed a g b major version must be at least 1."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -221,28 +243,30 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     ])->seeJsonStructure(['id']);
   }
 
-  public function testRegistrationWithLastConfirmedAGBVersion()
+  public function testRegistrationWithAGBVersions()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBVersion' => 5
+      'confirmedAGBMinorVersion' => 5,
+      'confirmedAGBMajorVersion' => 7
     ])->seeJsonStructure(['id']);
     $result = json_decode($this->response->getContent(), true);
     /** @var UserInterface $user */
     /** @noinspection PhpUndefinedMethodInspection */
     $user = EntityManager::find(User::class, $result['id']);
-    self::assertEquals(5, $user->getConfirmedAGBVersion());
+    self::assertEquals(5, $user->getConfirmedAGBMinorVersion());
+    self::assertEquals(7, $user->getConfirmedAGBMajorVersion());
   }
 
-  public function testRegistrationWithStringAsLastConfirmedAGBVersion()
+  public function testRegistrationWithStringAsConfirmedAGBMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBVersion' => "5"
+      'confirmedAGBMinorVersion' => "5"
     ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
-      ["confirmedAGBVersion" => ["The confirmed a g b version must be an integer."]],
+      ["confirmedAGBMinorVersion" => ["The confirmed a g b minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 

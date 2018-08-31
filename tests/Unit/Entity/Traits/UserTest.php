@@ -24,7 +24,8 @@ class UserTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Entity\Traits\User::getJWTCustomClaims
    * @uses   \Tfboe\FmLib\Entity\Traits\User::getJwtVersion
-   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMinorVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMajorVersion
    */
   public function testConstructor()
   {
@@ -32,7 +33,8 @@ class UserTest extends UnitTestCase
     self::assertInstanceOf(User::class, $user);
     self::assertEquals(['ver' => 1], $user->getJWTCustomClaims());
     self::assertEquals(1, $user->getJwtVersion());
-    self::assertEquals(0, $user->getConfirmedAGBVersion());
+    self::assertEquals(0, $user->getConfirmedAGBMajorVersion());
+    self::assertEquals(0, $user->getConfirmedAGBMinorVersion());
   }
 
   /**
@@ -86,15 +88,27 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBVersion
-   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMinorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBMinorVersion
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
-  public function testLastConfirmedAGBVersion()
+  public function testLastConfirmedAGBMinorVersion()
   {
     $user = $this->user();
-    $user->setConfirmedAGBVersion(5);
-    self::assertEquals(5, $user->getConfirmedAGBVersion());
+    $user->setConfirmedAGBMinorVersion(5);
+    self::assertEquals(5, $user->getConfirmedAGBMinorVersion());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMajorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBMajorVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
+   */
+  public function testLastConfirmedAGBMajorVersion()
+  {
+    $user = $this->user();
+    $user->setConfirmedAGBMajorVersion(5);
+    self::assertEquals(5, $user->getConfirmedAGBMajorVersion());
   }
 //</editor-fold desc="Public Methods">
 

@@ -26,7 +26,22 @@ interface UserInterface extends BaseEntityInterface, TimestampableEntityInterfac
   /**
    * @return int
    */
-  public function getConfirmedAGBVersion(): int;
+  public function getConfirmedAGBMajorVersion(): int;
+
+  /**
+   * @param int $confirmedAGBMajorVersion
+   */
+  public function setConfirmedAGBMajorVersion(int $confirmedAGBMajorVersion);
+
+  /**
+   * @return int
+   */
+  public function getConfirmedAGBMinorVersion(): int;
+
+  /**
+   * @param int $confirmedAGBMinorVersion
+   */
+  public function setConfirmedAGBMinorVersion(int $confirmedAGBMinorVersion);
 
   /**
    * @return string
@@ -51,11 +66,6 @@ interface UserInterface extends BaseEntityInterface, TimestampableEntityInterfac
    * @return int
    */
   public function getJwtVersion(): int;
-
-  /**
-   * @param mixed $confirmedAGBVersion
-   */
-  public function setConfirmedAGBVersion($confirmedAGBVersion);
 
   /**
    * @param mixed $email

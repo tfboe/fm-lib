@@ -227,24 +227,23 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::recalculateRankingSystems
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Logging::log
    */
   public function testRecalculateRankingSystems()
   {
-    $rs1 = $this->createMock(\Tfboe\FmLib\Entity\RankingSystemInterface::class);
+    $rs1 = $this->createStubWithId(\Tfboe\FmLib\Entity\RankingSystemInterface::class, "rs1");
     $rs1->expects(self::once())->method('getServiceName')->willReturn('service');
-    $rs1->expects(self::exactly(3))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-02-01"));
+    $rs1->expects(self::exactly(2))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-02-01"));
     $rs1->expects(self::once())->method('setOpenSyncFrom')->with(null);
-    $rs1->expects(self::once())->method('setOpenSyncFromInProcess')->with(null);
-    $rs2 = $this->createMock(\Tfboe\FmLib\Entity\RankingSystemInterface::class);
+    $rs2 = $this->createStubWithId(\Tfboe\FmLib\Entity\RankingSystemInterface::class, "rs2");
     $rs2->expects(self::once())->method('getServiceName')->willReturn('service');
-    $rs2->expects(self::exactly(3))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-05-01"));
+    $rs2->expects(self::exactly(2))->method('getOpenSyncFrom')->willReturn(new \DateTime("2017-05-01"));
     $rs2->expects(self::once())->method('setOpenSyncFrom')->with(null);
-    $rs2->expects(self::once())->method('setOpenSyncFromInProcess')->with(null);
     $slash = '\\';
     $first = 'SELECT s';
     $second = ' FROM Tfboe';
     $third = 'FmLib';
-    $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL OR s.openSyncFromInProcess IS NOT NULL';
+    $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL';
     $entityManager = $this->getEntityManagerMockForQuery([$rs1, $rs2],
       $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest, ['flush', 'clear', 'transactional',
         'find']);

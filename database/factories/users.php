@@ -20,6 +20,7 @@ $factory->define(\Tfboe\FmLib\Tests\Entity\User::class, function (\Faker\Generat
     'password' => \Illuminate\Support\Facades\Hash::make($password),
     'email' => $faker->email,
     'jwtVersion' => 1,
-    'confirmedAGBVersion' => 0,
+    'confirmedAGBMinorVersion' => 0,
+    'confirmedAGBMajorVersion' => 0,
   ];
 });
