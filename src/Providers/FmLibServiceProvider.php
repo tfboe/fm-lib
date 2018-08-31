@@ -21,6 +21,8 @@ use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
+use Tfboe\FmLib\Service\AGBService;
+use Tfboe\FmLib\Service\AGBServiceInterface;
 use Tfboe\FmLib\Service\AsyncExecuterService;
 use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
 use Tfboe\FmLib\Service\DeletionService;
@@ -132,6 +134,10 @@ class FmLibServiceProvider extends ServiceProvider
 
     $this->app->singleton(AsyncExecuterServiceInterface::class, function () {
       return new AsyncExecuterService();
+    });
+
+    $this->app->singleton(AGBServiceInterface::class, function (Container $app) {
+      return new AGBService($app->make(EntityManagerInterface::class));
     });
   }
 //</editor-fold desc="Public Methods">

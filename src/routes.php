@@ -42,6 +42,10 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
     'as' => 'login', 'uses' => 'UserController@login'
   ]);
 
+  $router->get('getLatestAGB', [
+    'as' => 'getLatestAGB', 'uses' => 'UserController@getLatestAGB'
+  ]);
+
   $router->group(['middleware' => 'auth:api'], function () use ($router) {
     /**
      * @api {get} /userId Get User ID

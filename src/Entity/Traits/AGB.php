@@ -37,5 +37,53 @@ trait AGB
    * @var int
    */
   private $majorVersion;
+
+  /**
+   * @return string
+   */
+  public function getText(): string
+  {
+    return $this->text;
+  }
+
+  /**
+   * @param string $text
+   */
+  public function setText(string $text): void
+  {
+    $this->text = $text;
+  }
+
+  /**
+   * @return int
+   */
+  public function getMinorVersion(): int
+  {
+    return $this->minorVersion;
+  }
+
+  /**
+   * @param int $minorVersion
+   */
+  public function setMinorVersion(int $minorVersion): void
+  {
+    $this->minorVersion = $minorVersion;
+  }
+
+  /**
+   * @return int
+   */
+  public function getMajorVersion(): int
+  {
+    return $this->majorVersion;
+  }
+
+  /**
+   * @param int $majorVersion
+   */
+  public function setMajorVersion(int $majorVersion): void
+  {
+    $this->majorVersion = $majorVersion;
+  }
 //</editor-fold desc="Fields">
 }

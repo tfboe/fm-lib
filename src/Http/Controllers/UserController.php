@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Application;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
+use Tfboe\FmLib\Service\AGBServiceInterface;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -110,6 +111,17 @@ class UserController extends BaseController
     $this->getEntityManager()->flush();
 
     return $this->getRegisterResponse($request, $app, $user);
+  }
+
+  /**
+   * @param AGBServiceInterface $agbService
+   * @return JsonResponse
+   */
+  public function getLatestAGB(AGBServiceInterface $agbService): JsonResponse
+  {
+    $agb = $agbService->getLatestAGB();
+    return response()->json(["text" => $agb->getText(), "minorVersion" => $agb->getMinorVersion(),
+      "majorVersion" => $agb->getMajorVersion()]);
   }
 
   /**
