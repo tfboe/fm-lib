@@ -13,7 +13,7 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
    *
    * @apiParam {string} email the unique email address of the user
    * @apiParam {string{8..}} password the password
-   * @apiParam {integer{>=0}} confirmedAGBVersion confirmed AGB version
+   * @apiParam {integer{>=0}} confirmedTermsVersion confirmed terms version
    *
    * @apiSuccess {string} id the id of the newly created user
    * @apiError ValidationException The provided email is malformed or does already exist, or the provided password is
@@ -42,8 +42,8 @@ $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use 
     'as' => 'login', 'uses' => 'UserController@login'
   ]);
 
-  $router->get('getLatestAGB', [
-    'as' => 'getLatestAGB', 'uses' => 'UserController@getLatestAGB'
+  $router->get('getLatestTerms', [
+    'as' => 'getLatestTerms', 'uses' => 'UserController@getLatestTerms'
   ]);
 
   $router->group(['middleware' => 'auth:api'], function () use ($router) {

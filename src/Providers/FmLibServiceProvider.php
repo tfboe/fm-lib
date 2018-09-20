@@ -21,8 +21,6 @@ use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
-use Tfboe\FmLib\Service\AGBService;
-use Tfboe\FmLib\Service\AGBServiceInterface;
 use Tfboe\FmLib\Service\AsyncExecuterService;
 use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
 use Tfboe\FmLib\Service\DeletionService;
@@ -41,6 +39,8 @@ use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdent
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
 use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
+use Tfboe\FmLib\Service\TermsService;
+use Tfboe\FmLib\Service\TermsServiceInterface;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
 /**
@@ -136,8 +136,8 @@ class FmLibServiceProvider extends ServiceProvider
       return new AsyncExecuterService();
     });
 
-    $this->app->singleton(AGBServiceInterface::class, function (Container $app) {
-      return new AGBService($app->make(EntityManagerInterface::class));
+    $this->app->singleton(TermsServiceInterface::class, function (Container $app) {
+      return new TermsService($app->make(EntityManagerInterface::class));
     });
   }
 //</editor-fold desc="Public Methods">

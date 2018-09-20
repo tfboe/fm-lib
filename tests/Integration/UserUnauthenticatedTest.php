@@ -60,8 +60,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $this->json('POST', '/register', [
       'email' => $user->getEmail(),
       'password' => 'testPassword2',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1,
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1,
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["email" => ["The email has already been taken."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
@@ -70,8 +70,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
   {
     $this->json('POST', '/register', [
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1,
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1,
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["email" => ["The email field is required."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
@@ -105,8 +105,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $this->json('POST', '/register', [
       'email' => 'invalidEmail',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1,
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1,
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["email" => ["The email must be a valid email address."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
@@ -136,27 +136,27 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     self::assertNull($this->response->headers->get('jwt-token'));
   }
 
-  public function testInvalidLastConfirmedAGBMinorVersion()
+  public function testInvalidLastConfirmedTermsMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => 'noInt',
-      'confirmedAGBMajorVersion' => 1,
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMinorVersion" =>
-      ["The confirmed a g b minor version must be an integer."]],
+      'confirmedTermsMinorVersion' => 'noInt',
+      'confirmedTermsMajorVersion' => 1,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMinorVersion" =>
+      ["The confirmed terms minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
-  public function testInvalidLastConfirmedAGBMajorVersion()
+  public function testInvalidLastConfirmedTermsMajorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMajorVersion' => 'noInt',
-      'confirmedAGBMinorVersion' => 0,
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMajorVersion" =>
-      ["The confirmed a g b major version must be an integer."]],
+      'confirmedTermsMajorVersion' => 'noInt',
+      'confirmedTermsMinorVersion' => 0,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMajorVersion" =>
+      ["The confirmed terms major version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -176,8 +176,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
   {
     $this->json('POST', '/register', [
       'password' => 5,
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1,
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1,
     ])->seeStatusCode(422)->seeJsonEquals(
       ["errors" => [
         "email" => ["The email field is required."],
@@ -185,27 +185,27 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       ], "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
-  public function testNegativeLastConfirmedAGBMinorVersion()
+  public function testNegativeLastConfirmedTermsMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => -1,
-      'confirmedAGBMajorVersion' => 1,
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMinorVersion" =>
-      ["The confirmed a g b minor version must be at least 0."]],
+      'confirmedTermsMinorVersion' => -1,
+      'confirmedTermsMajorVersion' => 1,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMinorVersion" =>
+      ["The confirmed terms minor version must be at least 0."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
-  public function testZeroLastConfirmedAGBMajorVersion()
+  public function testZeroLastConfirmedTermsMajorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMajorVersion' => 0,
-      'confirmedAGBMinorVersion' => 0
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedAGBMajorVersion" =>
-      ["The confirmed a g b major version must be at least 1."]],
+      'confirmedTermsMajorVersion' => 0,
+      'confirmedTermsMinorVersion' => 0
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMajorVersion" =>
+      ["The confirmed terms major version must be at least 1."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -214,8 +214,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 16511233,
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["password" => ["The password must be a string."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
@@ -235,8 +235,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["password" => ["The password field is required."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
@@ -256,36 +256,36 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1
     ])->seeJsonStructure(['id']);
   }
 
-  public function testRegistrationWithAGBVersions()
+  public function testRegistrationWithTermsVersions()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => 5,
-      'confirmedAGBMajorVersion' => 7
+      'confirmedTermsMinorVersion' => 5,
+      'confirmedTermsMajorVersion' => 7
     ])->seeJsonStructure(['id']);
     $result = json_decode($this->response->getContent(), true);
     /** @var UserInterface $user */
     /** @noinspection PhpUndefinedMethodInspection */
     $user = EntityManager::find(User::class, $result['id']);
-    self::assertEquals(5, $user->getConfirmedAGBMinorVersion());
-    self::assertEquals(7, $user->getConfirmedAGBMajorVersion());
+    self::assertEquals(5, $user->getConfirmedTermsMinorVersion());
+    self::assertEquals(7, $user->getConfirmedTermsMajorVersion());
   }
 
-  public function testRegistrationWithStringAsConfirmedAGBMinorVersion()
+  public function testRegistrationWithStringAsConfirmedTermsMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'testPassword',
-      'confirmedAGBMinorVersion' => "5",
-      'confirmedAGBMajorVersion' => 1
+      'confirmedTermsMinorVersion' => "5",
+      'confirmedTermsMajorVersion' => 1
     ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
-      ["confirmedAGBMinorVersion" => ["The confirmed a g b minor version must be an integer."]],
+      ["confirmedTermsMinorVersion" => ["The confirmed terms minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -294,8 +294,8 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
       'password' => 'short',
-      'confirmedAGBMinorVersion' => 0,
-      'confirmedAGBMajorVersion' => 1
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1
     ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
       ["password" => ["The password must be at least 8 characters."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);

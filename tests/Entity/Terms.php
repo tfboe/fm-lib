@@ -10,16 +10,16 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Entity\AGBInterface;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use Tfboe\FmLib\Entity\TermsInterface;
 
 /**
  * Class Competition
  * @package Tfboe\FmLib\Tests\Entity
  * @ORM\Entity
- * @ORM\Table(name="agbs",indexes={@ORM\Index(name="unique_version", columns={"minor_version","major_version"})})
+ * @ORM\Table(name="terms",indexes={@ORM\Index(name="unique_version", columns={"minor_version","major_version"})})
  */
-class AGB extends BaseEntity implements AGBInterface
+class Terms extends BaseEntity implements TermsInterface
 {
-  use \Tfboe\FmLib\Entity\Traits\AGB;
+  use \Tfboe\FmLib\Entity\Traits\Terms;
 }

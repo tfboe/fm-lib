@@ -24,8 +24,8 @@ class UserTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Entity\Traits\User::getJWTCustomClaims
    * @uses   \Tfboe\FmLib\Entity\Traits\User::getJwtVersion
-   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMinorVersion
-   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMajorVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMinorVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMajorVersion
    */
   public function testConstructor()
   {
@@ -33,8 +33,8 @@ class UserTest extends UnitTestCase
     self::assertInstanceOf(User::class, $user);
     self::assertEquals(['ver' => 1], $user->getJWTCustomClaims());
     self::assertEquals(1, $user->getJwtVersion());
-    self::assertEquals(0, $user->getConfirmedAGBMajorVersion());
-    self::assertEquals(0, $user->getConfirmedAGBMinorVersion());
+    self::assertEquals(0, $user->getConfirmedTermsMajorVersion());
+    self::assertEquals(0, $user->getConfirmedTermsMinorVersion());
   }
 
   /**
@@ -88,27 +88,27 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMinorVersion
-   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBMinorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMinorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedTermsMinorVersion
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
-  public function testLastConfirmedAGBMinorVersion()
+  public function testLastConfirmedTermsMinorVersion()
   {
     $user = $this->user();
-    $user->setConfirmedAGBMinorVersion(5);
-    self::assertEquals(5, $user->getConfirmedAGBMinorVersion());
+    $user->setConfirmedTermsMinorVersion(5);
+    self::assertEquals(5, $user->getConfirmedTermsMinorVersion());
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedAGBMajorVersion
-   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedAGBMajorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMajorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedTermsMajorVersion
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
-  public function testLastConfirmedAGBMajorVersion()
+  public function testLastConfirmedTermsMajorVersion()
   {
     $user = $this->user();
-    $user->setConfirmedAGBMajorVersion(5);
-    self::assertEquals(5, $user->getConfirmedAGBMajorVersion());
+    $user->setConfirmedTermsMajorVersion(5);
+    self::assertEquals(5, $user->getConfirmedTermsMajorVersion());
   }
 //</editor-fold desc="Public Methods">
 

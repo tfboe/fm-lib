@@ -10,9 +10,9 @@ namespace Tfboe\FmLib\Service;
 
 
 use Doctrine\ORM\EntityManagerInterface;
-use Tfboe\FmLib\Entity\AGBInterface;
+use Tfboe\FmLib\Entity\TermsInterface;
 
-class AGBService implements AGBServiceInterface
+class TermsService implements TermsServiceInterface
 {
 //<editor-fold desc="Fields">
   /**
@@ -23,7 +23,7 @@ class AGBService implements AGBServiceInterface
 
 //<editor-fold desc="Constructor">
   /**
-   * AGBService constructor.
+   * TermsService constructor.
    * @param EntityManagerInterface $em
    */
   public function __construct(EntityManagerInterface $em)
@@ -34,19 +34,19 @@ class AGBService implements AGBServiceInterface
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return AGBInterface
+   * @return TermsInterface
    */
-  public function getLatestAGB(): AGBInterface
+  public function getLatestTerms(): TermsInterface
   {
     $builder = $this->em->createQueryBuilder();
-    $agb = $builder->select('e')
-      ->from(AGBInterface::class, 'e')
+    $terms = $builder->select('e')
+      ->from(TermsInterface::class, 'e')
       ->orderBy('e.majorVersion', 'DESC')
       ->addOrderBy('e.minorVersion', 'DESC')
       ->setMaxResults(1)
       ->getQuery()
       ->getOneOrNullResult();
-    return $agb;
+    return $terms;
   }
 //</editor-fold desc="Public Methods">
 }

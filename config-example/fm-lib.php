@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 return [
   'entityMaps' => [
-    'Tfboe\\FmLib\\Entity\\AGBInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\AGB',
+    'Tfboe\\FmLib\\Entity\\TermsInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Terms',
     'Tfboe\\FmLib\\Entity\\CompetitionInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Competition',
     'Tfboe\\FmLib\\Entity\\GameInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Game',
     'Tfboe\\FmLib\\Entity\\MatchInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Match',

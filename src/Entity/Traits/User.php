@@ -44,13 +44,13 @@ trait User
    * @ORM\Column(type="integer")
    * @var int
    */
-  private $confirmedAGBMajorVersion;
+  private $confirmedTermsMajorVersion;
 
   /**
    * @ORM\Column(type="integer")
    * @var int
    */
-  private $confirmedAGBMinorVersion;
+  private $confirmedTermsMinorVersion;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -98,33 +98,33 @@ trait User
   /**
    * @return int
    */
-  public function getConfirmedAGBMajorVersion(): int
+  public function getConfirmedTermsMajorVersion(): int
   {
-    return $this->confirmedAGBMajorVersion;
+    return $this->confirmedTermsMajorVersion;
   }
 
   /**
-   * @param int $confirmedAGBMajorVersion
+   * @param int $confirmedTermsMajorVersion
    */
-  public function setConfirmedAGBMajorVersion(int $confirmedAGBMajorVersion)
+  public function setConfirmedTermsMajorVersion(int $confirmedTermsMajorVersion)
   {
-    $this->confirmedAGBMajorVersion = $confirmedAGBMajorVersion;
+    $this->confirmedTermsMajorVersion = $confirmedTermsMajorVersion;
   }
 
   /**
    * @return int
    */
-  public function getConfirmedAGBMinorVersion(): int
+  public function getConfirmedTermsMinorVersion(): int
   {
-    return $this->confirmedAGBMinorVersion;
+    return $this->confirmedTermsMinorVersion;
   }
 
   /**
-   * @param int $confirmedAGBMinorVersion
+   * @param int $confirmedTermsMinorVersion
    */
-  public function setConfirmedAGBMinorVersion(int $confirmedAGBMinorVersion)
+  public function setConfirmedTermsMinorVersion(int $confirmedTermsMinorVersion)
   {
-    $this->confirmedAGBMinorVersion = $confirmedAGBMinorVersion;
+    $this->confirmedTermsMinorVersion = $confirmedTermsMinorVersion;
   }
 
   /**
@@ -151,8 +151,8 @@ trait User
   protected final function init()
   {
     $this->jwtVersion = 1;
-    $this->confirmedAGBMinorVersion = 0;
-    $this->confirmedAGBMajorVersion = 0;
+    $this->confirmedTermsMinorVersion = 0;
+    $this->confirmedTermsMajorVersion = 0;
   }
 //</editor-fold desc="Protected Final Methods">
 }

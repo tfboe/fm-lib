@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Laravel\Lumen\Application;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
-use Tfboe\FmLib\Service\AGBServiceInterface;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
+use Tfboe\FmLib\Service\TermsServiceInterface;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
 /**
@@ -93,8 +93,8 @@ class UserController extends BaseController
     $specification = [];
     $specification['user'] = $this->getCredentialSpecification($app);
     $specification['user']['email']['validation'] .= '|unique:' . $userClass . ',email';
-    $specification['user']['confirmedAGBMinorVersion'] = ['validation' => 'required|integer-type|integer|min:0'];
-    $specification['user']['confirmedAGBMajorVersion'] = ['validation' => 'required|integer-type|integer|min:1'];
+    $specification['user']['confirmedTermsMinorVersion'] = ['validation' => 'required|integer-type|integer|min:0'];
+    $specification['user']['confirmedTermsMajorVersion'] = ['validation' => 'required|integer-type|integer|min:1'];
 
     $this->addAdditionalRegisterSpecifications($specification);
 
@@ -114,14 +114,14 @@ class UserController extends BaseController
   }
 
   /**
-   * @param AGBServiceInterface $agbService
+   * @param TermsServiceInterface $termsService
    * @return JsonResponse
    */
-  public function getLatestAGB(AGBServiceInterface $agbService): JsonResponse
+  public function getLatestTerms(TermsServiceInterface $termsService): JsonResponse
   {
-    $agb = $agbService->getLatestAGB();
-    return response()->json(["text" => $agb->getText(), "minorVersion" => $agb->getMinorVersion(),
-      "majorVersion" => $agb->getMajorVersion()]);
+    $terms = $termsService->getLatestTerms();
+    return response()->json(["text" => $terms->getText(), "minorVersion" => $terms->getMinorVersion(),
+      "majorVersion" => $terms->getMajorVersion()]);
   }
 
   /**

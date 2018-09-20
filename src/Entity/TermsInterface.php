@@ -17,7 +17,7 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
  * Interface GameInterface
  * @package Tfboe\FmLib\Entity
  */
-interface AGBInterface extends BaseEntityInterface, UUIDEntityInterface
+interface TermsInterface extends BaseEntityInterface, UUIDEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**

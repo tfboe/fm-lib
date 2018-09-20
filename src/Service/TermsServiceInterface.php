@@ -9,14 +9,14 @@
 namespace Tfboe\FmLib\Service;
 
 
-use Tfboe\FmLib\Entity\AGBInterface;
+use Tfboe\FmLib\Entity\TermsInterface;
 
-interface AGBServiceInterface
+interface TermsServiceInterface
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @return AGBInterface
+   * @return TermsInterface
    */
-  public function getLatestAGB(): AGBInterface;
+  public function getLatestTerms(): TermsInterface;
 //</editor-fold desc="Public Methods">
 }
