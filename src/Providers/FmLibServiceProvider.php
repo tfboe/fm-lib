@@ -64,8 +64,6 @@ class FmLibServiceProvider extends ServiceProvider
       $attribute, $value, $parameters, $validator) {
       return is_int($value);
     }, 'The :attribute must be an integer.');
-
-    include __DIR__ . '/../routes.php';
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */ //\Doctrine\DBAL\DBALException
@@ -139,6 +137,8 @@ class FmLibServiceProvider extends ServiceProvider
     $this->app->singleton(TermsServiceInterface::class, function (Container $app) {
       return new TermsService($app->make(EntityManagerInterface::class));
     });
+
+    include __DIR__ . '/../routes.php';
   }
 //</editor-fold desc="Public Methods">
 }
