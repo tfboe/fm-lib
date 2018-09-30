@@ -134,7 +134,6 @@ class LoadingService implements LoadingServiceInterface
                       $toDoEntityIds[$subClass] = [];
                     }
                     $toDoEntityIds[$subClass][] = $subObject;
-                    break;
                   }
                 }
               }
