@@ -20,10 +20,6 @@ if [ "$GITHUB_OAUTH" != "" ]; then
     composer config --global -g github-oauth.github.com ${GITHUB_OAUTH}
 fi
 
-composer self-update -q
-
-if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi
-
 composer install
 
 if [ "$INTEGRATION" = '1' ]; then
@@ -52,7 +48,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp -r ../${directory}/database .
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
-    composer config repositories.fm-lib vcs ${REPOSITORY_LOCATION}
+    composer config repositories.fm-lib path ../${directory}
     composer require ${LIB_NAME} --prefer-dist
     composer require phpunit/phpcov:^5.0 --prefer-dist
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
