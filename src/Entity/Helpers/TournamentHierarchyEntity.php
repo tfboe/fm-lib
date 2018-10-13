@@ -87,6 +87,9 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    */
   public function getInfluencingRankingSystems(): array
   {
+    if ($this->influencingRankingSystems == null) {
+      $this->influencingRankingSystems = [];
+    }
     return $this->influencingRankingSystems;
   }
 
