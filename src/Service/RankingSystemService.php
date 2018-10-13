@@ -16,7 +16,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RecalculationInterface;
-use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 
 /**
@@ -58,74 +57,6 @@ class RankingSystemService implements RankingSystemServiceInterface
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
-  /**
-   * @inheritDoc
-   */
-  public function adaptOpenSyncFromValues(TournamentInterface $tournament, array $oldInfluences): void
-  {
-    $earliestInfluences = $this->getRankingSystemsEarliestInfluences($tournament);
-    foreach ($oldInfluences as $id => $arr) {
-      if (array_key_exists($id, $earliestInfluences)) {
-        if ($oldInfluences[$id]["earliestInfluence"] < $earliestInfluences[$id]["earliestInfluence"]) {
-          $earliestInfluences[$id]["earliestInfluence"] = $oldInfluences[$id]["earliestInfluence"];
-        }
-      } else {
-        $earliestInfluences[$id] = $oldInfluences[$id];
-      }
-    }
-    foreach ($earliestInfluences as $arr) {
-      /** @var RankingSystemInterface $ranking */
-      $ranking = $arr["rankingSystem"];
-      $earliestInfluence = $arr["earliestInfluence"];
-      if ($ranking->getOpenSyncFrom() === null || $ranking->getOpenSyncFrom() > $earliestInfluence) {
-        $ranking->setOpenSyncFrom($earliestInfluence);
-      }
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function applyRankingSystems(TournamentInterface $tournament, array $earliestInfluences): void
-  {
-    $rankingSystems = $this->getRankingSystems($tournament);
-    foreach ($rankingSystems as $sys) {
-      if (!array_key_exists($sys->getId(), $earliestInfluences)) {
-        $earliestInfluences[$sys->getId()] = [
-          "rankingSystem" => $sys,
-          "earliestInfluence" => null
-        ];
-      }
-    }
-    foreach ($earliestInfluences as $arr) {
-      /** @var RankingSystemInterface $ranking */
-      $ranking = $arr["rankingSystem"];
-      $earliestInfluence = $arr["earliestInfluence"];
-      $service = $this->dsls->loadRankingSystemService($ranking->getServiceName());
-      $service->updateRankingForTournament($ranking, $tournament, $earliestInfluence);
-    }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  public function getRankingSystemsEarliestInfluences(TournamentInterface $tournament): array
-  {
-    $rankingSystems = $this->getRankingSystems($tournament);
-
-    $result = [];
-    //compute earliest influences
-    foreach ($rankingSystems as $sys) {
-      $service = $this->dsls->loadRankingSystemService($sys->getServiceName());
-      $result[$sys->getId()] = [
-        "rankingSystem" => $sys,
-        "earliestInfluence" => $service->getEarliestInfluence($sys, $tournament)
-      ];
-    }
-
-    return $result;
-  }
-
   /**
    * @inheritDoc
    */

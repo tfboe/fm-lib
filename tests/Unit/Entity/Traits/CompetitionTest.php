@@ -106,6 +106,8 @@ class CompetitionTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::setTournamentWithoutInitializing
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::isInitialized
    */
   public function testTournamentAndParent()
   {

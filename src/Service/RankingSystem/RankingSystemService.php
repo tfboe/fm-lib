@@ -108,32 +108,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
-  /**
-   * @inheritDoc
-   */
-  public function getEarliestInfluence(RankingSystemInterface $ranking, TournamentInterface $tournament): ?\DateTime
-  {
-    return $this->getEarliestEntityInfluence($ranking, $tournament, false);
-  }
-
-  /**
-   * @inheritdoc
-   * @throws PreconditionFailedException
-   * @throws \Doctrine\DBAL\DBALException
-   */
-  public function updateRankingForTournament(RankingSystemInterface $ranking, TournamentInterface $tournament,
-                                             ?\DateTime $oldInfluence)
-  {
-    $earliestInfluence = $this->getEarliestInfluence($ranking, $tournament);
-    if ($oldInfluence !== null &&
-      ($earliestInfluence === null || $oldInfluence < $earliestInfluence)) {
-      $earliestInfluence = $oldInfluence;
-    }
-    if ($earliestInfluence !== null) {
-      $this->updateRankingFrom($ranking, $earliestInfluence, null);
-    }
-  }/** @noinspection PhpDocMissingThrowsInspection */
-
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * @inheritDoc
    * @throws PreconditionFailedException

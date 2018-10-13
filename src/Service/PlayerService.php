@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
-use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
  * Class PlayerService
@@ -60,75 +59,76 @@ class PlayerService implements PlayerServiceInterface
    */
   public function mergePlayers(PlayerInterface $player, PlayerInterface $toMerge)
   {
-    if ($player->getId() == $toMerge->getId()) {
-      return "Players are identical!";
-    }
-
-    /** @var TournamentInterface[] $ts */
-    $ts = $this->em->createQueryBuilder()
-      ->select("t")
-      ->from(TournamentInterface::class, 't')
-      ->innerJoin('t.competitions', 'c')
-      ->innerJoin('c.teams', 'te')
-      ->innerJoin('te.memberships', 'm')
-      ->where('m.player = (:id)')->setParameter('id', $toMerge->getId())
-      ->getQuery()->getResult();
-
-    $tMap = [];
-    foreach ($ts as $tournament) {
-      $tMap[$tournament->getId()] = $tournament;
-    }
-    $ts = array_values($tMap);
-
-    $this->ls->loadEntities($ts); //TODO make this memory safe!!!
-
-    //check if player is attendant in one of the tournaments of toMerge
-    foreach ($ts as $tournament) {
-      foreach ($tournament->getCompetitions() as $competition) {
-        foreach ($competition->getTeams() as $team) {
-          foreach ($team->getMemberships() as $membership) {
-            if ($membership->getPlayer()->getId() == $player->getId()) {
-              return "Player 1 and player 2 both attended the tournament " . $tournament->getName() .
-                "(" . $tournament->getStartTime()->format('d.m.Y H:i') . ", id='" . $tournament->getId() . "')";
-            }
-          }
-        }
-      }
-    }
-
-    //change players
-    foreach ($ts as $tournament) {
-      foreach ($tournament->getCompetitions() as $competition) {
-        $isMember = false;
-        foreach ($competition->getTeams() as $team) {
-          foreach ($team->getMemberships() as $membership) {
-            if ($membership->getPlayer()->getId() == $toMerge->getId()) {
-              $this->rankingSystemService->adaptOpenSyncFromValues($tournament, []);
-              $membership->setPlayer($player);
-              $isMember = true;
-            }
-          }
-        }
-        if ($isMember) {
-          foreach ($competition->getPhases() as $phase) {
-            foreach ($phase->getMatches() as $match) {
-              foreach ($match->getGames() as $game) {
-                if ($game->getPlayersA()->containsKey($toMerge->getId())) {
-                  $game->getPlayersA()->remove($toMerge->getId());
-                  $game->getPlayersA()->set($player->getId(), $player);
-                }
-                if ($game->getPlayersB()->containsKey($toMerge->getId())) {
-                  $game->getPlayersB()->remove($toMerge->getId());
-                  $game->getPlayersB()->set($player->getId(), $player);
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return true;
+    throw new \BadMethodCallException("Not yet implemented!");
+//    if ($player->getId() == $toMerge->getId()) {
+//      return "Players are identical!";
+//    }
+//
+//    /** @var TournamentInterface[] $ts */
+//    $ts = $this->em->createQueryBuilder()
+//      ->select("t")
+//      ->from(TournamentInterface::class, 't')
+//      ->innerJoin('t.competitions', 'c')
+//      ->innerJoin('c.teams', 'te')
+//      ->innerJoin('te.memberships', 'm')
+//      ->where('m.player = (:id)')->setParameter('id', $toMerge->getId())
+//      ->getQuery()->getResult();
+//
+//    $tMap = [];
+//    foreach ($ts as $tournament) {
+//      $tMap[$tournament->getId()] = $tournament;
+//    }
+//    $ts = array_values($tMap);
+//
+//    $this->ls->loadEntities($ts); //TODO make this memory safe!!!
+//
+//    //check if player is attendant in one of the tournaments of toMerge
+//    foreach ($ts as $tournament) {
+//      foreach ($tournament->getCompetitions() as $competition) {
+//        foreach ($competition->getTeams() as $team) {
+//          foreach ($team->getMemberships() as $membership) {
+//            if ($membership->getPlayer()->getId() == $player->getId()) {
+//              return "Player 1 and player 2 both attended the tournament " . $tournament->getName() .
+//                "(" . $tournament->getStartTime()->format('d.m.Y H:i') . ", id='" . $tournament->getId() . "')";
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+//    //change players
+//    foreach ($ts as $tournament) {
+//      foreach ($tournament->getCompetitions() as $competition) {
+//        $isMember = false;
+//        foreach ($competition->getTeams() as $team) {
+//          foreach ($team->getMemberships() as $membership) {
+//            if ($membership->getPlayer()->getId() == $toMerge->getId()) {
+//              $this->rankingSystemService->adaptOpenSyncFromValues($tournament, []);
+//              $membership->setPlayer($player);
+//              $isMember = true;
+//            }
+//          }
+//        }
+//        if ($isMember) {
+//          foreach ($competition->getPhases() as $phase) {
+//            foreach ($phase->getMatches() as $match) {
+//              foreach ($match->getGames() as $game) {
+//                if ($game->getPlayersA()->containsKey($toMerge->getId())) {
+//                  $game->getPlayersA()->remove($toMerge->getId());
+//                  $game->getPlayersA()->set($player->getId(), $player);
+//                }
+//                if ($game->getPlayersB()->containsKey($toMerge->getId())) {
+//                  $game->getPlayersB()->remove($toMerge->getId());
+//                  $game->getPlayersB()->set($player->getId(), $player);
+//                }
+//              }
+//            }
+//          }
+//        }
+//      }
+//    }
+//
+//    return true;
   }
 //</editor-fold desc="Public Methods">
 }

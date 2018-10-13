@@ -46,6 +46,11 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    * @var Collection|RankingSystemInterface[]
    */
   private $rankingSystems;
+
+  /**
+   * @var RankingSystemInterface[]
+   */
+  private $influencingRankingSystems;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -55,6 +60,7 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   public function __construct()
   {
     $this->rankingSystems = new ArrayCollection();
+    $this->influencingRankingSystems = [];
   }
 //</editor-fold desc="Constructor">
 
@@ -65,6 +71,22 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   public function getRankingSystems()
   {
     return $this->rankingSystems;
+  }
+
+  /**
+   * @return RankingSystemInterface[]
+   */
+  public function getInfluencingRankingSystems(): array
+  {
+    return $this->influencingRankingSystems;
+  }
+
+  /**
+   * @param RankingSystemInterface $rankingSystem
+   */
+  public function addInfluencingRankingSystem(RankingSystemInterface $rankingSystem)
+  {
+    $this->influencingRankingSystems[] = $rankingSystem;
   }
 //</editor-fold desc="Public Methods">
 }

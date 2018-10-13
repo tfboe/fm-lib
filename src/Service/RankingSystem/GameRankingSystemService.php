@@ -68,6 +68,79 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
     return $query;
   }
 
+  /**
+   * @param array $values
+   * @return mixed|null
+   */
+  private function min(array $values)
+  {
+    $min = null;
+    foreach ($values as $v) {
+      if ($min === null || ($v !== null && $v < $min)) {
+        $min = $v;
+      }
+    }
+    return $min;
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getEarliestInfluence(RankingSystemInterface $ranking,
+                                       TournamentHierarchyEntity $entity, ?array $entityChangeSet = null): ?\DateTime
+  {
+    if ($entityChangeSet !== null) {
+      if (array_key_exists('endTime', $entityChangeSet)) {
+        return $this->min($entityChangeSet['endTime']);
+      }
+      if ($entity->getEndTime() !== null) {
+        if ($entity instanceof GameInterface) {
+          return $entity->getEndTime();
+        } else {
+          return null;
+        }
+      }
+      if (array_key_exists('startTime', $entityChangeSet)) {
+        return $this->min($entityChangeSet['startTime']);
+      }
+      if ($entity->getStartTime() !== null) {
+        if ($entity instanceof GameInterface) {
+          return $entity->getStartTime();
+        } else {
+          return null;
+        }
+      }
+      if ($entity instanceof TournamentInterface) {
+        if (array_key_exists('updatedAt', $entityChangeSet)) {
+          return $this->min($entityChangeSet['updatedAt']);
+        }
+        return null;
+      } else if ($entity instanceof GameInterface) {
+        //do the same as without a change set, see below
+      } else {
+        return null;
+      }
+    }
+
+    if ($entity instanceof TournamentInterface) {
+      while ($entity->getParent() !== null) {
+        $entity = $entity->getParent();
+        if ($entity->getEndTime() !== null) {
+          return $entity->getEndTime();
+        } else if ($entity->getStartTime() !== null) {
+          return $entity->getStartTime();
+        }
+      }
+      if ($entity instanceof TournamentInterface) {
+        /** @var $entity TournamentInterface */
+        if ($entity->getUpdatedAt() !== null) {
+          return $entity->getUpdatedAt();
+        }
+      }
+    }
+    return null;
+  }
+
 
   /**
    * @inheritDoc

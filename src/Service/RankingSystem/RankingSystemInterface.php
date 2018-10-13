@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
+use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RecalculationInterface;
-use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
  * Interface RankingSystemInterface
@@ -25,22 +25,14 @@ interface RankingSystemInterface
    * This method must be called before a tournament changes and the result must then be used for the
    * earliest_old_influence parameter in the updateRankingForTournament method.
    * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
-   * @param TournamentInterface $tournament
-   * @return \DateTime|null the earliest influence or null iff no entity above the level of this ranking has the ranking
-   *                        in its rankingSystems
+   * @param TournamentHierarchyEntity $entity
+   * @param mixed[][]|null $entityChangeSet Maps properties which changed to an array with two elements, the first the
+   *                       old value and the second the new value. If this is null that means we consider a new or
+   *                       deleted element.
+   * @return \DateTime|null the earliest influence or null iff the entity/the change has not an influence to the ranking
    */
   public function getEarliestInfluence(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking,
-                                       TournamentInterface $tournament): ?\DateTime;
-
-  /**
-   * Updates the rankings for this tournament
-   * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
-   * @param TournamentInterface $tournament
-   * @param \DateTime|null $oldInfluence if the tournament changed this is the earliest influence of the
-   *                       tournament before the change
-   */
-  public function updateRankingForTournament(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking,
-                                             TournamentInterface $tournament, ?\DateTime $oldInfluence);
+                                       TournamentHierarchyEntity $entity, ?array $entityChangeSet = null): ?\DateTime;
 
   /**
    * Updates the rankings assuming all changes happened after $from.
