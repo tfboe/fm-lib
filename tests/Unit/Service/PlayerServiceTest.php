@@ -81,6 +81,7 @@ class PlayerServiceTest extends UnitTestCase
     ]);
 
     /** @var EntityManagerInterface $em */
+    /** @noinspection SyntaxError */
     $em = $this->getEntityManagerMockForQuery([$tournament],
       'SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te ' .
       'INNER JOIN te.memberships m WHERE m.player = (:id)');
@@ -157,6 +158,7 @@ class PlayerServiceTest extends UnitTestCase
 
 
     /** @var EntityManagerInterface $em */
+    /** @noinspection SyntaxError */
     $em = $this->getEntityManagerMockForQuery([$tournament],
       'SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te ' .
       'INNER JOIN te.memberships m WHERE m.player = (:id)');

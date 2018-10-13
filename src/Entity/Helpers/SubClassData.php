@@ -15,7 +15,7 @@ use Tfboe\FmLib\Exceptions\PropertyNotExistingException;
 /**
  * Trait SubClassData
  * implements magic methods for getting and setting subclass data. Stores them in one field, which is stored via
- * doctrine as json_array / string (if json_array is not supported).
+ * doctrine as json / string (if json is not supported).
  * @package Tfboe\FmLib\Entity
  */
 trait SubClassData
@@ -23,7 +23,7 @@ trait SubClassData
 //<editor-fold desc="Fields">
   /**
    * @var array
-   * @ORM\Column(type="json_array")
+   * @ORM\Column(type="json")
    */
   private $subClassData;
 

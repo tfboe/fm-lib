@@ -24,8 +24,56 @@ abstract class UnitTestCase extends TestCase
   use ReflectionMethods;
   use OnlyTestLogging;
 
-//<editor-fold desc="Protected Methods">
+//<editor-fold desc="Public Methods">
+  public function tearDown()
+  {
+    parent::tearDown();
+  }
+//</editor-fold desc="Public Methods">
 
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Gets a mock class (with full implementation). The given arguments are used for the arguments for the constructor.
+   * If too less arguments are given mocks are created for the rest of the constructor arguments.
+   * @param string $className the class to mock
+   * @param array $arguments the arguments to use for the constructor
+   * @param string[] $mockedMethods the methods to mock in the class
+   * @return MockObject the mocked object
+   */
+  protected final function getMockWithMockedArguments(string $className, array $arguments = [],
+                                                      array $mockedMethods = []): MockObject
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $reflection = new \ReflectionClass($className);
+    $params = $reflection->getConstructor()->getParameters();
+    $allArguments = $arguments;
+    for ($i = count($arguments); $i < count($params); $i++) {
+      $allArguments[] = $this->createMock($params[$i]->getClass()->name);
+    }
+    return $this->getMockForAbstractClass($className, $allArguments, '', true, true, true, $mockedMethods);
+  }
+
+  /**
+   * Gets a new instance of the given class. The given arguments are used for the arguments for the constructor.
+   * If too less arguments are given mocks are created for the rest of the constructor arguments.
+   * @param string $className the class for which to create an instance
+   * @param array $arguments the arguments to use for the constructor
+   * @return mixed an instance of the given class
+   */
+  protected final function getObjectWithMockedArguments($className, array $arguments = [])
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $reflection = new \ReflectionClass($className);
+    $params = $reflection->getConstructor()->getParameters();
+    $allArguments = $arguments;
+    for ($i = count($arguments); $i < count($params); $i++) {
+      $allArguments[$i] = $this->createMock($params[$i]->getClass()->name);
+    }
+    return new $className(...$allArguments);
+  }
+//</editor-fold desc="Protected Final Methods">
+
+//<editor-fold desc="Protected Methods">
   /**
    * Creates a stub with a given set of stubbed methods, which will return the given results
    * @param string $class the class name
@@ -51,21 +99,6 @@ abstract class UnitTestCase extends TestCase
   protected function createStubWithId(string $class, $entityId = "entity-id", $getterMethod = 'getId')
   {
     return $this->createStub($class, [$getterMethod => $entityId]);
-  }
-
-  /**
-   * Gets a mock for an entity manager which creates a query builder which will return a query which will return the
-   * given result.
-   * @param array $result the result array the query should return
-   * @param string|null $expectedQuery the expected query if set
-   * @param string[] $otherMockedMethods list of other methods to mock
-   * @return MockObject the mocked entity manager
-   */
-  protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
-                                                  array $otherMockedMethods = [], $amount = 1)
-  {
-    return $this->getEntityManagerMockForQueries(array_fill(0, $amount, $result),
-      $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);
   }
 
   /**
@@ -111,51 +144,19 @@ abstract class UnitTestCase extends TestCase
     return $entityManager;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
   /**
-   * Gets a mock class (with full implementation). The given arguments are used for the arguments for the constructor.
-   * If too less arguments are given mocks are created for the rest of the constructor arguments.
-   * @param string $className the class to mock
-   * @param array $arguments the arguments to use for the constructor
-   * @param string[] $mockedMethods the methods to mock in the class
-   * @return MockObject the mocked object
+   * Gets a mock for an entity manager which creates a query builder which will return a query which will return the
+   * given result.
+   * @param array $result the result array the query should return
+   * @param string|null $expectedQuery the expected query if set
+   * @param string[] $otherMockedMethods list of other methods to mock
+   * @return MockObject the mocked entity manager
    */
-  protected final function getMockWithMockedArguments(string $className, array $arguments = [],
-                                                      array $mockedMethods = []): MockObject
+  protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
+                                                  array $otherMockedMethods = [], $amount = 1)
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $reflection = new \ReflectionClass($className);
-    $params = $reflection->getConstructor()->getParameters();
-    $allArguments = $arguments;
-    for ($i = count($arguments); $i < count($params); $i++) {
-      $allArguments[] = $this->createMock($params[$i]->getClass()->name);
-    }
-    return $this->getMockForAbstractClass($className, $allArguments, '', true, true, true, $mockedMethods);
-  }
-
-  /** @noinspection PhpDocMissingThrowsInspection */
-  /**
-   * Gets a new instance of the given class. The given arguments are used for the arguments for the constructor.
-   * If too less arguments are given mocks are created for the rest of the constructor arguments.
-   * @param string $className the class for which to create an instance
-   * @param array $arguments the arguments to use for the constructor
-   * @return mixed an instance of the given class
-   */
-  protected final function getObjectWithMockedArguments($className, array $arguments = [])
-  {
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $reflection = new \ReflectionClass($className);
-    $params = $reflection->getConstructor()->getParameters();
-    $allArguments = $arguments;
-    for ($i = count($arguments); $i < count($params); $i++) {
-      $allArguments[$i] = $this->createMock($params[$i]->getClass()->name);
-    }
-    return new $className(...$allArguments);
-  }
-
-  public function tearDown()
-  {
-    parent::tearDown();
+    return $this->getEntityManagerMockForQueries(array_fill(0, $amount, $result),
+      $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);
   }
 //</editor-fold desc="Protected Methods">
 }

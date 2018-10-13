@@ -37,6 +37,14 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
 //<editor-fold desc="Protected Methods">
   /**
+   * @return string
+   */
+  protected function getUserDb()
+  {
+    return "users";
+  }
+
+  /**
    * sends a json request with an authentication token
    * @param string $method the method to use (GET, POST, ...)
    * @param string $uri the uri of the request
@@ -54,11 +62,6 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   {
     $this->clearUsers();
     parent::workOnDatabaseDestroy();
-  }
-
-  protected function getUserDb()
-  {
-    return "users";
   }
 
   protected function workOnDatabaseSetUp()

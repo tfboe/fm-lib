@@ -11,6 +11,7 @@ namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Entity\Helpers\BaseTrait;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
@@ -24,6 +25,7 @@ trait RankingSystemListEntry
 {
   use UUIDEntity;
   use SubClassData;
+  use BaseTrait;
 
 //<editor-fold desc="Fields">
   /**
@@ -116,11 +118,21 @@ trait RankingSystemListEntry
    */
   public function setRankingSystemList(RankingSystemListInterface $rankingSystemList)
   {
-    if ($this->rankingSystemList !== null) {
+    if ($this->rankingSystemList !== null && $this->isInitialized($this->rankingSystemList->getEntries())) {
       $this->rankingSystemList->getEntries()->remove($this->getPlayer()->getId());
     }
+    $this->setRankingSystemListWithoutInitializing($rankingSystemList);
+    if ($this->isInitialized($rankingSystemList->getEntries())) {
+      $rankingSystemList->getEntries()->set($this->getPlayer()->getId(), $this);
+    }
+  }
+
+  /**
+   * @param RankingSystemListInterface $rankingSystemList
+   */
+  public function setRankingSystemListWithoutInitializing(RankingSystemListInterface $rankingSystemList)
+  {
     $this->rankingSystemList = $rankingSystemList;
-    $rankingSystemList->getEntries()->set($this->getPlayer()->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 

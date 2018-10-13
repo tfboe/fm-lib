@@ -108,15 +108,6 @@ trait Competition
   }
 
   /**
-   * Competition constructor.
-   */
-  protected final function init()
-  {
-    $this->teams = new ArrayCollection();
-    $this->phases = new ArrayCollection();
-  }
-
-  /**
    * @param TournamentInterface $tournament
    * @return $this|CompetitionInterface|Competition
    */
@@ -130,4 +121,15 @@ trait Competition
     return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Competition constructor.
+   */
+  protected final function init()
+  {
+    $this->teams = new ArrayCollection();
+    $this->phases = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

@@ -23,6 +23,8 @@ class RankingSystem extends BaseEntity implements RankingSystemInterface
 {
   use \Tfboe\FmLib\Entity\Traits\RankingSystem;
 
+//<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    * @param array $keys
@@ -31,4 +33,5 @@ class RankingSystem extends BaseEntity implements RankingSystemInterface
   {
     $this->init($keys);
   }
+//</editor-fold desc="Constructor">
 }

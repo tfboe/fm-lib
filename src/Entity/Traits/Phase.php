@@ -150,18 +150,6 @@ trait Phase
   }
 
   /**
-   * Competition constructor.
-   */
-  protected final function init()
-  {
-    $this->preQualifications = new ArrayCollection();
-    $this->postQualifications = new ArrayCollection();
-    $this->name = '';
-    $this->rankings = new ArrayCollection();
-    $this->matches = new ArrayCollection();
-  }
-
-  /**
    * @param CompetitionInterface $competition
    */
   public function setCompetition(CompetitionInterface $competition)
@@ -181,4 +169,18 @@ trait Phase
     $this->phaseNumber = $phaseNumber;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Competition constructor.
+   */
+  protected final function init()
+  {
+    $this->preQualifications = new ArrayCollection();
+    $this->postQualifications = new ArrayCollection();
+    $this->name = '';
+    $this->rankings = new ArrayCollection();
+    $this->matches = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

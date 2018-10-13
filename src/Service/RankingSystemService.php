@@ -14,10 +14,10 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
-use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RecalculationInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Helpers\Logging;
+use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 
 /**
  * Class RankingSystemService
@@ -33,6 +33,11 @@ class RankingSystemService implements RankingSystemServiceInterface
 
   /** @var EntityManagerInterface */
   private $entityManager;
+
+  /**
+   * @var ObjectCreatorServiceInterface
+   */
+  private $ocs;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -41,11 +46,14 @@ class RankingSystemService implements RankingSystemServiceInterface
    * RankingSystemService constructor.
    * @param DynamicServiceLoadingServiceInterface $dsls
    * @param EntityManagerInterface $entityManager
+   * @param ObjectCreatorServiceInterface $ocs
    */
-  public function __construct(DynamicServiceLoadingServiceInterface $dsls, EntityManagerInterface $entityManager)
+  public function __construct(DynamicServiceLoadingServiceInterface $dsls, EntityManagerInterface $entityManager,
+                              ObjectCreatorServiceInterface $ocs)
   {
     $this->dsls = $dsls;
     $this->entityManager = $entityManager;
+    $this->ocs = $ocs;
   }
 //</editor-fold desc="Constructor">
 
@@ -126,43 +134,47 @@ class RankingSystemService implements RankingSystemServiceInterface
     //clear entityManager to save memory
     $this->entityManager->flush();
     $this->entityManager->clear();
-    $rankingSystemOpenSyncFroms = [];
-    /** @var RankingSystemInterface[] $rankingSystems */
-    $rankingSystems = [];
-    $this->entityManager->transactional(
-      function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
-        $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
-        $query = $em->createQueryBuilder();
-        $query
-          ->from(RankingSystemInterface::class, 's')
-          ->select('s')
-          ->where($query->expr()->isNotNull('s.openSyncFrom'));
-        /** @var RankingSystemInterface[] $rankingSystems */
-        $rankingSystems = $query->getQuery()->setLockMode(LockMode::PESSIMISTIC_WRITE)->getResult();
-        foreach ($rankingSystems as $rankingSystem) {
-          $rankingSystemOpenSyncFroms[$rankingSystem->getId()] = $rankingSystem->getOpenSyncFrom();
-          Logging::log("Update Ranking System " . $rankingSystem->getName() . " from " .
-            $rankingSystem->getOpenSyncFrom()->format("Y-m-d H:i:s"));
-          $rankingSystem->setOpenSyncFrom(null);
-        }
-      }
-    );
 
-    if (count($rankingSystems) > 0) {
+    $query = $this->entityManager->createQueryBuilder();
+    $query
+      ->from(RankingSystemInterface::class, 's')
+      ->select('s')
+      ->where($query->expr()->isNotNull('s.openSyncFrom'));
+    /** @var RankingSystemInterface[] $rankingSystems */
+    $rankingSystems = $query->getQuery()->getResult();
+
+    foreach ($rankingSystems as $rankingSystem) {
+      $recalculateFrom = null;
       $this->entityManager->transactional(
-        function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
-          /** @var LastRecalculationInterface $lastRecalculation */
-          $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
-          $em->flush();
-          $lastRecalculation->setStartTime(new \DateTime());
-          foreach ($rankingSystems as $rankingSystem) {
-            $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-            $service->updateRankingFrom($rankingSystem, $rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
+        function (EntityManager $em) use ($rankingSystem, &$recalculateFrom) {
+          $em->lock($rankingSystem, LockMode::PESSIMISTIC_WRITE);
+          $recalculation = $this->getRecalculation($em, $rankingSystem);
+          $em->refresh($rankingSystem);
+          $recalculateFrom = $rankingSystem->getOpenSyncFrom();
+          $rankingSystem->setOpenSyncFrom(null);
+          if ($recalculation->getRecalculateFrom() === null ||
+            $recalculation->getRecalculateFrom() > $recalculateFrom) {
+            $recalculation->setRecalculateFrom($recalculateFrom);
+          } else {
+            $recalculateFrom = $recalculation->getRecalculateFrom();
           }
-          $lastRecalculation->setEndTime(new \DateTime());
-          $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);
         }
       );
+      if ($recalculateFrom !== null) {
+        $this->entityManager->transactional(
+          function (EntityManager $em) use (&$rankingSystem) {
+            $recalculation = $this->getRecalculation($em, $rankingSystem);
+            $recalculation->setVersion($recalculation->getVersion() + 1);
+            $recalculation->setStartTime(new \DateTime());
+            $recalculation->setEndTime(null);
+            $em->flush();
+            $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
+            $service->updateRankingFrom($rankingSystem, $recalculation->getRecalculateFrom(), $recalculation);
+            $recalculation->setEndTime(new \DateTime());
+            $recalculation->setRecalculateFrom(null);
+          }
+        );
+      }
     }
   }
 //</editor-fold desc="Public Methods">
@@ -179,6 +191,42 @@ class RankingSystemService implements RankingSystemServiceInterface
       $result = array_merge($result, $this->getRankingSystems($child));
     }
     return $result;
+  }
+
+  /**
+   * @param EntityManagerInterface $em
+   * @param RankingSystemInterface $rankingSystem
+   * @return RecalculationInterface
+   * @throws \Doctrine\ORM\OptimisticLockException
+   * @throws \Doctrine\ORM\PessimisticLockException
+   * @throws \Doctrine\ORM\TransactionRequiredException
+   * @throws PreconditionFailedException
+   */
+  private function getRecalculation(EntityManagerInterface $em,
+                                    RankingSystemInterface $rankingSystem): RecalculationInterface
+  {
+    $query = $em->createQueryBuilder();
+    $query
+      ->from(RecalculationInterface::class, 'r')
+      ->select('r')
+      ->where($query->expr()->eq('r.rankingSystem', ':rankingSystem'))
+      ->setParameter('rankingSystem', $rankingSystem);
+    $recalculations = $query->getQuery()->setLockMode(LockMode::PESSIMISTIC_WRITE)->getResult();
+    if (count($recalculations) > 1) {
+      throw new PreconditionFailedException("Can't have multiple recalculations for one ranking system in parallel!");
+    }
+    if (count($recalculations) == 0) {
+      $recalculation = $this->ocs->createObjectFromInterface(RecalculationInterface::class);
+      $recalculation->setVersion(1);
+      $recalculation->setRankingSystem($rankingSystem);
+      $recalculation->setStartTime(new \DateTime());
+      $em->persist($recalculation);
+      $em->flush();
+      $em->lock($recalculation, LockMode::PESSIMISTIC_WRITE);
+      return $recalculation;
+    } else {
+      return $recalculations[0];
+    }
   }
 //</editor-fold desc="Private Methods">
 }

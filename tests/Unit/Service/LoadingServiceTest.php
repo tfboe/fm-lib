@@ -66,6 +66,7 @@ class LoadingServiceTest extends UnitTestCase
    */
   public function testLoadEntitiesDefaultPropertiesGame()
   {
+    /** @noinspection SyntaxError */
     $service = new LoadingService($this->getEntityManagerMockForQuery([],
       'SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 LEFT JOIN '
       . 't1.playersB t3 WHERE t1.id IN(\'g\')'
@@ -117,6 +118,7 @@ class LoadingServiceTest extends UnitTestCase
 
     $competition2->method('getPhases')->willReturn(new ArrayCollection([$phase2]));
 
+    /** @noinspection SyntaxError */
     $entityManager = $this->getEntityManagerMockForQueries([[], []], [
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\TournamentInterface t1 LEFT JOIN t1.competitions t2 WHERE t1.id IN(\'t\')',
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\CompetitionInterface t1 LEFT JOIN t1.phases t2 WHERE t1.id IN(\'c1\')'
@@ -137,6 +139,7 @@ class LoadingServiceTest extends UnitTestCase
    */
   public function testLoadEntitiesNullProperty()
   {
+    /** @noinspection SyntaxError */
     $service = new LoadingService($this->getEntityManagerMockForQuery([],
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\TournamentInterface t1 LEFT JOIN t1.competitions t2 WHERE t1.id IN(\'t\')'
     ));
@@ -154,6 +157,7 @@ class LoadingServiceTest extends UnitTestCase
    */
   public function testLoadEntitiesSimpleProperty()
   {
+    /** @noinspection SyntaxError */
     $service = new LoadingService($this->getEntityManagerMockForQuery([],
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\CompetitionInterface t1 LEFT JOIN t1.tournament t2 WHERE t1.id IN(\'c\')'
     ));

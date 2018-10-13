@@ -22,6 +22,7 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
+
 abstract class Phase implements PhaseInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Phase;

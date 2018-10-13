@@ -22,6 +22,8 @@ class User extends BaseEntity implements UserInterface
 {
   use \Tfboe\FmLib\Entity\Traits\User;
 
+//<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    */
@@ -29,4 +31,5 @@ class User extends BaseEntity implements UserInterface
   {
     $this->init();
   }
+//</editor-fold desc="Constructor">
 }

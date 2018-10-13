@@ -36,6 +36,15 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Protected Methods">
+  /** @noinspection PhpMissingParentCallCommonInspection */
+  /**
+   * @inheritDoc
+   */
+  protected function getAdditionalChangeFields(): array
+  {
+    return ['teamElo', 'opponentElo'];
+  }
+
   /**
    * Gets additional fields for this ranking type
    * @return string[] list of additional fields
@@ -48,7 +57,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   /**
    * @inheritDoc
    */
-  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array
+  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list,
+                                array $oldChanges, array &$entries): array
   {
     /** @var GameInterface $game */
     $game = $entity;
@@ -57,13 +67,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
     if (!$game->isPlayed() || $game->getResult() === Result::NOT_YET_FINISHED ||
       $game->getResult() === Result::NULLED) {
       //game gets not elo rated
-      $this->addNotRatedChanges($changes, $game->getPlayersA(), $entity, $list->getRankingSystem());
-      $this->addNotRatedChanges($changes, $game->getPlayersB(), $entity, $list->getRankingSystem());
+      $this->addNotRatedChanges($changes, $game->getPlayersA(), $entity, $list->getRankingSystem(), $oldChanges);
+      $this->addNotRatedChanges($changes, $game->getPlayersB(), $entity, $list->getRankingSystem(), $oldChanges);
       return $changes;
     }
 
-    $entriesA = $this->getEntriesOfPlayers($game->getPlayersA(), $list);
-    $entriesB = $this->getEntriesOfPlayers($game->getPlayersB(), $list);
+    $entriesA = $this->getEntriesOfPlayers($game->getPlayersA(), $list, $entries);
+    $entriesB = $this->getEntriesOfPlayers($game->getPlayersB(), $list, $entries);
 
     $isAProvisory = $this->hasProvisoryEntry($entriesA);
     $isBProvisory = $this->hasProvisoryEntry($entriesB);
@@ -91,9 +101,9 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 
     $this->computeChanges($changes, $entriesA, $resultA, $expectationDiffA, $game, $averageA, $averageB,
-      $isAProvisory, $isBProvisory);
+      $isAProvisory, $isBProvisory, $oldChanges);
     $this->computeChanges($changes, $entriesB, $resultB, $expectationDiffB, $game, $averageB, $averageA,
-      $isBProvisory, $isAProvisory);
+      $isBProvisory, $isAProvisory, $oldChanges);
     return $changes;
   }
 
@@ -114,12 +124,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param Collection|PlayerInterface[] $players
    * @param TournamentHierarchyEntity $entity
    * @param RankingSystemInterface $ranking
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
    */
   private function addNotRatedChanges(array &$changes, Collection $players, TournamentHierarchyEntity $entity,
-                                      RankingSystemInterface $ranking)
+                                      RankingSystemInterface $ranking, array $oldChanges)
   {
     foreach ($players as $player) {
-      $change = $this->getOrCreateChange($entity, $ranking, $player);
+      $change = $this->getOrCreateChange($entity, $ranking, $player, $oldChanges);
       $change->setTeamElo(0.0);
       $change->setOpponentElo(0.0);
       $change->setPointsChange(0.0);
@@ -128,14 +139,6 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
       $change->setProvisoryRanking(0.0);
       $changes[] = $change;
     }
-  }
-
-  /**
-   * @inheritDoc
-   */
-  protected function getAdditionalChangeFields(): array
-  {
-    return ['teamElo', 'opponentElo'];
   }
 
   /** @noinspection PhpTooManyParametersInspection */ //TODO refactor this method
@@ -149,14 +152,15 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param float $opponentAverage
    * @param bool $teamHasProvisory
    * @param bool $opponentHasProvisory
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
    */
   private function computeChanges(array &$changes, array $entries, float $result, float $expectationDiff,
                                   GameInterface $game, float $teamAverage, float $opponentAverage,
-                                  bool $teamHasProvisory, bool $opponentHasProvisory)
+                                  bool $teamHasProvisory, bool $opponentHasProvisory, array $oldChanges)
   {
     foreach ($entries as $entry) {
       $change = $this->getOrCreateChange($game, $entry->getRankingSystemList()->getRankingSystem(),
-        $entry->getPlayer());
+        $entry->getPlayer(), $oldChanges);
       $change->setPlayedGames(1);
       $change->setTeamElo($teamHasProvisory ? 0.0 : $teamAverage);
       $change->setOpponentElo($opponentHasProvisory ? 0.0 : $opponentAverage);

@@ -28,17 +28,17 @@ trait UUIDEntity
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return string
+   * @return string|int
    */
-  public function getId(): string
+  public function getEntityId()
   {
     return $this->id;
   }
 
   /**
-   * @return string|int
+   * @return string
    */
-  public function getEntityId()
+  public function getId(): string
   {
     return $this->id;
   }

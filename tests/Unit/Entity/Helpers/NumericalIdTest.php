@@ -21,18 +21,6 @@ class NumericalIdTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Helpers\NumericalId::getId
-   */
-  public function testId()
-  {
-    $player = $this->player();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $idProperty = self::getProperty(get_class($player), 'id');
-    $idProperty->setValue($player, 0);
-    self::assertEquals(0, $player->getId());
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Entity\Helpers\NumericalId::getEntityId
    */
   public function testEntityId()
@@ -42,6 +30,18 @@ class NumericalIdTest extends UnitTestCase
     $idProperty = self::getProperty(get_class($player), 'id');
     $idProperty->setValue($player, 1);
     self::assertEquals(1, $player->getEntityId());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\NumericalId::getId
+   */
+  public function testId()
+  {
+    $player = $this->player();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $idProperty = self::getProperty(get_class($player), 'id');
+    $idProperty->setValue($player, 0);
+    self::assertEquals(0, $player->getId());
   }
 //</editor-fold desc="Public Methods">
 

@@ -67,5 +67,10 @@ interface RankingSystemListEntryInterface extends BaseEntityInterface, UUIDEntit
    * @param RankingSystemListInterface $rankingSystemList
    */
   public function setRankingSystemList(RankingSystemListInterface $rankingSystemList);
+
+  /**
+   * @param RankingSystemListInterface $rankingSystemList
+   */
+  public function setRankingSystemListWithoutInitializing(RankingSystemListInterface $rankingSystemList);
 //</editor-fold desc="Public Methods">
 }

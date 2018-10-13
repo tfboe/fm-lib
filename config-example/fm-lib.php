@@ -18,6 +18,8 @@ return [
     'Tfboe\\FmLib\\Entity\\TournamentInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\Tournament',
     'Tfboe\\FmLib\\Entity\\UserInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\User',
     'Tfboe\\FmLib\\Entity\\TeamMembershipInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\TeamMembership',
-    'Tfboe\\FmLib\\Entity\\LastRecalculationInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\LastRecalculation',
+    'Tfboe\\FmLib\\Entity\\RecalculationInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\LastRecalculation',
+    'Tfboe\\FmLib\\Entity\\TournamentHierarchyEntityRankingTimeInterface' =>
+      'Tfboe\\FmLib\\Tests\\Entity\\TournamentHierarchyEntityRankingTime',
   ]
 ];

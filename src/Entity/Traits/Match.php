@@ -137,16 +137,6 @@ trait Match
   }
 
   /**
-   * Match constructor.
-   */
-  protected final function init()
-  {
-    $this->rankingsA = new ArrayCollection();
-    $this->rankingsB = new ArrayCollection();
-    $this->games = new ArrayCollection();
-  }
-
-  /**
    * @param int $matchNumber
    */
   public function setMatchNumber(int $matchNumber)
@@ -166,4 +156,16 @@ trait Match
     $phase->getMatches()->set($this->getMatchNumber(), $this);
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Match constructor.
+   */
+  protected final function init()
+  {
+    $this->rankingsA = new ArrayCollection();
+    $this->rankingsB = new ArrayCollection();
+    $this->games = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

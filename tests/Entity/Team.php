@@ -23,6 +23,8 @@ class Team extends BaseEntity implements TeamInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Team;
 
+//<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    */
@@ -30,4 +32,5 @@ class Team extends BaseEntity implements TeamInterface
   {
     $this->init();
   }
+//</editor-fold desc="Constructor">
 }

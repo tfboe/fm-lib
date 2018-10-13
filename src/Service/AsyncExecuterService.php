@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -8,7 +9,10 @@
 
 namespace Tfboe\FmLib\Service;
 
-
+/**
+ * Class AsyncExecuterService
+ * @package Tfboe\FmLib\Service
+ */
 class AsyncExecuterService implements AsyncExecuterServiceInterface
 {
 //<editor-fold desc="Public Methods">

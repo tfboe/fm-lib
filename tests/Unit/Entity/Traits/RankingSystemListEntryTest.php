@@ -99,6 +99,8 @@ class RankingSystemListEntryTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::isInitialized
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemListWithoutInitializing
    */
   public function testRankingSystemList()
   {
@@ -123,6 +125,8 @@ class RankingSystemListEntryTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::isInitialized
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemListWithoutInitializing
    */
   public function testRankingSystemListRemoveFromOld()
   {

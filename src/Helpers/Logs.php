@@ -17,6 +17,7 @@ abstract class Logs extends BasicEnum
 {
 //<editor-fold desc="Fields">
   const GENERAL = "general";
+  const RANKING_COMPUTATION = "ranking_computation";
   const TESTING = "testing";
 //</editor-fold desc="Fields">
 }

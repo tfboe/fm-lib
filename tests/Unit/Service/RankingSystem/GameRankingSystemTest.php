@@ -11,8 +11,10 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Tfboe\FmLib\Helpers\Level;
+use Tfboe\FmLib\Service\LoadingService;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService;
@@ -35,10 +37,16 @@ class GameRankingSystemTest extends UnitTestCase
    */
   public function testGetEntitiesQueryBuilder()
   {
-    $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '', false);
+    $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '', false, true, true, ['getClassMetadata']);
+    $metaData = $this->createMock(ClassMetadata::class);
+    $entityManager->method('getClassMetadata')->willReturn($metaData);
+    $reflectionClass = new \ReflectionClass(GameRankingSystemTest::class);
+    $metaData->method('getReflectionClass')->willReturn($reflectionClass);
     $system = $this->getMockForAbstractClass(GameRankingSystemService::class, [$entityManager,
       $this->createMock(TimeServiceInterface::class),
-      $this->createMock(EntityComparerInterface::class), $this->createMock(ObjectCreatorServiceInterface::class)]);
+      $this->createMock(EntityComparerInterface::class),
+      $this->createMock(ObjectCreatorServiceInterface::class),
+      $this->createMock(LoadingService::class)]);
     $rankingSystem = $this->createMock(RankingSystem::class);
     $rankingSystem->method('getId')->willReturn('ranking-system-id');
     /** @var QueryBuilder $builder */
@@ -62,10 +70,16 @@ class GameRankingSystemTest extends UnitTestCase
    */
   public function testLevel()
   {
+    $entityManager = $this->createMock(EntityManagerInterface::class);
+    $metaData = $this->createMock(ClassMetadata::class);
+    $entityManager->method('getClassMetadata')->willReturn($metaData);
+    $reflectionClass = new \ReflectionClass(GameRankingSystemTest::class);
+    $metaData->method('getReflectionClass')->willReturn($reflectionClass);
     $system = $this->getMockForAbstractClass(GameRankingSystemService::class,
-      [$this->createMock(EntityManagerInterface::class),
+      [$entityManager,
         $this->createMock(TimeServiceInterface::class),
-        $this->createMock(EntityComparerInterface::class), $this->createMock(ObjectCreatorServiceInterface::class)]);
+        $this->createMock(EntityComparerInterface::class), $this->createMock(ObjectCreatorServiceInterface::class),
+        $this->createMock(LoadingService::class)]);
     self::assertEquals(Level::GAME, self::callProtectedMethod($system, "getLevel"));
   }
 //</editor-fold desc="Public Methods">

@@ -23,8 +23,6 @@ use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
 use Tfboe\FmLib\Service\AsyncExecuterService;
 use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
-use Tfboe\FmLib\Service\DeletionService;
-use Tfboe\FmLib\Service\DeletionServiceInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\LoadingService;
@@ -102,7 +100,7 @@ class FmLibServiceProvider extends ServiceProvider
 
     $this->app->singleton(RankingSystemServiceInterface::class, function (Container $app) {
       return new RankingSystemService($app->make(DynamicServiceLoadingServiceInterface::class),
-        $app->make(EntityManagerInterface::class));
+        $app->make(EntityManagerInterface::class), $app->make(ObjectCreatorServiceInterface::class));
     });
 
     $this->app->singleton(ObjectCreatorServiceInterface::class, function () {
@@ -115,7 +113,8 @@ class FmLibServiceProvider extends ServiceProvider
         $app->make(EntityManagerInterface::class),
         $timeService,
         new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService),
-        $app->make(ObjectCreatorServiceInterface::class));
+        $app->make(ObjectCreatorServiceInterface::class),
+        $app->make(LoadingServiceInterface::class));
     });
 
     $this->app->singleton(LoadingServiceInterface::class, function (Container $app) {

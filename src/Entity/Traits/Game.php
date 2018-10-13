@@ -127,15 +127,6 @@ trait Game
   }
 
   /**
-   * Match constructor.
-   */
-  protected final function init()
-  {
-    $this->playersA = new ArrayCollection();
-    $this->playersB = new ArrayCollection();
-  }
-
-  /**
    * @param int $gameNumber
    */
   public function setGameNumber(int $gameNumber)
@@ -155,4 +146,15 @@ trait Game
     $match->getGames()->set($this->getGameNumber(), $this);
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Match constructor.
+   */
+  protected final function init()
+  {
+    $this->playersA = new ArrayCollection();
+    $this->playersB = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

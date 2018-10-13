@@ -12,17 +12,27 @@ namespace Tfboe\FmLib\Service\RankingSystem;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\MatchInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Entity\RecalculationInterface;
+use Tfboe\FmLib\Entity\TournamentHierarchyEntityRankingTimeInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
+use Tfboe\FmLib\Helpers\Logging;
+use Tfboe\FmLib\Helpers\Logs;
+use Tfboe\FmLib\Service\LoadingServiceInterface;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 
 
@@ -34,6 +44,8 @@ use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface
 {
 //<editor-fold desc="Fields">
+  /** @var LoadingServiceInterface */
+  protected $loadingService;
   /** @var EntityManagerInterface */
   private $entityManager;
   /** @var TimeServiceInterface */
@@ -57,9 +69,11 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @var RankingSystemService[]
    */
   private $updateRankingCalls;
-
   /** @var ObjectCreatorServiceInterface */
   private $objectCreatorService;
+  /** @var string[] */
+  private $toForgetClasses;
+
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -69,10 +83,12 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @param TimeServiceInterface $timeService
    * @param EntityComparerInterface $entityComparer
    * @param ObjectCreatorServiceInterface $objectCreatorService
+   * @param LoadingServiceInterface $loadingService
    */
   public function __construct(EntityManagerInterface $entityManager, TimeServiceInterface $timeService,
                               EntityComparerInterface $entityComparer,
-                              ObjectCreatorServiceInterface $objectCreatorService)
+                              ObjectCreatorServiceInterface $objectCreatorService,
+                              LoadingServiceInterface $loadingService)
   {
     $this->entityManager = $entityManager;
     $this->timeService = $timeService;
@@ -81,6 +97,13 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     $this->oldChanges = [];
     $this->updateRankingCalls = [];
     $this->objectCreatorService = $objectCreatorService;
+    $this->loadingService = $loadingService;
+    $this->toForgetClasses = [RankingSystemListEntryInterface::class, RankingSystemChangeInterface::class,
+      PlayerInterface::class, TournamentInterface::class, CompetitionInterface::class, PhaseInterface::class,
+      MatchInterface::class, GameInterface::class, TournamentHierarchyEntity::class];
+    foreach ($this->toForgetClasses as &$class) {
+      $class = $this->entityManager->getClassMetadata($class)->getReflectionClass()->getName();
+    }
   }
 //</editor-fold desc="Constructor">
 
@@ -95,6 +118,8 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
   /**
    * @inheritdoc
+   * @throws PreconditionFailedException
+   * @throws \Doctrine\DBAL\DBALException
    */
   public function updateRankingForTournament(RankingSystemInterface $ranking, TournamentInterface $tournament,
                                              ?\DateTime $oldInfluence)
@@ -105,18 +130,28 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       $earliestInfluence = $oldInfluence;
     }
     if ($earliestInfluence !== null) {
-      $this->updateRankingFrom($ranking, $earliestInfluence);
+      $this->updateRankingFrom($ranking, $earliestInfluence, null);
     }
-  }
+  }/** @noinspection PhpDocMissingThrowsInspection */
 
   /**
    * @inheritDoc
+   * @throws PreconditionFailedException
+   * @throws \Doctrine\DBAL\DBALException
    */
-  public function updateRankingFrom(RankingSystemInterface $ranking, \DateTime $from)
+  public function updateRankingFrom(RankingSystemInterface $ranking, \DateTime $from,
+                                    ?RecalculationInterface $recalculation)
   {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    Logging::log("Starting updating ranking " . $ranking->getName() . " from " . $from->format('Y-m-d H:i:s'),
+      Logs::RANKING_COMPUTATION);
     // can only be called once per ranking system!!!
     if (array_key_exists($ranking->getId(), $this->updateRankingCalls)) {
       throw new PreconditionFailedException();
+    }
+    $earliestTime = new \DateTime(env('EARLIEST_TIME', '2017-01-01 00:00:00'));
+    if ($from < $earliestTime) {
+      $from = $earliestTime;
     }
     $this->updateRankingCalls[$ranking->getId()] = $ranking;
     //find first reusable
@@ -126,6 +161,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     $current = null;
     /** @var RankingSystemListInterface $lastReusable */
     $lastReusable = null;
+    /** @var RankingSystemListInterface[] $toUpdate */
     $toUpdate = [];
 
     foreach ($lists as $list) {
@@ -144,26 +180,24 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
     if ($lastReusable === null) {
       $lastReusable = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
+      $date = clone $earliestTime;
+      $date->modify('-1 second');
+      $lastReusable->setLastEntryTime($date);
+      $this->getEntityManager()->persist($lastReusable);
+      $lastReusable->setRankingSystem($ranking);
     }
 
     usort($toUpdate, function (RankingSystemListInterface $list1, RankingSystemListInterface $list2) {
       return $list1->getLastEntryTime() <=> $list2->getLastEntryTime();
     });
 
+    $this->updateRankingTimes($from, $ranking);
 
-    $lastListTime = null;
     foreach ($toUpdate as $list) {
-      $entities = $this->getNextEntities($ranking, $lastReusable, $list);
-      if ($lastListTime == null) {
-        if (count($entities) > 0) {
-          $lastListTime = max($lastReusable->getLastEntryTime(), $this->timeService->getTime($entities[0]));
-        } else {
-          $lastListTime = $lastReusable->getLastEntryTime();
-        }
-      }
-      $this->recomputeBasedOn($list, $lastReusable, $entities, $lastListTime);
+      $this->recomputeBasedOn($list, $lastReusable);
+      $recalculation->setRecalculateFrom($list->getLastEntryTime());
+      $this->entityManager->flush();
       $lastReusable = $list;
-      $lastListTime = $lastReusable->getLastEntryTime();
     }
 
     if ($current === null) {
@@ -174,42 +208,13 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       $current->setRankingSystem($ranking);
     }
 
-    $entities = $this->getNextEntities($ranking, $lastReusable, $current);
-    if ($lastListTime == null) {
-      if (count($entities) > 0) {
-        $lastListTime = max($lastReusable->getLastEntryTime(), $this->timeService->getTime($entities[0]));
-      } else {
-        $lastListTime = $lastReusable->getLastEntryTime();
-      }
-    }
-    $this->recomputeBasedOn($current, $lastReusable, $entities, $lastListTime);
-    $this->deleteOldChanges();
-  }
-
-  /**
-   * @param RankingSystemInterface $ranking
-   * @param RankingSystemListInterface $lastReusable
-   * @param RankingSystemListInterface $list
-   * @return array|TournamentHierarchyEntity[]
-   */
-  private function getNextEntities(RankingSystemInterface $ranking, RankingSystemListInterface $lastReusable,
-                                   RankingSystemListInterface $list)
-  {
-    $this->deleteOldChanges();
-    $entities = $this->getEntities($ranking, $lastReusable->getLastEntryTime(),
-      $list->isCurrent() ? $this->getMaxDate() : $list->getLastEntryTime());
-
-    //sort entities
-    $this->timeService->clearTimes();
-    usort($entities, function ($entity1, $entity2) {
-      return $this->entityComparer->compareEntities($entity1, $entity2);
-    });
-
-    $this->markOldChangesAsDeleted($ranking, $entities);
-
-    return $entities;
+    $this->recomputeBasedOn($current, $lastReusable);
+    /** @noinspection PhpUnhandledExceptionInspection */
+    Logging::log("Finished updating ranking " . $ranking->getName() . " from " . $from->format('Y-m-d H:i:s')
+      . ", peak memory usage: " . memory_get_peak_usage(), Logs::RANKING_COMPUTATION);
   }
 //</editor-fold desc="Public Methods">
+
 //<editor-fold desc="Protected Final Methods">
   /**
    * Computes the average rating of the given entries
@@ -230,20 +235,6 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   }
 
   /**
-   * Gets the relevant entities for updating
-   * @param RankingSystemInterface $ranking the ranking for which to get the entities
-   * @param \DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities with
-   *                        time value exactly $from
-   * @param \DateTime to search for entities with a time value SMALLER OR EQUAL than $to
-   * @return TournamentHierarchyEntity[]
-   */
-  protected final function getEntities(RankingSystemInterface $ranking, \DateTime $from, \DateTime $to): array
-  {
-    $query = $this->getEntitiesQueryBuilder($ranking, $from, $to);
-    return $query->getQuery()->getResult();
-  }
-
-  /**
    * @return EntityManagerInterface
    */
   protected final function getEntityManager(): EntityManagerInterface
@@ -252,15 +243,31 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   }
 
   /**
+   * Gets the relevant entities for updating
+   * @param RankingSystemInterface $ranking the ranking for which to get the entities
+   * @param \DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities with
+   *                        time value exactly $from
+   * @param \DateTime to search for entities with a time value SMALLER OR EQUAL than $to
+   * @return TournamentHierarchyEntity[]
+   */
+  /*protected final function getEntities(RankingSystemInterface $ranking, \DateTime $from, \DateTime $to): array
+  {
+    $query = $this->getEntitiesQueryBuilder($ranking, $from, $to);
+    return $query->getQuery()->getResult();
+  }*/
+
+  /**
    * @param Collection|PlayerInterface[] $players
    * @param RankingSystemListInterface $list
+   * @param RankingSystemListEntryInterface[] $entries a dictionary of available entries indexed by player id
    * @return RankingSystemListEntryInterface[] $entries
    */
-  protected final function getEntriesOfPlayers(Collection $players, RankingSystemListInterface $list): array
+  protected final function getEntriesOfPlayers(Collection $players, RankingSystemListInterface $list,
+                                               array &$entries): array
   {
     $result = [];
     foreach ($players as $player) {
-      $result[] = $this->getOrCreateRankingSystemListEntry($list, $player);
+      $result[] = $this->getOrCreateRankingSystemListEntry($list, $player, $entries);
     }
     return $result;
   }
@@ -271,10 +278,11 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @param TournamentHierarchyInterface $entity the tournament hierarchy entity to search for
    * @param RankingSystemInterface $ranking the ranking system to search for
    * @param PlayerInterface $player the player to search for
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
    * @return RankingSystemChangeInterface the found or newly created ranking system change
    */
   protected final function getOrCreateChange(TournamentHierarchyInterface $entity, RankingSystemInterface $ranking,
-                                             PlayerInterface $player)
+                                             PlayerInterface $player, array $oldChanges)
   {
     $key1 = $entity->getId();
     $key2 = $player->getId();
@@ -285,7 +293,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       $this->changes[$key1][$key2] = $this->oldChanges[$key1][$key2];
       unset($this->oldChanges[$key1][$key2]);
     }
-    if (!array_key_exists($key2, $this->changes[$key1])) {
+    if (!array_key_exists($player->getId(), $oldChanges)) {
       //create new change
       /** @var RankingSystemChangeInterface $change */
       $change = $this->objectCreatorService->createObjectFromInterface(RankingSystemChangeInterface::class,
@@ -299,56 +307,41 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       $change->setRankingSystem($ranking);
       $change->setPlayer($player);
       $this->entityManager->persist($change);
-      $this->changes[$key1][$key2] = $change;
+      return $change;
+    } else {
+      return $oldChanges[$player->getId()];
     }
-    return $this->changes[$key1][$key2];
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * @param RankingSystemListInterface $list the list in which to search for the entry or in which to add it
    * @param PlayerInterface $player the player to search for
+   * @param RankingSystemListEntryInterface[] $entries a dictionary of available entries indexed by player id
    * @return RankingSystemListEntryInterface the found or the new entry
    */
-  protected final function getOrCreateRankingSystemListEntry(RankingSystemListInterface $list,
-                                                             PlayerInterface $player): RankingSystemListEntryInterface
+  protected final function getOrCreateRankingSystemListEntry(RankingSystemListInterface $list, PlayerInterface $player,
+                                                             array &$entries): RankingSystemListEntryInterface
   {
     $playerId = $player->getId();
-    if (!$list->getEntries()->containsKey($playerId)) {
+    if (!array_key_exists($playerId, $entries)) {
       /** @var RankingSystemListEntryInterface $entry */
       $entry = $this->objectCreatorService->createObjectFromInterface(RankingSystemListEntryInterface::class,
         [array_keys($this->getAdditionalFields())]);
       $entry->setPlayer($player);
-      $entry->setRankingSystemList($list);
+      $entry->setRankingSystemListWithoutInitializing($list);
       $this->resetListEntry($entry);
       $this->entityManager->persist($entry);
+      $entries[$playerId] = $entry;
     }
-    return $list->getEntries()->get($playerId);
+    //echo("A:" . $player->getId() . ";");
+    //echo($list->getEntries()->get($playerId)->getPlayer()->getId());
+    return $entries[$playerId];
   }
 
-  /**
-   * @param RankingSystemListEntryInterface $entry
-   * @throws \Tfboe\FmLib\Exceptions\PropertyNotExistingException
-   */
-  private function resetListEntry(RankingSystemListEntryInterface $entry)
-  {
-    $entry->setPoints($this->startPoints());
-    $entry->setNumberRankedEntities(0);
-    foreach ($this->getAdditionalFields() as $field => $value) {
-      // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
-      /** @noinspection PhpUnhandledExceptionInspection */
-      $entry->setProperty($field, $value);
-    }
-  }
 //</editor-fold desc="Protected Final Methods">
 
 //<editor-fold desc="Protected Methods">
-  /**
-   * Gets additional fields for this ranking type mapped to its start value
-   * @return string[] list of additional fields
-   */
-  protected abstract function getAdditionalFields(): array;
-
   /**
    * Gets additional fields for this ranking type mapped to its start value
    * @return string[] list of additional fields
@@ -359,13 +352,22 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   }
 
   /**
+   * Gets additional fields for this ranking type mapped to its start value
+   * @return string[] list of additional fields
+   */
+  protected abstract function getAdditionalFields(): array;
+
+  /**
    * Gets all ranking changes for the given entity for the given list. Must return a change for each involved player.
    * The field pointsAfterwards get calculated afterwards and can be left empty.
    * @param TournamentHierarchyEntity $entity the entity for which to compute the ranking changes
    * @param RankingSystemListInterface $list the list for which to compute the ranking changes
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
+   * @param RankingSystemListEntryInterface[] $entries a dictionary of available entries indexed by player id
    * @return RankingSystemChangeInterface[] the changes
    */
-  protected abstract function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array;
+  protected abstract function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list,
+                                         array $oldChanges, array &$entries): array;
 
   /**
    * Gets a query for getting the relevant entities for updating
@@ -379,10 +381,26 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
                                                       \DateTime $from, \DateTime $to): QueryBuilder;
 
   /**
+   * @return TournamentHierarchyEntity[][]|\DateTime[][]|int[][]
+   */
+  protected abstract function getEntriesClass(): string;
+
+  /**
    * Gets the level of the ranking system service (see Level Enum)
    * @return int
    */
   protected abstract function getLevel(): int;
+
+  /**
+   * @param TournamentHierarchyEntity $entity
+   * @return PlayerInterface[]
+   */
+  protected abstract function getPlayersOfEntity(TournamentHierarchyEntity $entity): array;
+
+  /**
+   * @param TournamentHierarchyEntity[] $entities
+   */
+  protected abstract function loadAllPlayersOfEntities(array $entities): void;
 
   /**
    * Gets the start points for a new player in the ranking
@@ -392,95 +410,200 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   {
     return 0.0;
   }
+
+  /**
+   * @param \DateTime $from
+   * @param RankingSystemInterface $rankingSystem
+   */
+  protected abstract function updateRankingTimes(\DateTime $from, RankingSystemInterface $rankingSystem);
+  /** @noinspection PhpDocMissingThrowsInspection */
 //</editor-fold desc="Protected Methods">
 
 //<editor-fold desc="Private Methods">
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * Clones all ranking values from base and inserts them into list, furthermore removes all remaining ranking values of
    * list. After this method was called list and base contain exactly the same rankings.
    * @param RankingSystemListInterface $list the ranking list to change
    * @param RankingSystemListInterface $base the ranking list to use as base list, this doesn't get changed
+   * @throws \Doctrine\DBAL\DBALException
    */
   private function cloneInto(RankingSystemListInterface $list, RankingSystemListInterface $base)
   {
-    /*//first remove all entries from list
-    foreach($list->getEntries()->toArray() as $entry)
-    {
-      $list->getEntries()->removeElement($entry);
-      $this->entityManager->remove($entry);
-    }*/
+    //we use native queries for everything, flush entityManager before doing anything
+    $this->getEntityManager()->flush();
 
-    $clonedPlayers = [];
+    $meta = $this->getEntityManager()->getClassMetadata(RankingSystemListEntryInterface::class);
+    $table = $meta->getTableName();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $rankingSystemListCol = $meta->getSingleAssociationJoinColumnName('rankingSystemList');
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $playerCol = $meta->getSingleAssociationJoinColumnName('player');
+    $pointsCol = $meta->getColumnName('points');
+    $idCol = $meta->getColumnName('id');
+    $numberRankedEntitiesCol = $meta->getColumnName('numberRankedEntities');
+    $subClassDataCol = $meta->getColumnName('subClassData');
 
-    foreach ($base->getEntries() as $entry) {
-      $playerId = $entry->getPlayer()->getId();
-      $clonedPlayers[$playerId] = true;
-      if (!$list->getEntries()->containsKey($playerId)) {
-        //create new entry
-        /** @var RankingSystemListEntryInterface $entry */
-        $clone = $this->objectCreatorService->createObjectFromInterface(RankingSystemListEntryInterface::class,
-          [[]]);
-        $this->entityManager->persist($clone);
-        $clone->setPlayer($entry->getPlayer());
-        $clone->setRankingSystemList($list);
-      }
-      $foundEntry = $list->getEntries()[$playerId];
-      $foundEntry->setNumberRankedEntities($entry->getNumberRankedEntities());
-      $foundEntry->setPoints($entry->getPoints());
-      $foundEntry->cloneSubClassDataFrom($entry);
-    }
+    //remove entries which are in list but not in base
+    $query = <<<SQL
+DELETE l
+FROM $table AS l
+LEFT JOIN $table AS b ON b.$playerCol = l.$playerCol AND b.$rankingSystemListCol = ?
+WHERE b.$idCol IS NULL AND l.$rankingSystemListCol = ?
+SQL;
+    $this->getEntityManager()->getConnection()->executeUpdate($query, [$base->getId(), $list->getId()]);
 
-    //remove all unused entries from list
-    foreach ($list->getEntries()->toArray() as $playerId => $entry) {
-      if (!array_key_exists($playerId, $clonedPlayers)) {
-        $this->resetListEntry($entry);
-        //$list->getEntries()->removeElement($entry);
-        //$this->entityManager->remove($entry);
-      }
-    }
+    //update entries which are in list and in base
+    $query = <<<SQL
+UPDATE $table AS l
+INNER JOIN $table AS b ON b.$playerCol = l.$playerCol AND b.$rankingSystemListCol = ?
+SET l.$subClassDataCol = b.$subClassDataCol, 
+    l.$pointsCol = b.$pointsCol, 
+    l.$numberRankedEntitiesCol = b.$numberRankedEntitiesCol
+WHERE l.$rankingSystemListCol = ?
+SQL;
+    $this->getEntityManager()->getConnection()->executeUpdate($query, [$base->getId(), $list->getId()]);
+
+    //last but not least insert entries into list which are in base but not in list, we do this with a native query
+    $query = <<<SQL
+INSERT INTO $table ($idCol, $rankingSystemListCol, $playerCol, $pointsCol, $numberRankedEntitiesCol, $subClassDataCol)
+SELECT UUID(), ?, b.$playerCol, b.$pointsCol, b.$numberRankedEntitiesCol, b.$subClassDataCol
+FROM $table AS b
+LEFT JOIN $table AS l
+ON l.$playerCol = b.$playerCol AND l.$rankingSystemListCol = ?
+WHERE l.$idCol IS NULL AND b.$rankingSystemListCol = ?
+SQL;
+    $this->getEntityManager()->getConnection()->executeUpdate($query, [$list->getId(), $list->getId(), $base->getId()]);
   }
 
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * @param RankingSystemInterface $rankingSystem
+   * @param \DateTime $from
+   * @param \DateTime $to
+   * @param array $usedIds
+   * @param bool $includeTo
+   * @throws \Doctrine\DBAL\DBALException
+   */
+  private function deleteOldChanges(RankingSystemInterface $rankingSystem, \DateTime $from, \DateTime $to,
+                                    array $usedIds, bool $includeTo)
+  {
+    $changeMeta = $this->getEntityManager()->getClassMetadata(RankingSystemChangeInterface::class);
+    $changeTable = $changeMeta->getTableName();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $changeHierarchyEntityCol = $changeMeta->getSingleAssociationJoinColumnName('hierarchyEntity');
+    $changeIdCol = $changeMeta->getColumnName('id');
+    $rankingTimeMeta =
+      $this->getEntityManager()->getClassMetadata(TournamentHierarchyEntityRankingTimeInterface::class);
+    $rankingTimeTable = $rankingTimeMeta->getTableName();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $rankingTimeHierarchyEntityCol = $rankingTimeMeta->getSingleAssociationJoinColumnName('hierarchyEntity');
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $rankingTimeRankingSystemCol = $rankingTimeMeta->getSingleAssociationJoinColumnName('rankingSystem');
+    $rankingTimeTimeCol = $rankingTimeMeta->getColumnName('rankingTime');
+    $rankingTimeIdCol = $rankingTimeMeta->getColumnName('id');
+
+    $toComparison = $includeTo ? "<=" : "<";
+    $idList = "";
+    for ($i = 0; $i < count($usedIds); $i++) {
+      if ($idList != "") {
+        $idList .= ",";
+      }
+      $idList .= '?';
+    }
+    $idListCondition = "";
+    if (count($usedIds) > 0) {
+      $idListCondition = "AND c.$changeIdCol NOT IN ($idList)";
+    }
+    $query = <<<SQL
+DELETE c
+FROM $changeTable AS c
+LEFT JOIN $rankingTimeTable t
+  ON t.$rankingTimeHierarchyEntityCol = c.$changeHierarchyEntityCol AND t.$rankingTimeRankingSystemCol = ?
+WHERE (t.$rankingTimeIdCol IS NULL OR (t.$rankingTimeTimeCol >= ? AND t.$rankingTimeTimeCol $toComparison ?)) 
+  $idListCondition
+SQL;
+    $this->getEntityManager()->getConnection()->executeUpdate($query,
+      array_merge([$rankingSystem->getId(), $from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')], $usedIds));
+  }
 
   /**
-   * @param RankingSystemInterface $ranking
-   * @param TournamentHierarchyEntity[] $entities
+   *
    */
-  private function markOldChangesAsDeleted(RankingSystemInterface $ranking, array $entities)
+  private function flushAndForgetEntities()
   {
-    assert(count($this->oldChanges) == 0);
-    $this->changes = [];
-    $queryBuilder = $this->entityManager->createQueryBuilder();
-    /** @var RankingSystemChangeInterface[] $changes */
-    $changes = $queryBuilder
-      ->from(RankingSystemChangeInterface::class, 'c')
-      ->select('c')
-      ->where($queryBuilder->expr()->eq('c.rankingSystem', ':ranking'))
-      ->setParameter('ranking', $ranking)
-      ->andWhere($queryBuilder->expr()->in('c.hierarchyEntity', ':entities'))
-      ->setParameter('entities', $entities)
-      ->getQuery()->getResult();
-    foreach ($changes as $change) {
-      $eId = $change->getHierarchyEntity()->getId();
-      $pId = $change->getPlayer()->getId();
-      if (array_key_exists($eId, $this->oldChanges) && array_key_exists($pId, $this->oldChanges[$eId])) {
-        //duplicate entry
-        assert($this->oldChanges[$eId][$pId]->getRankingSystem()->getId() ===
-          $change->getRankingSystem()->getId());
-        $this->entityManager->remove($change);
-      } else {
-        $this->oldChanges[$eId][$pId] = $change;
+    $this->entityManager->flush();
+    //manually detaching TournamentHierarchyEntities (TODO change this)
+    $identityMap = $this->getEntityManager()->getUnitOfWork()->getIdentityMap();
+    foreach ($this->toForgetClasses as $class) {
+      if (array_key_exists($class, $identityMap)) {
+        foreach ($identityMap[$class] as $entity) {
+          $this->entityManager->detach($entity);
+        }
       }
     }
+
+
+    /*for ($i = 0; $i < $current; $i++) {
+      $eId = $entities[$i]->getId();
+      if (array_key_exists($eId, $this->oldChanges)) {
+        foreach ($this->oldChanges[$eId] as $pId => $change) {
+          $this->entityManager->remove($change);
+        }
+      }
+      unset($this->oldChanges[$eId]);
+    }
+    $this->entityManager->flush();
+    for ($i = 0; $i < $current; $i++) {
+      $eId = $entities[$i]->getId();
+      $this->entityManager->detach($entities[$i]);
+      if (array_key_exists($eId, $this->changes)) {
+        foreach ($this->changes[$eId] as $pId => $change) {
+          $this->entityManager->detach($change);
+        }
+        unset($this->changes[$eId]);
+      }
+    }
+    if ($current >= count($entities)) {
+      $entities = [];
+    } else {
+      array_splice($entities, 0, $current);
+    }
+    $current = 0;*/
   }
 
-  private function deleteOldChanges()
+  /**
+   * @param RankingSystemListInterface $list
+   * @param mixed[][] $entities
+   * @return RankingSystemChangeInterface[][]
+   */
+  private function getChangesOfEntities(RankingSystemListInterface $list, array $entities)
   {
-    foreach ($this->oldChanges as $eId => $changes) {
-      foreach ($changes as $pId => $change) {
-        $this->entityManager->remove($change);
+    if (count($entities) == 0) {
+      return [];
+    }
+    $entityIds = array_map(function (array $a) {
+      return $a[0]->getId();
+    }, $entities);
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    /** @var RankingSystemChangeInterface[] $changes */
+    $changes = $qb->from(RankingSystemChangeInterface::class, 'e')
+      ->select('e')
+      ->where('e.rankingSystem = :rankingSystem')
+      ->andWhere($qb->expr()->in('e.hierarchyEntity', $entityIds))
+      ->setParameter('rankingSystem', $list->getRankingSystem())
+      ->getQuery()
+      ->getResult();
+    $result = [];
+    foreach ($changes as $change) {
+      if (!array_key_exists($change->getHierarchyEntity()->getId(), $result)) {
+        $result[$change->getHierarchyEntity()->getId()] = [];
+      }
+      if (!array_key_exists($change->getPlayer()->getId(), $result[$change->getHierarchyEntity()->getId()])) {
+        $result[$change->getHierarchyEntity()->getId()][$change->getPlayer()->getId()] = $change;
       }
     }
-    $this->oldChanges = [];
+    return $result;
   }
 
   /**
@@ -515,6 +638,96 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   }
 
   /**
+   * @param RankingSystemListInterface $list
+   * @param \DateTime $lastTime
+   * @param int|null $lastId
+   * @param int $pageSize
+   * @return TournamentHierarchyEntity[][]|\DateTime[][]|int[][]
+   */
+  private function getEntities(RankingSystemListInterface $list, \DateTime $lastTime, ?int $lastId,
+                               int $pageSize): array
+  {
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    $where = null;
+    if ($lastId !== null) {
+      $where = $qb->expr()->orX(
+        't.rankingTime > :lastTime',
+        't.id > :lastId'
+      );
+      $qb->setParameter('lastId', $lastId);
+    } else {
+      $where = 't.rankingTime > :lastTime';
+    }
+    $qb = $qb->from($this->getEntriesClass(), 'e')
+      ->select('e')
+      ->addSelect('t.rankingTime AS time')
+      ->addSelect('t.id AS id')
+      ->innerJoin(TournamentHierarchyEntityRankingTimeInterface::class, 't', Join::WITH,
+        $qb->expr()->eq('t.hierarchyEntity', 'e'))
+      ->where('t.rankingTime >= :lastTime')
+      ->andWhere($where)
+      ->andWhere($qb->expr()->eq('t.rankingSystem', ':rankingSystem'))
+      ->orderBy('t.rankingTime')
+      ->addOrderBy('t.id')
+      ->setMaxResults($pageSize)
+      ->setParameter('lastTime', $lastTime)
+      ->setParameter('rankingSystem', $list->getRankingSystem());
+    if (!$list->isCurrent()) {
+      $qb->andWhere('t.rankingTime <= :maxTime')
+        ->setParameter('maxTime', $list->getLastEntryTime());
+    }
+    return $qb->getQuery()->getResult();
+  }
+
+  /**
+   * @param RankingSystemListInterface $list
+   * @param TournamentHierarchyEntity[][]|\DateTime[][]|int[][] $entities
+   * @return RankingSystemListEntryInterface[]
+   */
+  private function getEntries(RankingSystemListInterface $list, array $entities)
+  {
+    $playerIds = [];
+    $entities = array_map(function ($a) {
+      return $a[0];
+    }, $entities);
+    $this->loadAllPlayersOfEntities($entities);
+    foreach ($entities as $entity) {
+      foreach ($this->getPlayersOfEntity($entity) as $player) {
+        if (!array_key_exists($player->getId(), $playerIds)) {
+          $playerIds[$player->getId()] = true;
+        }
+      }
+    }
+    if (count($playerIds) == 0) {
+      return [];
+    }
+    $qb = $this->getEntityManager()->createQueryBuilder();
+    /** @var RankingSystemListEntryInterface[] $entries */
+    $entries = $qb->from(RankingSystemListEntryInterface::class, 'e')
+      ->select('e')
+      ->where('e.rankingSystemList = :list')
+      ->andWhere($qb->expr()->in('e.player', array_keys($playerIds)))
+      ->setParameter('list', $list)
+      ->getQuery()
+      ->getResult();
+    $result = [];
+    foreach ($entries as $entry) {
+      $result[$entry->getPlayer()->getId()] = $entry;
+    }
+    return $result;
+  }
+
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * @return \DateTime
+   */
+  private function getMaxDate(): \DateTime
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    return (new \DateTime())->add(new \DateInterval('P100Y'));
+  }
+
+  /**
    * @param \DateTime $time the time of the last list
    * @param int $generationLevel the list generation level
    * @return \DateTime the time of the next list generation
@@ -537,15 +750,6 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     return (new \DateTime())->setDate($year, $month, 1)->setTime(0, 0, 0);
   }
 
-  /**
-   * @return \DateTime
-   * @throws \Exception
-   */
-  private function getMaxDate(): \DateTime
-  {
-    return (new \DateTime())->add(new \DateInterval('P100Y'));
-  }
-
   /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * Recomputes the given ranking list by using base as base list and applying the changes for the given entities
@@ -553,88 +757,104 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * are applied and the index gets changed accordingly.
    * @param RankingSystemListInterface $list the list to recompute
    * @param RankingSystemListInterface $base the list to use as base
-   * @param TournamentHierarchyEntity[] $entities the list of entities to use for the computation
-   * @param \DateTime $lastListTime the time of the last list or the first entry
+   * @throws \Doctrine\DBAL\DBALException
    */
-  private function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base,
-                                    array &$entities, \DateTime $lastListTime)
+  private function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base)
   {
+    $lastListTime = $base->getLastEntryTime();
     $nextGeneration = $this->getNextGenerationTime($lastListTime, $list->getRankingSystem()->getGenerationInterval());
     $this->cloneInto($list, $base);
-    for ($i = 0; $i < count($entities); $i++) {
-      $time = $this->timeService->getTime($entities[$i]);
-      if (!$list->isCurrent() && $time > $list->getLastEntryTime()) {
-        $this->flushAndForgetEntities($entities, $i);
-        return;
-      }
-      if ($nextGeneration < $time) {
-        /** @var RankingSystemListInterface $newList */
-        $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
-        $newList->setCurrent(false);
-        $newList->setLastEntryTime($nextGeneration);
-        $this->entityManager->persist($newList);
-        $newList->setRankingSystem($list->getRankingSystem());
-        $this->cloneInto($newList, $list);
-        $nextGeneration = $this->getNextGenerationTime($nextGeneration,
-          $list->getRankingSystem()->getGenerationInterval());
-        //clear entityManager to save memory
-        $this->flushAndForgetEntities($entities, $i);
-      }
-      $changes = $this->getChanges($entities[$i], $list);
-      foreach ($changes as $change) {
-        $entry = $this->getOrCreateRankingSystemListEntry($list, $change->getPlayer());
-        $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
-        $pointsAfterwards = $entry->getPoints() + $change->getPointsChange();
-        $entry->setPoints($pointsAfterwards);
-        $change->setPointsAfterwards($pointsAfterwards);
-        //apply further changes
-        foreach ($this->getAdditionalFields() as $field => $value) {
-          // PropertyNotExistingException => entry and field have exactly the static properties from getAdditionalFields
-          /** @noinspection PhpUnhandledExceptionInspection */
-          $entry->setProperty($field, $entry->getProperty($field) + $change->getProperty($field));
+    $finished = false;
+    $lastId = null;
+    $lastTime = $base->getLastEntryTime();
+    $pageSize = env('RANKING_PAGE_SIZE', 100);
+    //echo("Identity Map:\n");
+    $i = 0;
+    $oldUsedChangeIds = [];
+    while (!$finished) {
+      $i++;
+      //get next page of entities
+      $entities = $this->getEntities($list, $lastTime, $lastId, $pageSize);
+      $finished = count($entities) < $pageSize;
+      //getEntries
+      $entries = $this->getEntries($list, $entities);
+      //getChanges
+      $changes = $this->getChangesOfEntities($list, $entities);
+      $usedChangesIds = [];
+      $lastTimeBefore = $lastTime;
+      foreach ($entities as $i => $res) {
+        /** @var TournamentHierarchyEntity $entity */
+        $entity = $res[0];
+        /** @var \DateTime $time */
+        $time = $res['time'];
+        if ($lastTimeBefore <= $base->getLastEntryTime()) {
+          $lastTimeBefore = $time;
         }
-        if ($time > $list->getLastEntryTime()) {
-          $list->setLastEntryTime($time);
+        $id = $res['id'];
+        assert($list->isCurrent() || $time < $list->getLastEntryTime());
+        assert($time > $lastTime || ($time == $lastTime && $id > $lastId));
+        $lastTime = $time;
+        if ($nextGeneration < $time) {
+          /** @var RankingSystemListInterface $newList */
+          $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
+          $newList->setCurrent(false);
+          $newList->setLastEntryTime($nextGeneration);
+          $this->entityManager->persist($newList);
+          $newList->setRankingSystem($list->getRankingSystem());
+          $this->cloneInto($newList, $list);
+          $nextGeneration = $this->getNextGenerationTime($nextGeneration,
+            $list->getRankingSystem()->getGenerationInterval());
         }
-        $this->entityManager->persist($change);
+        $oldChanges = [];
+        if (array_key_exists($entity->getId(), $changes)) {
+          $oldChanges = $changes[$entity->getId()];
+        }
+
+        $newChanges = $this->getChanges($entity, $list, $oldChanges, $entries);
+        foreach ($newChanges as $change) {
+          $usedChangesIds[] = $change->getId();
+          $entry = $this->getOrCreateRankingSystemListEntry($list, $change->getPlayer(), $entries);
+          $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
+          $pointsAfterwards = $entry->getPoints() + $change->getPointsChange();
+          $entry->setPoints($pointsAfterwards);
+          $change->setPointsAfterwards($pointsAfterwards);
+          //apply further changes
+          foreach ($this->getAdditionalFields() as $field => $value) {
+            // PropertyNotExistingException => entry and field have exactly the static properties from
+            // getAdditionalFields
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $entry->setProperty($field, $entry->getProperty($field) + $change->getProperty($field));
+          }
+          if ($time > $list->getLastEntryTime()) {
+            $list->setLastEntryTime($time);
+          }
+        }
       }
+      //delete unused changes
+      $this->deleteOldChanges($list->getRankingSystem(), $lastTimeBefore, $lastTime,
+        array_merge($oldUsedChangeIds, $usedChangesIds), $finished);
+      if ($lastTimeBefore == $lastTime) {
+        $oldUsedChangeIds = array_merge($oldUsedChangeIds, $usedChangesIds);
+      } else {
+        $oldUsedChangeIds = $usedChangesIds;
+      }
+      $this->flushAndForgetEntities();
     }
-    $current = count($entities);
-    $this->flushAndForgetEntities($entities, $current);
   }
 
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
-   * @param TournamentHierarchyInterface[] $entities
-   * @param int &$current
+   * @param RankingSystemListEntryInterface $entry
    */
-  private function flushAndForgetEntities(&$entities, &$current)
+  private function resetListEntry(RankingSystemListEntryInterface $entry)
   {
-    for ($i = 0; $i < $current; $i++) {
-      $eId = $entities[$i]->getId();
-      if (array_key_exists($eId, $this->oldChanges)) {
-        foreach ($this->oldChanges[$eId] as $pId => $change) {
-          $this->entityManager->remove($change);
-        }
-      }
-      unset($this->oldChanges[$eId]);
+    $entry->setPoints($this->startPoints());
+    $entry->setNumberRankedEntities(0);
+    foreach ($this->getAdditionalFields() as $field => $value) {
+      // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
+      /** @noinspection PhpUnhandledExceptionInspection */
+      $entry->setProperty($field, $value);
     }
-    $this->entityManager->flush();
-    for ($i = 0; $i < $current; $i++) {
-      $eId = $entities[$i]->getId();
-      $this->entityManager->detach($entities[$i]);
-      if (array_key_exists($eId, $this->changes)) {
-        foreach ($this->changes[$eId] as $pId => $change) {
-          $this->entityManager->detach($change);
-        }
-        unset($this->changes[$eId]);
-      }
-    }
-    if ($current >= count($entities)) {
-      $entities = [];
-    } else {
-      array_splice($entities, 0, $current);
-    }
-    $current = 0;
   }
 //</editor-fold desc="Private Methods">
 }

@@ -19,7 +19,9 @@
     "laravel-doctrine/extensions": "^1.0.12",
     "gedmo/doctrine-extensions": "^2.4.33",
     "tymon/jwt-auth": "^1.0.0",
-    "irazasyed/jwt-auth-guard": "dev-master"
+    "irazasyed/jwt-auth-guard": "dev-master",
+    "doctrine/orm": "^2.6",
+    "ext-json": "*"
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.4.1",

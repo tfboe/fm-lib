@@ -81,7 +81,6 @@ class LoadingService implements LoadingServiceInterface
             $toDoEntityIds[$class] = [];
           }
           $toDoEntityIds[$class][] = $entity;
-          break;
         }
       }
     }

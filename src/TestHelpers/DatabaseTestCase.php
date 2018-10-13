@@ -49,7 +49,36 @@ abstract class DatabaseTestCase extends LumenTestCase
   }
 //</editor-fold desc="Constructor">
 
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Resolve className according to fm-lib config
+   * @param string $className
+   * @return string
+   */
+  protected final function resolveEntity(string $className): string
+  {
+    //resolve class name according to fm-lib config
+    if (config()->has('fm-lib')) {
+      $config = config('fm-lib');
+      if (array_key_exists('entityMaps', $config)) {
+        $classMap = $config['entityMaps'];
+        if (array_key_exists($className, $classMap)) {
+          return $classMap[$className];
+        }
+      }
+    }
+    return $className;
+  }
+//</editor-fold desc="Protected Final Methods">
+
 //<editor-fold desc="Protected Methods">
+  /**
+   * Adds additional attributes given to the create entity method
+   * @param mixed[] $attributes
+   */
+  protected function addAdditionalNewUserAttributes(array &$attributes)
+  {
+  }
 
   /**
    * Clears the database by truncating all tables (very time consuming)
@@ -125,14 +154,6 @@ abstract class DatabaseTestCase extends LumenTestCase
   }
 
   /**
-   * Adds additional attributes given to the create entity method
-   * @param mixed[] $attributes
-   */
-  protected function addAdditionalNewUserAttributes(array &$attributes)
-  {
-  }
-
-  /**
    * Uses faker to generate a new password
    * @return string the new password
    */
@@ -181,26 +202,6 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function workOnDatabaseSetUp()
   {
 
-  }
-
-  /**
-   * Resolve className according to fm-lib config
-   * @param string $className
-   * @return string
-   */
-  protected final function resolveEntity(string $className): string
-  {
-    //resolve class name according to fm-lib config
-    if (config()->has('fm-lib')) {
-      $config = config('fm-lib');
-      if (array_key_exists('entityMaps', $config)) {
-        $classMap = $config['entityMaps'];
-        if (array_key_exists($className, $classMap)) {
-          return $classMap[$className];
-        }
-      }
-    }
-    return $className;
   }
 //</editor-fold desc="Protected Methods">
 }

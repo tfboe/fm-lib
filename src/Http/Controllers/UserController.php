@@ -20,11 +20,12 @@ use Tymon\JWTAuth\Exceptions\JWTException;
  */
 class UserController extends BaseController
 {
-//<editor-fold desc="Public Methods">
-
+//<editor-fold desc="Fields">
   /** @var ObjectCreatorServiceInterface $objectCreatorService */
   private $objectCreatorService;
+//</editor-fold desc="Fields">
 
+//<editor-fold desc="Constructor">
   /**
    * @inheritDoc
    */
@@ -34,8 +35,9 @@ class UserController extends BaseController
     parent::__construct($entityManager);
     $this->objectCreatorService = $objectCreatorService;
   }
+//</editor-fold desc="Constructor">
 
-
+//<editor-fold desc="Public Methods">
   /**
    * login action, checks credentials and returns token
    * @param Request $request the http request
@@ -102,29 +104,6 @@ class UserController extends BaseController
   }
 
   /**
-   * Creates a new user
-   * @return UserInterface
-   */
-  protected function newUser(): UserInterface
-  {
-    return $this->objectCreatorService->createObjectFromInterface(UserInterface::class);
-  }
-
-  /**
-   * Gets the response for a successful register action
-   * @param Request $request the request
-   * @param Application $app the application
-   * @param UserInterface $user the newly registered user
-   * @return JsonResponse the json response
-   */
-  protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
-    Request $request, /** @noinspection PhpUnusedParameterInspection */
-    Application $app, UserInterface $user)
-  {
-    return response()->json(['id' => $user->getId()]);
-  }
-
-  /**
    * @return JsonResponse
    */
   public function userId(): JsonResponse
@@ -174,6 +153,29 @@ class UserController extends BaseController
   {
     $user = $request->user();
     return response()->json(['id' => $user->getId()], 200, ['jwt-token' => $token]);
+  }
+
+  /**
+   * Gets the response for a successful register action
+   * @param Request $request the request
+   * @param Application $app the application
+   * @param UserInterface $user the newly registered user
+   * @return JsonResponse the json response
+   */
+  protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
+    Request $request, /** @noinspection PhpUnusedParameterInspection */
+    Application $app, UserInterface $user)
+  {
+    return response()->json(['id' => $user->getId()]);
+  }
+
+  /**
+   * Creates a new user
+   * @return UserInterface
+   */
+  protected function newUser(): UserInterface
+  {
+    return $this->objectCreatorService->createObjectFromInterface(UserInterface::class);
   }
 //</editor-fold desc="Protected Methods">
 

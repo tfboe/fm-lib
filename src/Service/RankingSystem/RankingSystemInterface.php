@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
+use Tfboe\FmLib\Entity\RecalculationInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 
 /**
@@ -45,7 +46,9 @@ interface RankingSystemInterface
    * Updates the rankings assuming all changes happened after $from.
    * @param \Tfboe\FmLib\Entity\RankingSystemInterface $ranking
    * @param \DateTime $from
+   * @param RecalculationInterface $recalculation
    */
-  public function updateRankingFrom(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking, \DateTime $from);
+  public function updateRankingFrom(\Tfboe\FmLib\Entity\RankingSystemInterface $ranking, \DateTime $from,
+                                    RecalculationInterface $recalculation);
 //</editor-fold desc="Public Methods">
 }
