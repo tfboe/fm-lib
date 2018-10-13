@@ -52,13 +52,6 @@ fi
 (
 ./travis_before_script.sh
 )
-(
-./travis.sh
-)
-
-rm -rf /opt/project-storage/*
-mv coverage.xml coverage-merged.xml
-mv coverage-unit unit.cov coverage-integration integration.cov coverage-merged coverage-merged.xml /opt/project-storage/
 
 if [ "$DOCKER_CACHE_COMPOSER" != '0' ]; then
     (
@@ -70,3 +63,11 @@ if [ "$DOCKER_CACHE_COMPOSER" != '0' ]; then
     tar -cf ${tar_file} .
     )
 fi
+
+(
+./travis.sh
+)
+
+rm -rf /opt/project-storage/*
+mv coverage.xml coverage-merged.xml
+mv coverage-unit unit.cov coverage-integration integration.cov coverage-merged coverage-merged.xml /opt/project-storage/

@@ -39,7 +39,7 @@ if [ "$INTEGRATION" = '1' ]; then
     directory=${PWD##*/}
     cd ..
     rm -rf fm-lib-test
-    composer create-project --prefer-dist laravel/lumen fm-lib-test
+    composer create-project --prefer-dist laravel/lumen:5.6.* fm-lib-test
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
     cp -r ../${directory}/tests/Integration/ tests

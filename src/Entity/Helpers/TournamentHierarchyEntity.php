@@ -24,6 +24,7 @@ use Tfboe\FmLib\Entity\RankingSystemInterface;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\HasLifecycleCallbacks
  */
 abstract class TournamentHierarchyEntity extends BaseEntity implements TournamentHierarchyInterface
 {
@@ -65,6 +66,14 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad()
+  {
+    $this->influencingRankingSystems = [];
+  }
+
   /**
    * @return RankingSystemInterface[]|Collection
    */
