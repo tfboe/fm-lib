@@ -20,6 +20,10 @@ if [ "$GITHUB_OAUTH" != "" ]; then
     composer config --global -g github-oauth.github.com ${GITHUB_OAUTH}
 fi
 
+composer self-update -g
+
+if [ -n "$GH_TOKEN" ]; then composer config github-oauth.github.com ${GH_TOKEN}; fi
+
 composer install
 
 if [ "$INTEGRATION" = '1' ]; then
