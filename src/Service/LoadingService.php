@@ -47,14 +47,15 @@ class LoadingService implements LoadingServiceInterface
   {
     $this->em = $em;
     $this->defaultPropertiesToLoad = [
-      TournamentInterface::class => [["competitions"]],
-      CompetitionInterface::class => [["teams"], ["phases"]],
-      TeamInterface::class => [["memberships"]],
-      TeamMembershipInterface::class => [["player", "team"]],
-      PhaseInterface::class => [["preQualifications"], ["postQualifications"], ["rankings"], ["matches"]],
-      RankingInterface::class => [["teams"]],
-      MatchInterface::class => [["rankingsA", "rankingsB"], ["games"]],
-      GameInterface::class => [["playersA", "playersB"]],
+      TournamentInterface::class => [["competitions"], ["rankingSystems"]],
+      CompetitionInterface::class => [["teams"], ["phases"], ["rankingSystems"]],
+      TeamInterface::class => [["memberships"], ["rankingSystems"]],
+      TeamMembershipInterface::class => [["player", "team"], ["rankingSystems"]],
+      PhaseInterface::class => [["preQualifications"], ["postQualifications"], ["rankings"], ["matches"],
+        ["rankingSystems"]],
+      RankingInterface::class => [["teams"], ["rankingSystems"]],
+      MatchInterface::class => [["rankingsA", "rankingsB"], ["games"], ["rankingSystems"]],
+      GameInterface::class => [["playersA", "playersB"], ["rankingSystems"]],
     ];
   }
 //</editor-fold desc="Constructor">
