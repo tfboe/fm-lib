@@ -80,7 +80,7 @@ class PlayerService implements PlayerServiceInterface
     }
     $ts = array_values($tMap);
 
-    $this->ls->loadEntities($ts);
+    $this->ls->loadEntities($ts); //TODO make this memory safe!!!
 
     //check if player is attendant in one of the tournaments of toMerge
     foreach ($ts as $tournament) {

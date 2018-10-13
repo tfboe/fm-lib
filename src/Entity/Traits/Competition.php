@@ -14,6 +14,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\Helpers\BaseTrait;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
@@ -29,6 +30,7 @@ use Tfboe\FmLib\Helpers\Level;
 trait Competition
 {
   use NameEntity;
+  use BaseTrait;
 
 //<editor-fold desc="Fields">
   /**
@@ -113,12 +115,22 @@ trait Competition
    */
   public function setTournament(TournamentInterface $tournament)
   {
-    if ($this->tournament !== null) {
+    if ($this->tournament !== null && $this->isInitialized($this->tournament->getCompetitions())) {
       $this->tournament->getCompetitions()->remove($this->getName());
     }
-    $this->tournament = $tournament;
-    $tournament->getCompetitions()->set($this->getName(), $this);
+    $this->setTournamentWithoutInitializing($tournament);
+    if ($this->isInitialized($tournament->getCompetitions())) {
+      $tournament->getCompetitions()->set($this->getName(), $this);
+    }
     return $this;
+  }
+
+  /**
+   * @param TournamentInterface $tournament
+   */
+  public function setTournamentWithoutInitializing(TournamentInterface $tournament)
+  {
+    $this->tournament = $tournament;
   }
 //</editor-fold desc="Public Methods">
 
