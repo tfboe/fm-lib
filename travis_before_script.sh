@@ -9,7 +9,7 @@ INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
 WITH_LOCK="${WITH_LOCK:-0}"
 REPOSITORY_LOCATION="${REPOSITORY_LOCATION:-https://github.com/tfboe/fm-lib}"
-LIB_NAME="${LIB_NAME:-tfboe/fm-lib}"
+LIB_NAME="tfboe/fm-lib:@dev"
 
 if [ "$WITH_LOCK" == "0" ]; then
     rm composer.lock
@@ -49,7 +49,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
     composer config repositories.fm-lib path ../${directory}
-    composer require ${LIB_NAME} --prefer-dist
+    composer require ${LIB_NAME}
     composer require phpunit/phpcov:^5.0 --prefer-dist
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\

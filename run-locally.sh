@@ -17,7 +17,6 @@ export MYSQL_ROOT_PASSWORD="root"
 export UNIT="1"
 export INTEGRATION="1"
 export REPOSITORY_LOCATION="/tmp/test-src"
-export LIB_NAME="tfboe/fm-lib:dev-testing-branch"
 export HTML_COVERAGE="1"
 rm -rf /tmp/full-src
 rm -rf /tmp/test-src
