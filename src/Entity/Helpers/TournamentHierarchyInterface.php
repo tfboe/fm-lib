@@ -51,5 +51,16 @@ interface TournamentHierarchyInterface extends BaseEntityInterface, GameModeInte
    * @return RankingSystemInterface[]|Collection
    */
   public function getRankingSystems();
+
+  /**
+   * @return RankingSystemInterface[]
+   */
+  public function getInfluencingRankingSystems(): array;
+
+  /**
+   * @param RankingSystemInterface $rankingSystem
+   * @returns true if it got really added and false if it already was added
+   */
+  public function addInfluencingRankingSystem(RankingSystemInterface $rankingSystem): bool;
 //</editor-fold desc="Public Methods">
 }
