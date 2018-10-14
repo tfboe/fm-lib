@@ -67,10 +67,11 @@ class LoadingServiceTest extends UnitTestCase
   public function testLoadEntitiesDefaultPropertiesGame()
   {
     /** @noinspection SyntaxError */
-    $service = new LoadingService($this->getEntityManagerMockForQuery([],
+    $service = new LoadingService($this->getEntityManagerMockForQueries([[], []], [
       'SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 LEFT JOIN '
-      . 't1.playersB t3 WHERE t1.id IN(\'g\')'
-    ));
+      . 't1.playersB t3 WHERE t1.id IN(\'g\')',
+      'SELECT t1, t2 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.rankingSystems t2 WHERE t1.id IN(\'g\')'
+    ]));
     $game = $this->createMock(GameInterface::class);
     $game->method('getEntityId')->willReturn('g');
 

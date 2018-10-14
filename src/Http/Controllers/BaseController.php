@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
+use Tfboe\FmLib\Helpers\Tools;
 
 /**
  * Class Controllers
@@ -26,10 +27,6 @@ abstract class BaseController extends Controller
    * @var EntityManagerInterface
    */
   private $entityManager;
-  /**
-   * @var string
-   */
-  private $datetimetzFormat = 'Y-m-d H:i:s e';
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -50,7 +47,7 @@ abstract class BaseController extends Controller
    */
   protected final function getDatetimetzFormat(): string
   {
-    return $this->datetimetzFormat;
+    return Tools::getDatetimetzFormat();
   }
 
   /**
@@ -69,11 +66,8 @@ abstract class BaseController extends Controller
    */
   protected function datetimetzTransformer(): \Closure
   {
-    return function ($dateString) {
-      return \DateTime::createFromFormat($this->datetimetzFormat, $dateString);
-    };
+    return Tools::datetimetzTransformer();
   }
-
   /**
    * Gets a transformation function which transforms an enum name into the corresponding value
    * @param string $enumName the name of the enum
@@ -81,9 +75,7 @@ abstract class BaseController extends Controller
    */
   protected function enumTransformer(string $enumName): \Closure
   {
-    return function ($name) use ($enumName) {
-      return call_user_func([$enumName, "getValue"], $name);
-    };
+    return Tools::enumTransformer($enumName);
   }
 
   /**
@@ -95,45 +87,7 @@ abstract class BaseController extends Controller
    */
   protected function setFromSpecification(BaseEntityInterface $object, array $specification, array $inputArray)
   {
-    foreach ($specification as $key => $values) {
-      if (!array_key_exists('ignore', $values) || $values['ignore'] != true) {
-        $matches = [];
-        preg_match('/[^\.]*$/', $key, $matches);
-        $arrKey = $matches[0];
-        if (array_key_exists('property', $values)) {
-          $property = $values['property'];
-        } else {
-          $property = $arrKey;
-        }
-        $setter = 'set' . ucfirst($property);
-        if (array_key_exists($arrKey, $inputArray)) {
-          $value = $inputArray[$arrKey];
-          $this->transformValue($value, $values);
-          $object->$setter($value);
-        } else if (array_key_exists('default', $values) && $object->methodExists($setter)) {
-          $object->$setter($values['default']);
-        }
-      }
-    }
-    return $object;
-  }
-
-  /**
-   * Transforms the given value based on different configurations in specification.
-   * @param mixed $value the value to optionally transform
-   * @param array $specification the specification for this value
-   */
-  protected function transformValue(&$value, array $specification)
-  {
-    if (array_key_exists('reference', $specification)) {
-      $value = $this->getEntityManager()->find($specification['reference'], $value);
-    }
-    if (array_key_exists('type', $specification)) {
-      $value = self::transformByType($value, $specification['type']);
-    }
-    if (array_key_exists('transformer', $specification)) {
-      $value = $specification['transformer']($value);
-    }
+    return Tools::setFromSpecification($object, $specification, $inputArray, $this->entityManager);
   }
 
   /**
@@ -154,21 +108,4 @@ abstract class BaseController extends Controller
     return $this;
   }
 //</editor-fold desc="Protected Methods">
-
-//<editor-fold desc="Private Methods">
-  /**
-   * Transforms a value from a standard json communication format to its original php format. Counter part of
-   * valueToJson().
-   * @param string $value the json representation of the value
-   * @param string $type the type of the value
-   * @return mixed the real php representation of the value
-   */
-  private static function transformByType($value, $type)
-  {
-    if (strtolower($type) === 'date' || strtolower($type) === 'datetime') {
-      return new \DateTime($value);
-    }
-    return $value;
-  }
-//</editor-fold desc="Private Methods">
 }
