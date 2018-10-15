@@ -122,20 +122,23 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
       }
     }
 
-    if ($entity instanceof TournamentInterface) {
-      while ($entity->getParent() !== null) {
-        $entity = $entity->getParent();
-        if ($entity->getEndTime() !== null) {
-          return $entity->getEndTime();
-        } else if ($entity->getStartTime() !== null) {
-          return $entity->getStartTime();
-        }
+    if ($entity->getEndTime() !== null) {
+      return $entity->getEndTime();
+    } else if ($entity->getStartTime() !== null) {
+      return $entity->getStartTime();
+    }
+    while ($entity->getParent() !== null) {
+      $entity = $entity->getParent();
+      if ($entity->getEndTime() !== null) {
+        return $entity->getEndTime();
+      } else if ($entity->getStartTime() !== null) {
+        return $entity->getStartTime();
       }
-      if ($entity instanceof TournamentInterface) {
-        /** @var $entity TournamentInterface */
-        if ($entity->getUpdatedAt() !== null) {
-          return $entity->getUpdatedAt();
-        }
+    }
+    if ($entity instanceof TournamentInterface) {
+      /** @var $entity TournamentInterface */
+      if ($entity->getUpdatedAt() !== null) {
+        return $entity->getUpdatedAt();
       }
     }
     return null;
