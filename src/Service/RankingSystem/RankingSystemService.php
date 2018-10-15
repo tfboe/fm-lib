@@ -468,6 +468,7 @@ SQL;
     /** @noinspection PhpUnhandledExceptionInspection */
     $changeHierarchyEntityCol = $changeMeta->getSingleAssociationJoinColumnName('hierarchyEntity');
     $changeIdCol = $changeMeta->getColumnName('id');
+    $changeRankingSystemCol = $changeMeta->getSingleAssociationJoinColumnName('rankingSystem');
     $rankingTimeMeta =
       $this->getEntityManager()->getClassMetadata(TournamentHierarchyEntityRankingTimeInterface::class);
     $rankingTimeTable = $rankingTimeMeta->getTableName();
@@ -493,13 +494,14 @@ SQL;
     $query = <<<SQL
 DELETE c
 FROM $changeTable AS c
-LEFT JOIN $rankingTimeTable t
+INNER JOIN $rankingTimeTable t
   ON t.$rankingTimeHierarchyEntityCol = c.$changeHierarchyEntityCol AND t.$rankingTimeRankingSystemCol = ?
-WHERE (t.$rankingTimeIdCol IS NULL OR (t.$rankingTimeTimeCol >= ? AND t.$rankingTimeTimeCol $toComparison ?)) 
+WHERE c.$changeRankingSystemCol = ? AND t.$rankingTimeTimeCol >= ? AND t.$rankingTimeTimeCol $toComparison ?
   $idListCondition
 SQL;
     $this->getEntityManager()->getConnection()->executeUpdate($query,
-      array_merge([$rankingSystem->getId(), $from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')], $usedIds));
+      array_merge([$rankingSystem->getId(), $rankingSystem->getId(),
+        $from->format('Y-m-d H:i:s'), $to->format('Y-m-d H:i:s')], $usedIds));
   }
 
   /**
