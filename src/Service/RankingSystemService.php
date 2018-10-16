@@ -71,7 +71,7 @@ class RankingSystemService implements RankingSystemServiceInterface
     $query
       ->from(RankingSystemInterface::class, 's')
       ->select('s')
-      ->leftJoin(RecalculationInterface::class, 'r', Join::ON, 'r.rankingSystem = s')
+      ->leftJoin(RecalculationInterface::class, 'r', Join::WITH, 'r.rankingSystem = s')
       ->where($query->expr()->isNotNull('s.openSyncFrom'))
       ->orWhere($query->expr()->isNotNull('r.recalculateFrom'));
     /** @var RankingSystemInterface[] $rankingSystems */
