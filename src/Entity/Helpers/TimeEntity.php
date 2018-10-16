@@ -73,6 +73,28 @@ trait TimeEntity
     return $this->_localizedStartTime;
   }
 
+  public function preFlush()
+  {
+    $this->updateStartTime();
+    $this->updateEndTime();
+  }
+
+  private function updateStartTime()
+  {
+    if ($this->_localizedStartTime !== null && $this->_localizedStartTime != $this->startTime) {
+      $this->startTime = clone $this->_localizedStartTime;
+      $this->startTime->setTimezone(new \DateTimeZone("UTC"));
+    }
+  }
+
+  private function updateEndTime()
+  {
+    if ($this->_localizedEndTime !== null && $this->_localizedEndTime != $this->endTime) {
+      $this->endTime = clone $this->_localizedEndTime;
+      $this->endTime->setTimezone(new \DateTimeZone("UTC"));
+    }
+  }
+
 
   /**
    * @param \DateTime|null $endTime
@@ -82,8 +104,7 @@ trait TimeEntity
   {
     $this->_localizedEndTime = $endTime;
     $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
-    $this->endTime = clone $endTime;
-    $this->endTime->setTimezone(new \DateTimeZone("UTC"));
+    $this->updateEndTime();
     return $this;
   }
 
@@ -95,8 +116,7 @@ trait TimeEntity
   {
     $this->_localizedStartTime = $startTime;
     $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
-    $this->startTime = clone $startTime;
-    $this->startTime->setTimezone(new \DateTimeZone("UTC"));
+    $this->updateStartTime();
     return $this;
   }
 //</editor-fold desc="Public Methods">
