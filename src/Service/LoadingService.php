@@ -106,7 +106,7 @@ class LoadingService implements LoadingServiceInterface
               if (!$object->isInitialized()) {
                 return true;
               }
-            } else if (!property_exists($object, '__isInitialized__')) {
+            } else if (!property_exists($object, '__isInitialized__') || !$object->__isInitialized__) {
               return true;
             }
           }
