@@ -40,15 +40,12 @@ trait TimeEntity
    */
   private $endTimezone = "";
 
-  /**
-   * @var bool
-   */
-  private $startLocalized = false;
+  /** @var @var \DateTime|null */
+  private $_localizedStartTime = null;
 
-  /**
-   * @var bool
-   */
-  private $endLocalized = false;
+  /** @var @var \DateTime|null */
+  private $_localizedEndTime = null;
+
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
@@ -57,11 +54,11 @@ trait TimeEntity
    */
   public function getEndTime(): ?\DateTime
   {
-    if ($this->endTime !== null && !$this->endLocalized) {
-      $this->endTime->setTimezone(new \DateTimeZone($this->endTimezone));
-      $this->endLocalized = true;
+    if ($this->endTime !== null && $this->_localizedEndTime === null) {
+      $this->_localizedEndTime = clone $this->endTime;
+      $this->_localizedEndTime->setTimezone(new \DateTimeZone($this->endTimezone));
     }
-    return $this->endTime;
+    return $this->_localizedEndTime;
   }
 
   /**
@@ -69,11 +66,11 @@ trait TimeEntity
    */
   public function getStartTime(): ?\DateTime
   {
-    if ($this->startTime !== null && !$this->startLocalized) {
-      $this->startTime->setTimezone(new \DateTimeZone($this->startTimezone));
-      $this->startLocalized = true;
+    if ($this->startTime !== null && $this->_localizedStartTime === null) {
+      $this->_localizedStartTime = clone $this->startTime;
+      $this->_localizedStartTime->setTimezone(new \DateTimeZone($this->startTimezone));
     }
-    return $this->startTime;
+    return $this->_localizedStartTime;
   }
 
 
@@ -83,9 +80,10 @@ trait TimeEntity
    */
   public function setEndTime(?\DateTime $endTime)
   {
-    $this->endTime = $endTime;
+    $this->_localizedEndTime = $endTime;
     $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
-    $this->endLocalized = true;
+    $this->endTime = clone $endTime;
+    $this->endTime->setTimezone(new \DateTimeZone("UTC"));
     return $this;
   }
 
@@ -95,9 +93,10 @@ trait TimeEntity
    */
   public function setStartTime(?\DateTime $startTime)
   {
-    $this->startTime = $startTime;
+    $this->_localizedStartTime = $startTime;
     $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
-    $this->startLocalized = true;
+    $this->startTime = clone $startTime;
+    $this->startTime->setTimezone(new \DateTimeZone("UTC"));
     return $this;
   }
 //</editor-fold desc="Public Methods">
