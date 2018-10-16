@@ -13,6 +13,7 @@ namespace Tfboe\FmLib\Service;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Expr\Join;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RecalculationInterface;
@@ -70,7 +71,9 @@ class RankingSystemService implements RankingSystemServiceInterface
     $query
       ->from(RankingSystemInterface::class, 's')
       ->select('s')
-      ->where($query->expr()->isNotNull('s.openSyncFrom'));
+      ->leftJoin(RecalculationInterface::class, 'r', Join::ON, 'r.rankingSystem = s')
+      ->where($query->expr()->isNotNull('s.openSyncFrom'))
+      ->orWhere($query->expr()->isNotNull('r.recalculateFrom'));
     /** @var RankingSystemInterface[] $rankingSystems */
     $rankingSystems = $query->getQuery()->getResult();
 
