@@ -166,7 +166,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
       return $list1->getLastEntryTime() <=> $list2->getLastEntryTime();
     });
 
-    $this->updateRankingTimes($from, $ranking);
+    $this->updateRankingTimes($lastReusable->getLastEntryTime(), $ranking);
 
     foreach ($toUpdate as $list) {
       $this->recomputeBasedOn($list, $lastReusable);

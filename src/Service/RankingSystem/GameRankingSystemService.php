@@ -327,7 +327,7 @@ INNER JOIN $hierarchyEntityTable AS th
 LEFT JOIN $tournamentRankingSystemsAssociationTable AS trs
   ON trs.$tournamentRankingSystemsAssociationTournamentIdCol = t.$tournamentIdCol
     AND trs.$tournamentRankingSystemsAssociationRankingSystemIdCol = ?
-WHERE ($rankingTimePart >= ?) AND 
+WHERE ($rankingTimePart > ?) AND 
       (grs.$gameRankingSystemsAssociationGameIdCol IS NOT NULL OR 
       mrs.$matchRankingSystemsAssociationMatchIdCol IS NOT NULL OR 
       prs.$phaseRankingSystemsAssociationPhaseIdCol IS NOT NULL OR 
