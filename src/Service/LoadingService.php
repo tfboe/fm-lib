@@ -81,7 +81,6 @@ class LoadingService implements LoadingServiceInterface
             $toDoEntityIds[$class] = [];
           }
           $toDoEntityIds[$class][] = $entity;
-          break;
         }
       }
     }
@@ -106,7 +105,7 @@ class LoadingService implements LoadingServiceInterface
               if (!$object->isInitialized()) {
                 return true;
               }
-            } else if (!property_exists($object, '__isInitialized__')) {
+            } else if (!property_exists($object, '__isInitialized__') || !$object->__isInitialized__) {
               return true;
             }
           }
@@ -134,7 +133,6 @@ class LoadingService implements LoadingServiceInterface
                       $toDoEntityIds[$subClass] = [];
                     }
                     $toDoEntityIds[$subClass][] = $subObject;
-                    break;
                   }
                 }
               }
