@@ -7,7 +7,6 @@ CODE_COVERAGE="${CODE_COVERAGE:-0}"
 MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
-WITH_LOCK="${WITH_LOCK:-0}"
 LIB_NAME="tfboe/fm-lib:@dev"
 
 if [ "$GH_TOKEN" != "" ]; then
@@ -37,7 +36,12 @@ if [ "$INTEGRATION" = '1' ]; then
     directory=${PWD##*/}
     cd ..
     rm -rf fm-lib-test
-    composer create-project $PREFER_LOWEST laravel/lumen fm-lib-test
+    if [ -z "$PREFER_LOWEST" ]; then
+          composer create-project laravel/lumen fm-lib-test
+    else
+          composer create-project laravel/lumen:5.6.0 fm-lib-test
+    fi
+
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
     cp -r ../${directory}/tests/Integration/ tests
@@ -47,7 +51,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
     composer config repositories.fm-lib path ../${directory}
-    composer require ${LIB_NAME}
+    composer require ${LIB_NAME} $PREFER_LOWEST
     composer require phpunit/phpcov:^5.0
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\
