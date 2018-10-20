@@ -10,9 +10,9 @@ GITHUB_OAUTH="${GITHUB_OAUTH:-}"
 WITH_LOCK="${WITH_LOCK:-0}"
 LIB_NAME="tfboe/fm-lib:@dev"
 
-if [ "$GITHUB_OAUTH" != "" ]; then
+if [ "$GH_TOKEN" != "" ]; then
     echo "using github OAUTH"
-    composer config --global -g github-oauth.github.com ${GITHUB_OAUTH}
+    composer config --global -g github-oauth.github.com ${GH_TOKEN}
 fi
 
 composer validate --no-check-all --strict
