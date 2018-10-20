@@ -30,11 +30,11 @@
     "tymon/jwt-auth": "^1.0"
   },
   "require-dev": {
-    "barryvdh/laravel-ide-helper": "^2.0",
-    "fzaninotto/faker": "^1.0",
-    "phpmd/phpmd": "^2.0",
+    "barryvdh/laravel-ide-helper": "^2.5",
+    "fzaninotto/faker": "^1.8",
+    "phpmd/phpmd": "^2.6",
     "phpunit/phpcov": "^5.0",
-    "phpunit/phpunit": "^7.0"
+    "phpunit/phpunit": "^7.4"
   },
   "autoload": {
     "psr-4": {
