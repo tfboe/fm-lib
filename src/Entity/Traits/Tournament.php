@@ -107,15 +107,6 @@ trait Tournament
   }
 
   /**
-   * Tournament constructor.
-   */
-  protected final function init()
-  {
-    $this->tournamentListId = "";
-    $this->competitions = new ArrayCollection();
-  }
-
-  /**
    * @param UserInterface $creator
    * @return TournamentInterface|Tournament
    */
@@ -135,4 +126,15 @@ trait Tournament
     return $this;
   }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Final Methods">
+  /**
+   * Tournament constructor.
+   */
+  protected final function init()
+  {
+    $this->tournamentListId = "";
+    $this->competitions = new ArrayCollection();
+  }
+//</editor-fold desc="Protected Final Methods">
 }

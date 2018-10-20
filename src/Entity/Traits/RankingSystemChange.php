@@ -29,7 +29,7 @@ trait RankingSystemChange
 
 //<editor-fold desc="Fields">
   /**
-   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\RankingSystemInterface", inversedBy="changes")
+   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\RankingSystemInterface")
    * @var RankingSystemInterface
    */
   private $rankingSystem;

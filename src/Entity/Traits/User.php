@@ -58,6 +58,22 @@ trait User
 
 //<editor-fold desc="Public Methods">
   /**
+   * @return int
+   */
+  public function getConfirmedTermsMajorVersion(): int
+  {
+    return $this->confirmedTermsMajorVersion;
+  }
+
+  /**
+   * @return int
+   */
+  public function getConfirmedTermsMinorVersion(): int
+  {
+    return $this->confirmedTermsMinorVersion;
+  }
+
+  /**
    * @return string
    */
   public function getEmail(): string
@@ -96,27 +112,11 @@ trait User
   }
 
   /**
-   * @return int
-   */
-  public function getConfirmedTermsMajorVersion(): int
-  {
-    return $this->confirmedTermsMajorVersion;
-  }
-
-  /**
    * @param int $confirmedTermsMajorVersion
    */
   public function setConfirmedTermsMajorVersion(int $confirmedTermsMajorVersion)
   {
     $this->confirmedTermsMajorVersion = $confirmedTermsMajorVersion;
-  }
-
-  /**
-   * @return int
-   */
-  public function getConfirmedTermsMinorVersion(): int
-  {
-    return $this->confirmedTermsMinorVersion;
   }
 
   /**

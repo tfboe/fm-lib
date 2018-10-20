@@ -33,34 +33,22 @@ trait Team
    * @var Collection|TeamMembershipInterface[]
    */
   private $memberships;
-
-  /**
-   * @return Collection|TeamMembershipInterface[]
-   */
-  public function getMemberships(): Collection
-  {
-    return $this->memberships;
-  }
-
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", inversedBy="teams")
    * @var CompetitionInterface
    */
   private $competition;
-
   /**
    * @ORM\Column(type="integer")
    * @var int
    */
   private $rank;
-
   /**
    * @ORM\Column(type="integer")
    * @var int
    */
   private $startNumber;
 //</editor-fold desc="Fields">
-
 //<editor-fold desc="Constructor">
 //</editor-fold desc="Constructor">
 
@@ -71,6 +59,14 @@ trait Team
   public function getCompetition(): CompetitionInterface
   {
     return $this->competition;
+  }
+
+  /**
+   * @return Collection|TeamMembershipInterface[]
+   */
+  public function getMemberships(): Collection
+  {
+    return $this->memberships;
   }
 
   /**

@@ -27,6 +27,7 @@ class Ranking extends BaseEntity implements RankingInterface
   use \Tfboe\FmLib\Entity\Traits\Ranking;
 
 
+//<editor-fold desc="Constructor">
   /**
    * Ranking constructor.
    */
@@ -34,4 +35,5 @@ class Ranking extends BaseEntity implements RankingInterface
   {
     $this->init();
   }
+//</editor-fold desc="Constructor">
 }

@@ -40,15 +40,6 @@ class BasicEnumTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNames
-   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getConstants
-   */
-  public function testGetNames()
-  {
-    self::assertEquals(['KEY', 'INT_KEY'], TestEnum::getNames());
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getName
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNamesArray
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
@@ -75,6 +66,15 @@ class BasicEnumTest extends UnitTestCase
       ' Possible values: "value", 1.');
     /** @noinspection PhpUnhandledExceptionInspection */
     TestEnum::getName('int_key');
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNames
+   * @covers \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   */
+  public function testGetNames()
+  {
+    self::assertEquals(['KEY', 'INT_KEY'], TestEnum::getNames());
   }
 
   /**

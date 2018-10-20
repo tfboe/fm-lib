@@ -28,17 +28,17 @@ trait NumericalId
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return int
+   * @return string|int
    */
-  public function getId(): int
+  public function getEntityId()
   {
     return $this->id;
   }
 
   /**
-   * @return string|int
+   * @return int
    */
-  public function getEntityId()
+  public function getId(): int
   {
     return $this->id;
   }

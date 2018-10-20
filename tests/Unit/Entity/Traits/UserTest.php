@@ -88,18 +88,6 @@ class UserTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMinorVersion
-   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedTermsMinorVersion
-   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
-   */
-  public function testLastConfirmedTermsMinorVersion()
-  {
-    $user = $this->user();
-    $user->setConfirmedTermsMinorVersion(5);
-    self::assertEquals(5, $user->getConfirmedTermsMinorVersion());
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMajorVersion
    * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedTermsMajorVersion
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
@@ -109,6 +97,18 @@ class UserTest extends UnitTestCase
     $user = $this->user();
     $user->setConfirmedTermsMajorVersion(5);
     self::assertEquals(5, $user->getConfirmedTermsMajorVersion());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Traits\User::getConfirmedTermsMinorVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\User::setConfirmedTermsMinorVersion
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
+   */
+  public function testLastConfirmedTermsMinorVersion()
+  {
+    $user = $this->user();
+    $user->setConfirmedTermsMinorVersion(5);
+    self::assertEquals(5, $user->getConfirmedTermsMinorVersion());
   }
 //</editor-fold desc="Public Methods">
 

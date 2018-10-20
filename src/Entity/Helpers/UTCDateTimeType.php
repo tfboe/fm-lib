@@ -25,6 +25,7 @@ class UTCDateTimeType extends DateTimeType
 //<editor-fold desc="Public Methods">
   /**
    * {@inheritdoc}
+   * @throws \Doctrine\DBAL\Types\ConversionException
    */
   public function convertToDatabaseValue($value, AbstractPlatform $platform)
   {

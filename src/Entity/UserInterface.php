@@ -29,19 +29,9 @@ interface UserInterface extends BaseEntityInterface, TimestampableEntityInterfac
   public function getConfirmedTermsMajorVersion(): int;
 
   /**
-   * @param int $confirmedTermsMajorVersion
-   */
-  public function setConfirmedTermsMajorVersion(int $confirmedTermsMajorVersion);
-
-  /**
    * @return int
    */
   public function getConfirmedTermsMinorVersion(): int;
-
-  /**
-   * @param int $confirmedTermsMinorVersion
-   */
-  public function setConfirmedTermsMinorVersion(int $confirmedTermsMinorVersion);
 
   /**
    * @return string
@@ -66,6 +56,16 @@ interface UserInterface extends BaseEntityInterface, TimestampableEntityInterfac
    * @return int
    */
   public function getJwtVersion(): int;
+
+  /**
+   * @param int $confirmedTermsMajorVersion
+   */
+  public function setConfirmedTermsMajorVersion(int $confirmedTermsMajorVersion);
+
+  /**
+   * @param int $confirmedTermsMinorVersion
+   */
+  public function setConfirmedTermsMinorVersion(int $confirmedTermsMinorVersion);
 
   /**
    * @param mixed $email

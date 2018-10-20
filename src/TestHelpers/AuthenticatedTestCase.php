@@ -43,6 +43,14 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
 //<editor-fold desc="Protected Methods">
   /**
+   * @return string[]
+   */
+  protected function getClassesToClear(): array
+  {
+    return [UserInterface::class];
+  }
+
+  /**
    * sends a json request with an authentication token
    * @param string $method the method to use (GET, POST, ...)
    * @param string $uri the uri of the request
@@ -56,12 +64,18 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     return $this->json($method, $uri, $data, $headers);
   }
 
+  /**
+   * @throws \Doctrine\DBAL\DBALException
+   */
   protected function workOnDatabaseDestroy()
   {
     $this->clearUsers();
     parent::workOnDatabaseDestroy();
   }
 
+  /**
+   * @throws \Doctrine\DBAL\DBALException
+   */
   protected function workOnDatabaseSetUp()
   {
     $this->clearUsers();
@@ -79,24 +93,20 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 //</editor-fold desc="Protected Methods">
 
 //<editor-fold desc="Private Methods">
+  /**
+   * @throws \Doctrine\DBAL\DBALException
+   */
   private function clearUsers()
   {
     /** @var Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $this->clearClassTables($this->getClassesToClear());
+    /** @noinspection PhpUndefinedMethodInspection */
     $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;',
       EntityManager::getClassMetadata(UserInterface::class)->getTableName());
     /** @noinspection PhpUnhandledExceptionInspection */
     $connection->query($sql);
-  }
-
-  /**
-   * @return string[]
-   */
-  protected function getClassesToClear(): array
-  {
-    return [UserInterface::class];
   }
 //</editor-fold desc="Private Methods">
 }

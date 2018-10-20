@@ -32,6 +32,7 @@ class RankingSystemChange extends BaseEntity implements RankingSystemChangeInter
 {
   use \Tfboe\FmLib\Entity\Traits\RankingSystemChange;
 
+//<editor-fold desc="Constructor">
   /**
    * RankingSystem constructor.
    * @param array $keys
@@ -40,4 +41,5 @@ class RankingSystemChange extends BaseEntity implements RankingSystemChangeInter
   {
     $this->init($keys);
   }
+//</editor-fold desc="Constructor">
 }

@@ -77,6 +77,29 @@ class BaseControllerTest extends UnitTestCase
   }
 
   /**
+   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
+   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   */
+  public function testGetDatetimetzFormat()
+  {
+    $controller = $this->controller();
+    $format = static::callProtectedMethod($controller, "getDatetimetzFormat");
+    self::assertEquals('Y-m-d H:i:s e', $format);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   */
+  public function testGetEntityManager()
+  {
+    $entityManager = $this->createMock(EntityManagerInterface::class);
+    $controller = $this->getMockForAbstractClass(BaseController::class, [$entityManager]);
+    $em = static::callProtectedMethod($controller, "getEntityManager");
+    self::assertEquals($entityManager, $em);
+  }
+
+  /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
    * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
@@ -208,29 +231,6 @@ class BaseControllerTest extends UnitTestCase
     /** @noinspection PhpUnhandledExceptionInspection */
     $method = self::getMethod(UserController::class, 'validateBySpecification');
     $method->invokeArgs($controller, [$request, $specification]);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testGetDatetimetzFormat()
-  {
-    $controller = $this->controller();
-    $format = static::callProtectedMethod($controller, "getDatetimetzFormat");
-    self::assertEquals('Y-m-d H:i:s e', $format);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testGetEntityManager()
-  {
-    $entityManager = $this->createMock(EntityManagerInterface::class);
-    $controller = $this->getMockForAbstractClass(BaseController::class, [$entityManager]);
-    $em = static::callProtectedMethod($controller, "getEntityManager");
-    self::assertEquals($entityManager, $em);
   }
 //</editor-fold desc="Public Methods">
 

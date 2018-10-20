@@ -126,11 +126,11 @@ class RankingSystemService implements RankingSystemServiceInterface
     //clear entityManager to save memory
     $this->entityManager->flush();
     $this->entityManager->clear();
-    $rankingSystemOpenSyncFroms = [];
+    $rankingSystemOpenSyncFromValues = [];
     /** @var RankingSystemInterface[] $rankingSystems */
     $rankingSystems = [];
     $this->entityManager->transactional(
-      function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
+      function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFromValues) {
         $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
         $query = $em->createQueryBuilder();
         $query
@@ -140,7 +140,7 @@ class RankingSystemService implements RankingSystemServiceInterface
         /** @var RankingSystemInterface[] $rankingSystems */
         $rankingSystems = $query->getQuery()->setLockMode(LockMode::PESSIMISTIC_WRITE)->getResult();
         foreach ($rankingSystems as $rankingSystem) {
-          $rankingSystemOpenSyncFroms[$rankingSystem->getId()] = $rankingSystem->getOpenSyncFrom();
+          $rankingSystemOpenSyncFromValues[$rankingSystem->getId()] = $rankingSystem->getOpenSyncFrom();
           Logging::log("Update Ranking System " . $rankingSystem->getName() . " from " .
             $rankingSystem->getOpenSyncFrom()->format("Y-m-d H:i:s"));
           $rankingSystem->setOpenSyncFrom(null);
@@ -150,14 +150,14 @@ class RankingSystemService implements RankingSystemServiceInterface
 
     if (count($rankingSystems) > 0) {
       $this->entityManager->transactional(
-        function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFroms) {
+        function (EntityManager $em) use (&$rankingSystems, &$rankingSystemOpenSyncFromValues) {
           /** @var LastRecalculationInterface $lastRecalculation */
           $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
           $em->flush();
           $lastRecalculation->setStartTime(new \DateTime());
           foreach ($rankingSystems as $rankingSystem) {
             $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-            $service->updateRankingFrom($rankingSystem, $rankingSystemOpenSyncFroms[$rankingSystem->getId()]);
+            $service->updateRankingFrom($rankingSystem, $rankingSystemOpenSyncFromValues[$rankingSystem->getId()]);
           }
           $lastRecalculation->setEndTime(new \DateTime());
           $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);

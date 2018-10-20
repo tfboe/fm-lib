@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -11,6 +12,10 @@ namespace Tfboe\FmLib\Service;
 
 use Tfboe\FmLib\Entity\TermsInterface;
 
+/**
+ * Interface TermsServiceInterface
+ * @package Tfboe\FmLib\Service
+ */
 interface TermsServiceInterface
 {
 //<editor-fold desc="Public Methods">

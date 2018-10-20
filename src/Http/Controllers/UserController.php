@@ -21,11 +21,12 @@ use Tymon\JWTAuth\Exceptions\JWTException;
  */
 class UserController extends BaseController
 {
-//<editor-fold desc="Public Methods">
-
+//<editor-fold desc="Fields">
   /** @var ObjectCreatorServiceInterface $objectCreatorService */
   private $objectCreatorService;
+//</editor-fold desc="Fields">
 
+//<editor-fold desc="Constructor">
   /**
    * @inheritDoc
    */
@@ -35,7 +36,19 @@ class UserController extends BaseController
     parent::__construct($entityManager);
     $this->objectCreatorService = $objectCreatorService;
   }
+//</editor-fold desc="Constructor">
 
+//<editor-fold desc="Public Methods">
+  /**
+   * @param TermsServiceInterface $termsService
+   * @return JsonResponse
+   */
+  public function getLatestTerms(TermsServiceInterface $termsService): JsonResponse
+  {
+    $terms = $termsService->getLatestTerms();
+    return response()->json(["text" => $terms->getText(), "minorVersion" => $terms->getMinorVersion(),
+      "majorVersion" => $terms->getMajorVersion()]);
+  }
 
   /**
    * login action, checks credentials and returns token
@@ -43,6 +56,7 @@ class UserController extends BaseController
    * @param Application $app
    * @return JsonResponse
    * @throws AuthenticationException wrong credentials or errors during creating a token
+   * @throws \Illuminate\Validation\ValidationException
    */
   public function login(Request $request, Application $app): JsonResponse
   {
@@ -72,20 +86,12 @@ class UserController extends BaseController
   }
 
   /**
-   * Method called before login token gets generated.
-   * Can be used to modify token generation parameters.
-   * @param Request $request
-   */
-  protected function preLogin(Request $request)
-  {
-  }
-
-  /**
    * register action, registers a new user with email and password
    *
    * @param Request $request the http request
    * @param Application $app
    * @return JsonResponse
+   * @throws \Illuminate\Validation\ValidationException
    */
   public function register(Request $request, Application $app): JsonResponse
   {
@@ -111,40 +117,6 @@ class UserController extends BaseController
     $this->getEntityManager()->flush();
 
     return $this->getRegisterResponse($request, $app, $user);
-  }
-
-  /**
-   * @param TermsServiceInterface $termsService
-   * @return JsonResponse
-   */
-  public function getLatestTerms(TermsServiceInterface $termsService): JsonResponse
-  {
-    $terms = $termsService->getLatestTerms();
-    return response()->json(["text" => $terms->getText(), "minorVersion" => $terms->getMinorVersion(),
-      "majorVersion" => $terms->getMajorVersion()]);
-  }
-
-  /**
-   * Creates a new user
-   * @return UserInterface
-   */
-  protected function newUser(): UserInterface
-  {
-    return $this->objectCreatorService->createObjectFromInterface(UserInterface::class);
-  }
-
-  /**
-   * Gets the response for a successful register action
-   * @param Request $request the request
-   * @param Application $app the application
-   * @param UserInterface $user the newly registered user
-   * @return JsonResponse the json response
-   */
-  protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
-    Request $request, /** @noinspection PhpUnusedParameterInspection */
-    Application $app, UserInterface $user)
-  {
-    return response()->json(['id' => $user->getId()]);
   }
 
   /**
@@ -197,6 +169,38 @@ class UserController extends BaseController
   {
     $user = $request->user();
     return response()->json(['id' => $user->getId()], 200, ['jwt-token' => $token]);
+  }
+
+  /**
+   * Gets the response for a successful register action
+   * @param Request $request the request
+   * @param Application $app the application
+   * @param UserInterface $user the newly registered user
+   * @return JsonResponse the json response
+   */
+  protected function getRegisterResponse(/** @noinspection PhpUnusedParameterInspection */
+    Request $request, /** @noinspection PhpUnusedParameterInspection */
+    Application $app, UserInterface $user)
+  {
+    return response()->json(['id' => $user->getId()]);
+  }
+
+  /**
+   * Creates a new user
+   * @return UserInterface
+   */
+  protected function newUser(): UserInterface
+  {
+    return $this->objectCreatorService->createObjectFromInterface(UserInterface::class);
+  }
+
+  /**
+   * Method called before login token gets generated.
+   * Can be used to modify token generation parameters.
+   * @param Request $request
+   */
+  protected function preLogin(Request $request)
+  {
   }
 //</editor-fold desc="Protected Methods">
 

@@ -31,14 +31,14 @@ interface PlayerInterface extends BaseEntityInterface, TimestampableEntityInterf
   public function getFirstName(): string;
 
   /**
-   * @return string
-   */
-  public function getLastName(): string;
-
-  /**
    * @return int|string
    */
   public function getId();
+
+  /**
+   * @return string
+   */
+  public function getLastName(): string;
 
   /**
    * @param \DateTime $birthday

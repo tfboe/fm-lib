@@ -141,6 +141,7 @@ abstract class BaseController extends Controller
    * @param Request $request the request
    * @param array $specification the specification
    * @return $this|BaseController
+   * @throws \Illuminate\Validation\ValidationException
    */
   protected function validateBySpecification(Request $request, array $specification): BaseController
   {

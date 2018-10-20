@@ -8,22 +8,17 @@ MYSQL_ROOT_PASSWORD="${MYSQL_ROOT_PASSWORD:-}"
 INTEGRATION="${INTEGRATION:-0}"
 GITHUB_OAUTH="${GITHUB_OAUTH:-}"
 WITH_LOCK="${WITH_LOCK:-0}"
-# REPOSITORY_TYPE="${REPOSITORY_TYPE:-vcs}"
-# REPOSITORY_LOCATION="${REPOSITORY_LOCATION:-https://github.com/tfboe/fm-lib}"
-REPOSITORY_TYPE="${REPOSITORY_TYPE:-path}"
-REPOSITORY_LOCATION="${REPOSITORY_LOCATION}"
-LIB_NAME="${LIB_NAME:-tfboe/fm-lib @dev}"
-
-if [ "$WITH_LOCK" == "0" ]; then
-    rm composer.lock
-fi
+LIB_NAME="tfboe/fm-lib:@dev"
 
 if [ "$GITHUB_OAUTH" != "" ]; then
     echo "using github OAUTH"
     composer config --global -g github-oauth.github.com ${GITHUB_OAUTH}
 fi
 
-composer install
+composer validate --no-check-all --strict
+
+composer global require hirak/prestissimo
+composer update $PREFER_LOWEST
 
 if [ "$INTEGRATION" = '1' ]; then
     # modify php.ini for catchmail
@@ -42,7 +37,7 @@ if [ "$INTEGRATION" = '1' ]; then
     directory=${PWD##*/}
     cd ..
     rm -rf fm-lib-test
-    composer create-project --prefer-dist laravel/lumen fm-lib-test "5.6.*"
+    composer create-project $PREFER_LOWEST laravel/lumen fm-lib-test
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
     cp -r ../${directory}/tests/Integration/ tests
@@ -51,13 +46,9 @@ if [ "$INTEGRATION" = '1' ]; then
     cp -r ../${directory}/database .
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
-    if [ "$REPOSITORY_LOCATION" = "" ]; then
-        REPOSITORY_LOCATION="../${directory}"
-    fi
-    echo ${REPOSITORY_TYPE} ${REPOSITORY_LOCATION}
-    composer config repositories.fm-lib ${REPOSITORY_TYPE} ${REPOSITORY_LOCATION}
-    composer require ${LIB_NAME} --prefer-dist
-    composer require phpunit/phpcov:^5.0 --prefer-dist
+    composer config repositories.fm-lib path ../${directory}
+    composer require ${LIB_NAME}
+    composer require phpunit/phpcov:^5.0
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\
 '/$app->register(Tfboe\\FmLib\\Providers\\FmLibServiceProvider::class);/g' bootstrap/app.php

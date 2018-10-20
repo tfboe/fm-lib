@@ -19,6 +19,7 @@ use Tfboe\FmLib\Tests\Entity\User;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
+
 abstract class Tournament extends TournamentHierarchyEntity implements TournamentInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Tournament;

@@ -23,18 +23,6 @@ class UUIDEntityTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
-   * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   */
-  public function testId()
-  {
-    $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
-    self::assertEquals('test-id', $entity->getId());
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getEntityId
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
    */
@@ -44,6 +32,18 @@ class UUIDEntityTest extends UnitTestCase
     /** @noinspection PhpUnhandledExceptionInspection */
     self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
     self::assertEquals('test-id', $entity->getEntityId());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
+   * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
+   */
+  public function testId()
+  {
+    $entity = $this->mock();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
+    self::assertEquals('test-id', $entity->getId());
   }
 //</editor-fold desc="Public Methods">
 

@@ -169,6 +169,7 @@ class EloRankingTest extends UnitTestCase
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntriesOfPlayers
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalChangeFields()
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields
    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
    * @param bool $isPlayed if game was played
    * @param int $gameResult the game result

@@ -50,6 +50,8 @@ if [ "$DOCKER_CACHE_COMPOSER" != '0' ]; then
     fi
 fi
 
+composer self-update
+
 (
 ./travis_before_script.sh
 )

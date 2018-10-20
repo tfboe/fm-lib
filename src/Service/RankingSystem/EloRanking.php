@@ -37,6 +37,14 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 //<editor-fold desc="Protected Methods">
   /**
+   * @inheritDoc
+   */
+  protected function getAdditionalChangeFields(): array
+  {
+    return array_merge(parent::getAdditionalChangeFields(), ['teamElo', 'opponentElo']);
+  }
+
+  /**
    * Gets additional fields for this ranking type
    * @return string[] list of additional fields
    */
@@ -44,6 +52,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   {
     return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => self::START];
   }
+
+  /** @noinspection PhpMissingParentCallCommonInspection */
 
   /**
    * @inheritDoc
@@ -96,17 +106,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
       $isBProvisory, $isAProvisory);
     return $changes;
   }
-
-  /** @noinspection PhpMissingParentCallCommonInspection */
-  /**
-   * @inheritDoc
-   */
-  protected function startPoints(): float
-  {
-    return 0.0;
-  }
 //</editor-fold desc="Protected Methods">
-
 
 //<editor-fold desc="Private Methods">
   /**
@@ -130,15 +130,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
     }
   }
 
-  /**
-   * @inheritDoc
-   */
-  protected function getAdditionalChangeFields(): array
-  {
-    return ['teamElo', 'opponentElo'];
-  }
-
   /** @noinspection PhpTooManyParametersInspection */ //TODO refactor this method
+
   /**
    * @param array $changes
    * @param RankingSystemListEntryInterface[] $entries

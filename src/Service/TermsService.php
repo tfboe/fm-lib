@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -12,6 +13,10 @@ namespace Tfboe\FmLib\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\TermsInterface;
 
+/**
+ * Class TermsService
+ * @package Tfboe\FmLib\Service
+ */
 class TermsService implements TermsServiceInterface
 {
 //<editor-fold desc="Fields">
@@ -33,12 +38,14 @@ class TermsService implements TermsServiceInterface
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * @return TermsInterface
    */
   public function getLatestTerms(): TermsInterface
   {
     $builder = $this->em->createQueryBuilder();
+    /** @noinspection PhpUnhandledExceptionInspection */
     $terms = $builder->select('e')
       ->from(TermsInterface::class, 'e')
       ->orderBy('e.majorVersion', 'DESC')

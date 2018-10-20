@@ -20,10 +20,8 @@ use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
-use Tfboe\FmLib\Service\AsyncExecuterService;
-use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
-use Tfboe\FmLib\Service\DeletionService;
-use Tfboe\FmLib\Service\DeletionServiceInterface;
+use Tfboe\FmLib\Service\AsyncExecutorService;
+use Tfboe\FmLib\Service\AsyncExecutorServiceInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\LoadingService;
@@ -129,8 +127,8 @@ class FmLibServiceProvider extends ServiceProvider
       );
     });
 
-    $this->app->singleton(AsyncExecuterServiceInterface::class, function () {
-      return new AsyncExecuterService();
+    $this->app->singleton(AsyncExecutorServiceInterface::class, function () {
+      return new AsyncExecutorService();
     });
 
     $this->app->singleton(TermsServiceInterface::class, function (Container $app) {

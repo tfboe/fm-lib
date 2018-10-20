@@ -136,18 +136,6 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     self::assertNull($this->response->headers->get('jwt-token'));
   }
 
-  public function testInvalidLastConfirmedTermsMinorVersion()
-  {
-    $this->json('POST', '/register', [
-      'email' => 'test@user1.com',
-      'password' => 'testPassword',
-      'confirmedTermsMinorVersion' => 'noInt',
-      'confirmedTermsMajorVersion' => 1,
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMinorVersion" =>
-      ["The confirmed terms minor version must be an integer."]],
-      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
-  }
-
   public function testInvalidLastConfirmedTermsMajorVersion()
   {
     $this->json('POST', '/register', [
@@ -157,6 +145,18 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       'confirmedTermsMinorVersion' => 0,
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMajorVersion" =>
       ["The confirmed terms major version must be an integer."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
+
+  public function testInvalidLastConfirmedTermsMinorVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedTermsMinorVersion' => 'noInt',
+      'confirmedTermsMajorVersion' => 1,
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMinorVersion" =>
+      ["The confirmed terms minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -194,18 +194,6 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       'confirmedTermsMajorVersion' => 1,
     ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMinorVersion" =>
       ["The confirmed terms minor version must be at least 0."]],
-      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
-  }
-
-  public function testZeroLastConfirmedTermsMajorVersion()
-  {
-    $this->json('POST', '/register', [
-      'email' => 'test@user1.com',
-      'password' => 'testPassword',
-      'confirmedTermsMajorVersion' => 0,
-      'confirmedTermsMinorVersion' => 0
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMajorVersion" =>
-      ["The confirmed terms major version must be at least 1."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
@@ -277,6 +265,18 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     self::assertEquals(7, $user->getConfirmedTermsMajorVersion());
   }
 
+  public function testTooShortPassword()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'short',
+      'confirmedTermsMinorVersion' => 0,
+      'confirmedTermsMajorVersion' => 1
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
+      ["password" => ["The password must be at least 8 characters."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
+
   //TODO: handle this test case (related to integer-type validation which is at the moment deactivated due to a
   //      incompatibility to lumen 5.7, see src/Providers/FmLibServiceProvider.php
   /*public function testRegistrationWithStringAsConfirmedTermsMinorVersion()
@@ -290,18 +290,6 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       ["confirmedTermsMinorVersion" => ["The confirmed terms minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }*/
-
-  public function testTooShortPassword()
-  {
-    $this->json('POST', '/register', [
-      'email' => 'test@user1.com',
-      'password' => 'short',
-      'confirmedTermsMinorVersion' => 0,
-      'confirmedTermsMajorVersion' => 1
-    ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
-      ["password" => ["The password must be at least 8 characters."]],
-      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
-  }
 
   public function testTooShortPasswordLogin()
   {
@@ -337,6 +325,18 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       'password' => $password
     ])->seeStatusCode(401);
     self::assertNull($this->response->headers->get('jwt-token'));
+  }
+
+  public function testZeroLastConfirmedTermsMajorVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedTermsMajorVersion' => 0,
+      'confirmedTermsMinorVersion' => 0
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" => ["confirmedTermsMajorVersion" =>
+      ["The confirmed terms major version must be at least 1."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 //</editor-fold desc="Public Methods">
 }
