@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
+use Tfboe\FmLib\Helpers\TransformerFactory;
 
 /**
  * Class Controllers
@@ -69,9 +70,7 @@ abstract class BaseController extends Controller
    */
   protected function datetimetzTransformer(): \Closure
   {
-    return function ($dateString) {
-      return \DateTime::createFromFormat($this->datetimetzFormat, $dateString);
-    };
+    return TransformerFactory::datetimetzTransformer($this->datetimetzFormat);
   }
 
   /**
@@ -81,9 +80,7 @@ abstract class BaseController extends Controller
    */
   protected function enumTransformer(string $enumName): \Closure
   {
-    return function ($name) use ($enumName) {
-      return call_user_func([$enumName, "getValue"], $name);
-    };
+    return TransformerFactory::enumTransformer($enumName);
   }
 
   /**
