@@ -125,6 +125,9 @@ abstract class BaseController extends Controller
    */
   protected function transformValue(&$value, array $specification)
   {
+    if (array_key_exists('nullValue', $specification) && $value === null) {
+      $value = $specification['nullValue'];
+    }
     if (array_key_exists('reference', $specification)) {
       $value = $this->getEntityManager()->find($specification['reference'], $value);
     }
