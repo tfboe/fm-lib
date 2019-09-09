@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Traits;
 
 
+use DateTime;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
@@ -35,6 +36,18 @@ trait TeamMembership
    * @var PlayerInterface
    */
   private $player;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=true)
+   * @var DateTime|null
+   */
+  private $start;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=true)
+   * @var DateTime|null
+   */
+  private $end;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
@@ -73,5 +86,38 @@ trait TeamMembership
     $this->team = $team;
     $this->team->getMemberships()->set($this->getId(), $this);
   }
+
+  /**
+   * @return DateTime|null
+   */
+  public function getStart(): ?DateTime
+  {
+    return $this->start;
+  }
+
+  /**
+   * @param DateTime|null $start
+   */
+  public function setStart(?DateTime $start): void
+  {
+    $this->start = $start;
+  }
+
+  /**
+   * @return DateTime|null
+   */
+  public function getEnd(): ?DateTime
+  {
+    return $this->end;
+  }
+
+  /**
+   * @param DateTime|null $end
+   */
+  public function setEnd(?DateTime $end): void
+  {
+    $this->end = $end;
+  }
+
 //</editor-fold desc="Public Methods">
 }
