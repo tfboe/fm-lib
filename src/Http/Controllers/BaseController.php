@@ -10,8 +10,11 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Http\Controllers;
 
 
+use Closure;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Routing\Controller;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Helpers\TransformerFactory;
@@ -66,9 +69,9 @@ abstract class BaseController extends Controller
 //<editor-fold desc="Protected Methods">
   /**
    * Gets a transformation function which transforms a string in datetime format into a datetime with the given timezone
-   * @return \Closure the function which transforms a string into a datetime
+   * @return Closure the function which transforms a string into a datetime
    */
-  protected function datetimetzTransformer(): \Closure
+  protected function datetimetzTransformer(): Closure
   {
     return TransformerFactory::datetimetzTransformer($this->datetimetzFormat);
   }
@@ -76,9 +79,9 @@ abstract class BaseController extends Controller
   /**
    * Gets a transformation function which transforms an enum name into the corresponding value
    * @param string $enumName the name of the enum
-   * @return \Closure the function which transforms a name into the enum value
+   * @return Closure the function which transforms a name into the enum value
    */
-  protected function enumTransformer(string $enumName): \Closure
+  protected function enumTransformer(string $enumName): Closure
   {
     return TransformerFactory::enumTransformer($enumName);
   }
@@ -141,7 +144,7 @@ abstract class BaseController extends Controller
    * @param Request $request the request
    * @param array $specification the specification
    * @return $this|BaseController
-   * @throws \Illuminate\Validation\ValidationException
+   * @throws ValidationException
    */
   protected function validateBySpecification(Request $request, array $specification): BaseController
   {
@@ -149,6 +152,9 @@ abstract class BaseController extends Controller
     foreach ($specification as $key => $values) {
       if (array_key_exists('validation', $values)) {
         $arr[$key] = $values['validation'];
+      }
+      if (array_key_exists('transformBeforeValidation', $values) && $request->has($key)) {
+        $request->merge([$key => $values['transformBeforeValidation']($request->get($key))]);
       }
     }
     $this->validate($request, $arr);
@@ -167,7 +173,7 @@ abstract class BaseController extends Controller
   private static function transformByType($value, $type)
   {
     if (strtolower($type) === 'date' || strtolower($type) === 'datetime') {
-      return new \DateTime($value);
+      return new DateTime($value);
     }
     return $value;
   }
