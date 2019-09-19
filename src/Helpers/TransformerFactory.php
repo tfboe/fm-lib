@@ -9,6 +9,10 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Helpers;
 
+use Closure;
+use DateTime;
+use Exception;
+
 /**
  * Class TransformerFactory
  * @package App\Helpers
@@ -18,19 +22,19 @@ class TransformerFactory
 //<editor-fold desc="Public Methods">
   /**
    * Gets a transformation function which transforms a string in datetime format into a datetime with the given timezone
-   * @return \Closure the function which transforms a string into a datetime
+   * @return Closure the function which transforms a string into a datetime
    */
   public static function datetimetzTransformer(string $datetimetzFormat): Callable
   {
     return function ($dateString) use ($datetimetzFormat) {
-      return \DateTime::createFromFormat($datetimetzFormat, $dateString);
+      return DateTime::createFromFormat($datetimetzFormat, $dateString);
     };
   }
 
   /**
    * Gets a transformation function which transforms an enum value into the corresponding name
    * @param string $enumClass the class name of the enum
-   * @return \Closure the function which transforms a value into the enum name
+   * @return Closure the function which transforms a value into the enum name
    */
   public static function enumNameTransformer(string $enumClass): Callable
   {
@@ -42,7 +46,7 @@ class TransformerFactory
   /**
    * Gets a transformation function which transforms an enum name into the corresponding value
    * @param string $enumName the name of the enum
-   * @return \Closure the function which transforms a name into the enum value
+   * @return Closure the function which transforms a name into the enum value
    */
   public static function enumTransformer(string $enumName): Callable
   {
@@ -61,7 +65,23 @@ class TransformerFactory
       if (array_key_exists($x, $mapping)) {
         return $mapping[$x];
       } else {
-        throw new \Exception("Unknown source value!");
+        throw new Exception("Unknown source value!");
+      }
+    };
+  }
+
+  /**
+   * @return Callable
+   */
+  static function booleanTransformer(): Callable
+  {
+    return function ($value) {
+      if ($value === 'true') {
+        return true;
+      } else if ($value === 'false') {
+        return false;
+      } else {
+        return $value;
       }
     };
   }
