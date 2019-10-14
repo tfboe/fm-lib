@@ -47,6 +47,10 @@ class IdGenerator extends AbstractIdGenerator
    */
   public function generate(EntityManager $entityManager, $entity): string
   {
+    /** @var UUIDEntityInterface $entity */
+    if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
+      return $entity->getId();
+    }
     return self::createIdFrom();
   }
 //</editor-fold desc="Public Methods">

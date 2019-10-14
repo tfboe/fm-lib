@@ -21,5 +21,15 @@ interface UUIDEntityInterface
    * @return string
    */
   public function getId(): string;
+
+  /**
+   * @param string $id
+   */
+  public function setId(string $id);
+
+  /**
+   * @return bool
+   */
+  public function hasId(): bool;
 //</editor-fold desc="Public Methods">
 }
