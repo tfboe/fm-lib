@@ -62,14 +62,10 @@ class IdGenerator extends AbstractIdGenerator
   }
 
   /**
-   * Generates an identifier for an entity.
-   *
-   * @param EntityManager $entityManager
-   * @param Entity $entity
+   * @param $entity
    * @return string
-   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function generate(EntityManager $entityManager, $entity): string
+  public static function createIdFor($entity): string
   {
     /** @var UUIDEntityInterface $entity */
     if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
@@ -81,6 +77,19 @@ class IdGenerator extends AbstractIdGenerator
       $mixBy = $mixBy ^ $entity->getIdentifiableId();
     }
     return self::createIdFrom($mixBy);
+  }
+
+  /**
+   * Generates an identifier for an entity.
+   *
+   * @param EntityManager $entityManager
+   * @param Entity $entity
+   * @return string
+   * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+   */
+  public function generate(EntityManager $entityManager, $entity): string
+  {
+    return self::createIdFor($entity);
   }
 //</editor-fold desc="Public Methods">
 
