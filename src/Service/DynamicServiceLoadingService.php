@@ -56,7 +56,7 @@ class DynamicServiceLoadingService implements DynamicServiceLoadingServiceInterf
     if (strpos($class, 'Interface') === false) {
       $class .= 'Interface';
     }
-    if (strpos($class, '\\') === false) {
+    if (substr($class, strlen($namespace)) !== $namespace) {
       return $namespace . '\\' . $class;
     } else {
       return $class;

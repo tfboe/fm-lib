@@ -75,7 +75,7 @@ class IdGenerator extends AbstractIdGenerator
     if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
       return $entity->getId();
     }
-    $mixBy = Random::StringToInt(get_class($entity));
+    $mixBy = Random::stringToInt(get_class($entity));
     if (is_subclass_of($entity, IdentifiableInterface::class)) {
       /** @var IdentifiableInterface $entity */
       $mixBy = $mixBy ^ $entity->getIdentifiableId();

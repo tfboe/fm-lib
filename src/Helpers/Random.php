@@ -7,7 +7,7 @@ namespace Tfboe\FmLib\Helpers;
 class Random
 {
 //<editor-fold desc="Public Methods">
-  public static function StringToInt($str): int
+  public static function stringToInt($str): int
   {
     $result = unpack('q', md5($str, true));
     return $result[1];
