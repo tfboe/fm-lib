@@ -44,19 +44,20 @@ trait Phase
   private $phaseNumber;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="nextPhase")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="nextPhase", indexBy="id")
    * @var Collection|QualificationSystemInterface[]
    */
   private $preQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="previousPhase")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\QualificationSystemInterface", mappedBy="previousPhase",
+   *                indexBy="id")
    * @var Collection|QualificationSystemInterface[]
    */
   private $postQualifications;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", mappedBy="phase", indexBy="uniqueRank")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", mappedBy="phase", indexBy="id")
    * @var Collection|RankingInterface[]
    */
   private $rankings;

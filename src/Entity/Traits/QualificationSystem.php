@@ -63,7 +63,7 @@ trait QualificationSystem
       $this->nextPhase->getPreQualifications()->removeElement($this);
     }
     $this->nextPhase = $nextPhase;
-    $nextPhase->getPreQualifications()->add($this);
+    $nextPhase->getPreQualifications()->set($this->getId(), $this);
   }
 
   /**
@@ -75,7 +75,7 @@ trait QualificationSystem
       $this->previousPhase->getPostQualifications()->removeElement($this);
     }
     $this->previousPhase = $previousPhase;
-    $previousPhase->getPostQualifications()->add($this);
+    $previousPhase->getPostQualifications()->set($this->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 }

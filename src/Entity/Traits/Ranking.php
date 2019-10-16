@@ -96,10 +96,10 @@ trait Ranking
   public function setPhase(PhaseInterface $phase)
   {
     if ($this->phase !== null) {
-      $this->phase->getRankings()->remove($this->getUniqueRank());
+      $this->phase->getRankings()->remove($this->getId());
     }
     $this->phase = $phase;
-    $phase->getRankings()->set($this->getUniqueRank(), $this);
+    $phase->getRankings()->set($this->getId(), $this);
   }
 
   /**
