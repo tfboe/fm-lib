@@ -36,11 +36,7 @@ if [ "$INTEGRATION" = '1' ]; then
     directory=${PWD##*/}
     cd ..
     rm -rf fm-lib-test
-    if [ -z "$PREFER_LOWEST" ]; then
-          composer create-project laravel/lumen fm-lib-test
-    else
-          composer create-project laravel/lumen:5.6.0 fm-lib-test
-    fi
+    composer create-project laravel/lumen:^5.0 fm-lib-test
 
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
