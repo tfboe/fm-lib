@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Helpers;
 
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Helpers\DateTime;
 
 /**
  * Trait TimestampableEntity
@@ -51,7 +52,9 @@ trait TimestampableEntity
    */
   public function setCreatedAt(\DateTime $createdAt)
   {
-    $this->createdAt = $createdAt;
+    if (!DateTime::eq($this->createdAt, $createdAt)) {
+      $this->createdAt = $createdAt;
+    }
     return $this;
   }
 
@@ -61,7 +64,9 @@ trait TimestampableEntity
    */
   public function setUpdatedAt(\DateTime $updatedAt)
   {
-    $this->updatedAt = $updatedAt;
+    if (!DateTime::eq($this->updatedAt, $updatedAt)) {
+      $this->updatedAt = $updatedAt;
+    }
     return $this;
   }
 //</editor-fold desc="Public Methods">

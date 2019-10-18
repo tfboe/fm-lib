@@ -17,7 +17,7 @@ use Exception;
  * Class TransformerFactory
  * @package App\Helpers
  */
-class TransformerFactory
+abstract class TransformerFactory
 {
 //<editor-fold desc="Public Methods">
   /**

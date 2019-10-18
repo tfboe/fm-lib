@@ -9,6 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
+use DateTimeZone;
+use Tfboe\FmLib\Helpers\DateTime;
+
 /**
  * Trait TimeEntity
  * @package Tfboe\FmLib\Entity\Helpers
@@ -58,7 +61,7 @@ trait TimeEntity
   public function getEndTime(): ?\DateTime
   {
     if ($this->endTime !== null && !$this->endLocalized) {
-      $this->endTime->setTimezone(new \DateTimeZone($this->endTimezone));
+      $this->endTime->setTimezone(new DateTimeZone($this->endTimezone));
       $this->endLocalized = true;
     }
     return $this->endTime;
@@ -70,7 +73,7 @@ trait TimeEntity
   public function getStartTime(): ?\DateTime
   {
     if ($this->startTime !== null && !$this->startLocalized) {
-      $this->startTime->setTimezone(new \DateTimeZone($this->startTimezone));
+      $this->startTime->setTimezone(new DateTimeZone($this->startTimezone));
       $this->startLocalized = true;
     }
     return $this->startTime;
@@ -83,9 +86,11 @@ trait TimeEntity
    */
   public function setEndTime(?\DateTime $endTime)
   {
-    $this->endTime = $endTime;
-    $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
-    $this->endLocalized = true;
+    if (!DateTime::eq($endTime, $this->getEndTime())) {
+      $this->endTime = $endTime;
+      $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
+      $this->endLocalized = true;
+    }
     return $this;
   }
 
@@ -95,9 +100,11 @@ trait TimeEntity
    */
   public function setStartTime(?\DateTime $startTime)
   {
-    $this->startTime = $startTime;
-    $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
-    $this->startLocalized = true;
+    if (!DateTime::eq($startTime, $this->getStartTime())) {
+      $this->startTime = $startTime;
+      $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
+      $this->startLocalized = true;
+    }
     return $this;
   }
 //</editor-fold desc="Public Methods">

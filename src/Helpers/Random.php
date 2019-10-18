@@ -4,7 +4,7 @@
 namespace Tfboe\FmLib\Helpers;
 
 
-class Random
+abstract class Random
 {
 //<editor-fold desc="Public Methods">
   public static function stringToInt($str): int

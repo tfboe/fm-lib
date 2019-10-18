@@ -16,6 +16,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Helpers\DateTime;
 
 
 /**
@@ -100,7 +101,9 @@ trait RankingSystemList
    */
   public function setLastEntryTime(\DateTime $lastEntryTime)
   {
-    $this->lastEntryTime = $lastEntryTime;
+    if (!DateTime::eq($this->lastEntryTime, $lastEntryTime)) {
+      $this->lastEntryTime = $lastEntryTime;
+    }
   }
 
   /**

@@ -20,6 +20,7 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
+use Tfboe\FmLib\Helpers\DateTime;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
@@ -143,7 +144,7 @@ trait RankingSystem
 
   /**
    * @param int $generationInterval
-   * @throws \Tfboe\FmLib\Exceptions\ValueNotValid
+   * @throws ValueNotValid
    */
   public function setGenerationInterval(int $generationInterval)
   {
@@ -156,7 +157,9 @@ trait RankingSystem
    */
   public function setOpenSyncFrom(?\DateTime $openSyncFrom)
   {
-    $this->openSyncFrom = $openSyncFrom;
+    if (!DateTime::eq($this->openSyncFrom, $openSyncFrom)) {
+      $this->openSyncFrom = $openSyncFrom;
+    }
   }
 
   /**

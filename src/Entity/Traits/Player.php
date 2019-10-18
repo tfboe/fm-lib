@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Entity\Traits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
+use Tfboe\FmLib\Helpers\DateTime;
 
 
 /**
@@ -73,7 +74,9 @@ trait Player
    */
   public function setBirthday(\DateTime $birthday)
   {
-    $this->birthday = $birthday;
+    if (!DateTime::eq($this->birthday, $birthday)) {
+      $this->birthday = $birthday;
+    }
   }
 
   /**

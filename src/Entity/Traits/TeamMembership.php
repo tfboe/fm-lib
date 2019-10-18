@@ -100,7 +100,9 @@ trait TeamMembership
    */
   public function setStart(?DateTime $start): void
   {
-    $this->start = $start;
+    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->start, $start)) {
+      $this->start = $start;
+    }
   }
 
   /**
@@ -116,7 +118,9 @@ trait TeamMembership
    */
   public function setEnd(?DateTime $end): void
   {
-    $this->end = $end;
+    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->end, $end)) {
+      $this->end = $end;
+    }
   }
 
 //</editor-fold desc="Public Methods">
