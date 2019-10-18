@@ -21,6 +21,7 @@ use Tfboe\FmLib\Helpers\SpecificationHandler;
 abstract class BaseController extends Controller
 {
   use SpecificationHandler;
+
 //<editor-fold desc="Fields">
   /**
    * @var EntityManagerInterface
@@ -49,7 +50,9 @@ abstract class BaseController extends Controller
   {
     return $this->entityManager;
   }
+//</editor-fold desc="Protected Final Methods">
 
+//<editor-fold desc="Protected Methods">
   /**
    * @inheritDoc
    */
@@ -65,6 +68,5 @@ abstract class BaseController extends Controller
   {
     return $this->validate($request, $spec);
   }
-
-//</editor-fold desc="Protected Final Methods">
+//</editor-fold desc="Protected Methods">
 }

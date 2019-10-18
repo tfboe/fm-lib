@@ -11,6 +11,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\TestHelpers;
 
 use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Illuminate\Support\Facades\Auth;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Tfboe\FmLib\Entity\UserInterface;
@@ -65,7 +66,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   }
 
   /**
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function workOnDatabaseDestroy()
   {
@@ -74,7 +75,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   }
 
   /**
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function workOnDatabaseSetUp()
   {
@@ -94,7 +95,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   private function clearUsers()
   {

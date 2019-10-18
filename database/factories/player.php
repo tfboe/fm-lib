@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -7,12 +8,15 @@ declare(strict_types=1);
  * Time: 5:44 PM
  */
 
-/** @var \LaravelDoctrine\ORM\Testing\Factory $factory */
+use LaravelDoctrine\ORM\Testing\Factory;
+use Tfboe\FmLib\Tests\Entity\Player;
 
-$factory->define(\Tfboe\FmLib\Tests\Entity\Player::class, function (\Faker\Generator $faker, array $attributes) {
+/** @var Factory $factory */
+
+$factory->define(Player::class, function (\Faker\Generator $faker, array $attributes) {
   return [
     'firstName' => array_key_exists('firstName', $attributes) ? $attributes['firstName'] : $faker->firstName,
     'lastName' => array_key_exists('lastName', $attributes) ? $attributes['lastName'] : $faker->lastName,
-    'birthday' => new \DateTime($faker->date())
+    'birthday' => new DateTime($faker->date())
   ];
 });

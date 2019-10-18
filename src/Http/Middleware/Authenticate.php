@@ -4,7 +4,9 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Http\Middleware;
 
 use Closure;
+use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Contracts\Auth\Factory as Auth;
+use Illuminate\Http\Request;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
 use Tymon\JWTAuth\Payload;
@@ -19,7 +21,7 @@ class Authenticate
   /**
    * The authentication guard factory instance.
    *
-   * @var \Illuminate\Contracts\Auth\Factory
+   * @var Factory
    */
   protected $auth;
 //</editor-fold desc="Fields">
@@ -28,7 +30,7 @@ class Authenticate
   /**
    * Create a new middleware instance.
    *
-   * @param  \Illuminate\Contracts\Auth\Factory $auth
+   * @param Factory $auth
    */
   public function __construct(Auth $auth)
   {
@@ -40,9 +42,9 @@ class Authenticate
   /**
    * Handle an incoming request.
    *
-   * @param  \Illuminate\Http\Request $request
-   * @param  \Closure $next
-   * @param  string|null $guardName
+   * @param Request $request
+   * @param Closure $next
+   * @param string|null $guardName
    * @return mixed
    * @throws AuthenticationException if request doesn't provide valid authentication token
    */

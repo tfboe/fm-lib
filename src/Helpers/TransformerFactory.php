@@ -21,7 +21,24 @@ abstract class TransformerFactory
 {
 //<editor-fold desc="Public Methods">
   /**
+   * @return Callable
+   */
+  static function booleanTransformer(): Callable
+  {
+    return function ($value) {
+      if ($value === 'true') {
+        return true;
+      } else if ($value === 'false') {
+        return false;
+      } else {
+        return $value;
+      }
+    };
+  }
+
+  /**
    * Gets a transformation function which transforms a string in datetime format into a datetime with the given timezone
+   * @param string $datetimetzFormat the format to use in the transformation
    * @return Closure the function which transforms a string into a datetime
    */
   public static function datetimetzTransformer(string $datetimetzFormat): Callable
@@ -66,22 +83,6 @@ abstract class TransformerFactory
         return $mapping[$x];
       } else {
         throw new Exception("Unknown source value!");
-      }
-    };
-  }
-
-  /**
-   * @return Callable
-   */
-  static function booleanTransformer(): Callable
-  {
-    return function ($value) {
-      if ($value === 'true') {
-        return true;
-      } else if ($value === 'false') {
-        return false;
-      } else {
-        return $value;
       }
     };
   }

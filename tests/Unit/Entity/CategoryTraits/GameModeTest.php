@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Categories\GameMode;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -23,6 +25,8 @@ class GameModeTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\GameMode::getGameMode
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\GameMode::setGameMode
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testProperty()
@@ -39,8 +43,10 @@ class GameModeTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\GameMode::setGameMode
-   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testPropertyException()
   {
@@ -55,9 +61,10 @@ class GameModeTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return \PHPUnit_Framework_MockObject_MockObject|\Tfboe\FmLib\Entity\CategoryTraits\GameMode
+   * @return MockObject|\Tfboe\FmLib\Entity\CategoryTraits\GameMode
+   * @throws ReflectionException
    */
-  private function mock(): \PHPUnit_Framework_MockObject_MockObject
+  private function mock(): MockObject
   {
     return $this->getMockForTrait(\Tfboe\FmLib\Entity\CategoryTraits\GameMode::class);
   }

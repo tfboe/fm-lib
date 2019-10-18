@@ -34,6 +34,7 @@ class RankingSystemListEntry extends BaseEntity implements RankingSystemListEntr
   use \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry;
 
 //<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    * @param array $keys

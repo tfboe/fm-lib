@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Categories\Table;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -24,6 +26,8 @@ class TableTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\Table::getTable
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\Table::setTable
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testProperty()
@@ -40,8 +44,10 @@ class TableTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\Table::setTable
-   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testPropertyException()
   {
@@ -57,9 +63,10 @@ class TableTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return \PHPUnit_Framework_MockObject_MockObject|\Tfboe\FmLib\Entity\CategoryTraits\Table
+   * @return MockObject|\Tfboe\FmLib\Entity\CategoryTraits\Table
+   * @throws ReflectionException
    */
-  private function mock(): \PHPUnit_Framework_MockObject_MockObject
+  private function mock(): MockObject
   {
     return $this->getMockForTrait(\Tfboe\FmLib\Entity\CategoryTraits\Table::class);
   }

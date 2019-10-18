@@ -10,11 +10,13 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Exceptions;
 
 
+use Exception;
+
 /**
  * Class AbstractException
  * @package Tfboe\FmLib\Exceptions
  */
-class AbstractException extends \Exception
+class AbstractException extends Exception
 {
 
 }

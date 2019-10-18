@@ -13,30 +13,22 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
-use Illuminate\Support\ServiceProvider;
 use Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider;
 use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
-use Tfboe\FmLib\Service\AsyncExecutorService;
 use Tfboe\FmLib\Service\AsyncExecutorServiceInterface;
-use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
-use Tfboe\FmLib\Service\LoadingService;
 use Tfboe\FmLib\Service\LoadingServiceInterface;
-use Tfboe\FmLib\Service\ObjectCreatorService;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
-use Tfboe\FmLib\Service\PlayerService;
 use Tfboe\FmLib\Service\PlayerServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EloRankingInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
-use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
-use Tfboe\FmLib\Service\TermsService;
 use Tfboe\FmLib\Service\TermsServiceInterface;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
 
@@ -46,7 +38,21 @@ use Tymon\JWTAuth\Providers\LumenServiceProvider;
  */
 class FmLibServiceProvider extends ServiceProvider
 {
+
+//<editor-fold desc="Fields">
+  protected $singletons = [
+    ExceptionHandler::class => Handler::class,
+    DynamicServiceLoadingServiceInterface::class,
+    RankingSystemServiceInterface::class,
+    ObjectCreatorServiceInterface::class,
+    LoadingServiceInterface::class,
+    PlayerServiceInterface::class,
+    AsyncExecutorServiceInterface::class,
+    TermsServiceInterface::class
+  ];
+//</editor-fold desc="Fields">
 //<editor-fold desc="Public Methods">
+
   /**
    * Bootstrap the application services.
    *
@@ -71,13 +77,9 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    parent::register();
     //register middleware
     app()->routeMiddleware(['auth' => Authenticate::class]);
-
-    $this->app->singleton(
-      ExceptionHandler::class,
-      Handler::class
-    );
 
     if ($this->app->environment() !== 'production') {
       if (class_exists('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider')) {
@@ -93,19 +95,6 @@ class FmLibServiceProvider extends ServiceProvider
     $this->app->register(GedmoExtensionsServiceProvider::class);
     $this->app->register(JwtAuthGuardServiceProvider::class);
 
-    $this->app->singleton(DynamicServiceLoadingServiceInterface::class, function (Container $app) {
-      return new DynamicServiceLoadingService($app);
-    });
-
-    $this->app->singleton(RankingSystemServiceInterface::class, function (Container $app) {
-      return new RankingSystemService($app->make(DynamicServiceLoadingServiceInterface::class),
-        $app->make(EntityManagerInterface::class));
-    });
-
-    $this->app->singleton(ObjectCreatorServiceInterface::class, function () {
-      return new ObjectCreatorService();
-    });
-
     $this->app->singleton(EloRankingInterface::class, function (Container $app) {
       $timeService = new RecursiveEndStartTimeService();
       return new EloRanking(
@@ -113,26 +102,6 @@ class FmLibServiceProvider extends ServiceProvider
         $timeService,
         new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService),
         $app->make(ObjectCreatorServiceInterface::class));
-    });
-
-    $this->app->singleton(LoadingServiceInterface::class, function (Container $app) {
-      return new LoadingService($app->make(EntityManagerInterface::class));
-    });
-
-    $this->app->singleton(PlayerServiceInterface::class, function (Container $app) {
-      return new PlayerService(
-        $app->make(EntityManagerInterface::class),
-        $app->make(LoadingServiceInterface::class),
-        $app->make(RankingSystemServiceInterface::class)
-      );
-    });
-
-    $this->app->singleton(AsyncExecutorServiceInterface::class, function () {
-      return new AsyncExecutorService();
-    });
-
-    $this->app->singleton(TermsServiceInterface::class, function (Container $app) {
-      return new TermsService($app->make(EntityManagerInterface::class));
     });
 
     include __DIR__ . '/../routes.php';

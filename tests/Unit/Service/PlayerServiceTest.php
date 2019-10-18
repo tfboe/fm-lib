@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
@@ -20,15 +22,15 @@ use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TeamMembershipInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Service\DeletionServiceInterface;
 use Tfboe\FmLib\Service\LoadingServiceInterface;
 use Tfboe\FmLib\Service\PlayerService;
+use Tfboe\FmLib\Service\PlayerServiceInterface;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 
 /**
- * Class DeletionServiceTest
+ * Class PlayerServiceTest
  * @package Tfboe\FmLib\Tests\Unit\Service
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -52,11 +54,14 @@ class PlayerServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\PlayerService::mergePlayers
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\PlayerService::__construct
    */
   public function testMergeBothPlayersInSameTournament()
   {
+    /** @var PlayerInterface $player1 */
     $player1 = $this->createStubWithId(PlayerInterface::class, "p1");
+    /** @var PlayerInterface $player2 */
     $player2 = $this->createStubWithId(PlayerInterface::class, "p2");
     $team1 = $this->createStub(TeamInterface::class, [
       'getMemberships' => new ArrayCollection([$this->createStub(TeamMembershipInterface::class, [
@@ -77,17 +82,24 @@ class PlayerServiceTest extends UnitTestCase
       'getCompetitions' => new ArrayCollection([$competition]),
       'getName' => 'Tournament',
       'getId' => 't',
-      'getStartTime' => new \DateTime("2000-01-01")
+      'getStartTime' => new DateTime("2000-01-01")
     ]);
 
     /** @var EntityManagerInterface $em */
-    $em = $this->getEntityManagerMockForQuery([$tournament],
-      'SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te ' .
-      'INNER JOIN te.memberships m WHERE m.player = (:id)');
+    $em = $this->getEntityManagerMockForQuery([$tournament], <<<DQL
+      SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te
+      INNER JOIN te.memberships m WHERE m.player = (:id)
+DQL
+    );
 
+    /** @var LoadingServiceInterface $loadingService */
+    $loadingService = $this->createStub(LoadingServiceInterface::class);
+    /** @var RankingSystemServiceInterface $rankingSystemService */
+    $rankingSystemService = $this->createStub(RankingSystemServiceInterface::class);
+    /** @var PlayerServiceInterface $service */
     $service = new PlayerService($em,
-      $this->createStub(LoadingServiceInterface::class),
-      $this->createStub(RankingSystemServiceInterface::class)
+      $loadingService,
+      $rankingSystemService
     );
 
     self::assertEquals('Player 1 and player 2 both attended the tournament Tournament(01.01.2000 00:00, id=\'t\')',
@@ -103,7 +115,6 @@ class PlayerServiceTest extends UnitTestCase
     $player1 = $this->createStubWithId(PlayerInterface::class, "p1");
     $player2 = $this->createStubWithId(PlayerInterface::class, "p1");
 
-
     $service = new PlayerService(
       $this->createStub(EntityManagerInterface::class),
       $this->createStub(LoadingServiceInterface::class),
@@ -115,6 +126,7 @@ class PlayerServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\PlayerService::mergePlayers
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\PlayerService::__construct
    */
   public function testMergePlayer()
@@ -157,9 +169,11 @@ class PlayerServiceTest extends UnitTestCase
 
 
     /** @var EntityManagerInterface $em */
-    $em = $this->getEntityManagerMockForQuery([$tournament],
-      'SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te ' .
-      'INNER JOIN te.memberships m WHERE m.player = (:id)');
+    $em = $this->getEntityManagerMockForQuery([$tournament], <<<DQL
+      SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te
+      INNER JOIN te.memberships m WHERE m.player = (:id)
+DQL
+    );
     /** @var LoadingServiceInterface|MockObject $ls */
     $ls = $this->createMock(LoadingServiceInterface::class);
     $ls->expects(self::once())->method('loadEntities')->with([$tournament])->willReturnCallback(

@@ -1,6 +1,8 @@
 <?php
 declare(strict_types=1);
 
+use Tfboe\FmLib\Tests\Entity\User;
+
 return [
   'defaults' => [
     'guard' => env('AUTH_GUARD', 'api'),
@@ -18,7 +20,7 @@ return [
   'providers' => [
     'users' => [
       'driver' => 'doctrine',
-      'model' => \Tfboe\FmLib\Tests\Entity\User::class
+      'model' => User::class
     ],
   ],
 ];

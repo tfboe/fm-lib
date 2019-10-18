@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\Traits\Match;
@@ -30,8 +31,9 @@ class MatchTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getGames
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getChildren
-   * @uses   \Tfboe\FmLib\Entity\GameInterface
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\GameInterface
    */
   public function testGamesAndChildren()
   {
@@ -49,10 +51,11 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::init
-   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getGames
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testInit()
   {
@@ -68,6 +71,7 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getLevel
+   * @throws ReflectionException
    */
   public function testLevel()
   {
@@ -78,6 +82,7 @@ class MatchTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getLocalIdentifier
+   * @throws ReflectionException
    */
   public function testMatchNumberAndLocalIdentifier()
   {
@@ -92,8 +97,9 @@ class MatchTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::setPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getParent
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
    */
   public function testPhaseAndParent()
   {
@@ -120,8 +126,9 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
-   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    */
   public function testRankingsA()
   {
@@ -136,8 +143,9 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
-   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    */
   public function testRankingsB()
   {
@@ -154,6 +162,7 @@ class MatchTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return Match|MockObject a new match
+   * @throws ReflectionException
    */
   private function match(): MockObject
   {

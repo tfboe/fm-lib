@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
@@ -23,6 +24,10 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
 
+/**
+ * Class Phase
+ * @package Tfboe\FmLib\Tests\Unit\Entity\Traits
+ */
 abstract class Phase implements PhaseInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Phase;
@@ -42,8 +47,9 @@ class PhaseTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::setCompetition
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getCompetition
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getParent
-   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPhaseNumber
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::setPhaseNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPhaseNumber
    */
   public function testCompetitionAndParent()
   {
@@ -70,10 +76,11 @@ class PhaseTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::init
-   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPostQualifications
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPreQualifications
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getRankings
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
   public function testInit()
   {
@@ -90,6 +97,7 @@ class PhaseTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getLevel
+   * @throws ReflectionException
    */
   public function testLevel()
   {
@@ -99,6 +107,7 @@ class PhaseTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getMatches
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getChildren
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testMatchesAndChildren()
@@ -116,9 +125,10 @@ class PhaseTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPostQualifications
-   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\QualificationSystem
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testNextQualificationSystems()
   {
@@ -134,6 +144,7 @@ class PhaseTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::setPhaseNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPhaseNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getLocalIdentifier
+   * @throws ReflectionException
    */
   public function testPhaseNumberAndLocalIdentifier()
   {
@@ -145,8 +156,9 @@ class PhaseTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPreQualifications
-   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\QualificationSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testPreviousQualificationSystems()
   {
@@ -160,9 +172,10 @@ class PhaseTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getRankings
-   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testRankings()
   {
@@ -179,6 +192,7 @@ class PhaseTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return Phase|MockObject a new phase
+   * @throws ReflectionException
    */
   private function phase(): MockObject
   {

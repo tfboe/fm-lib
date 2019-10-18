@@ -6,6 +6,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 
+use DateTime;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
@@ -43,22 +45,23 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
   /**
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::compareEntities
+   * @param DateTime $time1
+   * @param DateTime $time2
+   * @param int $expectedResult
+   * @throws Exception
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::getPredecessors
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *       ::compareEntityTimes
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *       ::compareLocalIdentifiersWithinTournament
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::getPredecessors
-   * @param \DateTime $time1
-   * @param \DateTime $time2
-   * @param int $expectedResult
    */
-  public function testCompareEntitiesDifferentEntityTimesGrandparentLevel(\DateTime $time1, \DateTime $time2,
+  public function testCompareEntitiesDifferentEntityTimesGrandparentLevel(DateTime $time1, DateTime $time2,
                                                                           int $expectedResult)
   {
     $service = $this->createComparer();
-    $commonEndTime = new \DateTime("2017-01-01");
+    $commonEndTime = new DateTime("2017-01-01");
     $grandParent1 = $this->createTreeStructureEntity('gp1', ['getEndTime' => $time1]);
     $grandParent2 = $this->createTreeStructureEntity('gp2', ['getEndTime' => $time2]);
     $parent1 = $this->createTreeStructureEntity('p1', ['getEndTime' => $commonEndTime, 'getParent' => $grandParent1]);
@@ -75,18 +78,18 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
   /**
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::compareEntities
+   * @param DateTime $time1
+   * @param DateTime $time2
+   * @param int $expectedResult
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
+   *       ::compareLocalIdentifiersWithinTournament
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::getPredecessors
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *       ::compareEntityTimes
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
-   *       ::compareLocalIdentifiersWithinTournament
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::getPredecessors
-   * @param \DateTime $time1
-   * @param \DateTime $time2
-   * @param int $expectedResult
    */
-  public function testCompareEntitiesDifferentEntityTimesOneLevel(\DateTime $time1, \DateTime $time2,
+  public function testCompareEntitiesDifferentEntityTimesOneLevel(DateTime $time1, DateTime $time2,
                                                                   int $expectedResult)
   {
     $service = $this->createComparer();
@@ -102,22 +105,23 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
   /**
    * @dataProvider localIdentifierProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::compareEntities
+   * @param mixed $localIdentifier1 the local identifier of entity1
+   * @param mixed $localIdentifier2 the local identifier of entity2
+   * @param int $expectedResult
+   * @throws Exception
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *        ::compareEntityTimes
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *               ::compareLocalIdentifiersWithinTournament
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::getPredecessors
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
-   * @param mixed $localIdentifier1 the local identifier of entity1
-   * @param mixed $localIdentifier2 the local identifier of entity2
-   * @param int $expectedResult
    */
   public function testCompareEntitiesSameEntityTimesDifferentLocalIdentifiers($localIdentifier1, $localIdentifier2,
                                                                               int $expectedResult)
   {
     $service = $this->createComparer();
-    $commonEndTime = new \DateTime("2017-01-01");
+    $commonEndTime = new DateTime("2017-01-01");
     $entity1 = $this->createTreeStructureEntity('e1',
       ['getEndTime' => $commonEndTime, 'getLocalIdentifier' => $localIdentifier1]);
     $entity2 = $this->createTreeStructureEntity('e2',
@@ -134,16 +138,16 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *        ::compareEntityTimes
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
-   * @param \DateTime $time1 the start time of the first entity
-   * @param \DateTime $time2 the start time of the second entity
+   * @param DateTime $time1 the start time of the first entity
+   * @param DateTime $time2 the start time of the second entity
    * @param int $expectedResult the expected result of the method
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    */
-  public function testCompareEntityTimesWithStartTimes(\DateTime $time1, \DateTime $time2, int $expectedResult)
+  public function testCompareEntityTimesWithStartTimes(DateTime $time1, DateTime $time2, int $expectedResult)
   {
     $service = $this->createComparer();
-    $commonEndTime = new \DateTime("2017-12-01");
+    $commonEndTime = new DateTime("2017-12-01");
     $entity1 = $this->createTreeStructureEntity('e1', ['getEndTime' => $commonEndTime, 'getStartTime' => $time1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getEndTime' => $commonEndTime, 'getStartTime' => $time2]);
 
@@ -157,13 +161,13 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
    *        ::compareEntityTimes
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
-   * @param \DateTime $time1 the end time of the first entity
-   * @param \DateTime $time2 the end time of the second entity
+   * @param DateTime $time1 the end time of the first entity
+   * @param DateTime $time2 the end time of the second entity
    * @param int $expectedResult the expected result of the method
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    */
-  public function testCompareEntityTimesWithoutStartTimes(\DateTime $time1, \DateTime $time2, int $expectedResult)
+  public function testCompareEntityTimesWithoutStartTimes(DateTime $time1, DateTime $time2, int $expectedResult)
   {
     $service = $this->createComparer();
     $entity1 = $this->createTreeStructureEntity('e1', ['getEndTime' => $time1]);
@@ -261,13 +265,14 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
 
   /**
    * @return array
+   * @throws Exception
    */
   public function timePairProvider()
   {
     return [
-      [new \DateTime("2017-05-01"), new \DateTime("2017-06-01"), -1],
-      [new \DateTime("2017-06-01"), new \DateTime("2017-06-01"), 0],
-      [new \DateTime("2017-06-01"), new \DateTime("2017-05-30"), 1]
+      [new DateTime("2017-05-01"), new DateTime("2017-06-01"), -1],
+      [new DateTime("2017-06-01"), new DateTime("2017-06-01"), 0],
+      [new DateTime("2017-06-01"), new DateTime("2017-05-30"), 1]
     ];
   }
 //</editor-fold desc="Public Methods">

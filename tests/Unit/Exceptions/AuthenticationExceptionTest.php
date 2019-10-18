@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
+use Exception;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -25,7 +26,7 @@ class AuthenticationExceptionTest extends UnitTestCase
    */
   public function testConstructor()
   {
-    $prev = new \Exception();
+    $prev = new Exception();
     $exc = new AuthenticationException("message", $prev);
     self::assertEquals("message", $exc->getMessage());
     self::assertEquals($prev, $exc->getPrevious());

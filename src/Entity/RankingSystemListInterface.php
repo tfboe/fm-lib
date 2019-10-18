@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
@@ -26,9 +27,9 @@ interface RankingSystemListInterface extends BaseEntityInterface, UUIDEntityInte
   public function getEntries(): Collection;
 
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getLastEntryTime(): \DateTime;
+  public function getLastEntryTime(): DateTime;
 
   /**
    * @return RankingSystemInterface
@@ -46,9 +47,9 @@ interface RankingSystemListInterface extends BaseEntityInterface, UUIDEntityInte
   public function setCurrent(bool $current);
 
   /**
-   * @param \DateTime $lastEntryTime
+   * @param DateTime $lastEntryTime
    */
-  public function setLastEntryTime(\DateTime $lastEntryTime);
+  public function setLastEntryTime(DateTime $lastEntryTime);
 
   /**
    * @param RankingSystemInterface $rankingSystem

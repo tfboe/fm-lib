@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
+use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\MessageBag;
@@ -46,14 +47,14 @@ class HandlerTest extends UnitTestCase
   public function testRender()
   {
     $handler = $this->handler();
-    $exception = new \Exception("Exception message");
+    $exception = new Exception("Exception message");
     $res = $handler->render($this->request(), $exception);
     self::assertInstanceOf(JsonResponse::class, $res);
     /** @var JsonResponse $res */
     self::assertEquals(['status' => 500, 'message' => 'Exception message', 'name' => 'InternalException'],
       $res->getData(true));
 
-    $exception = new \Exception("Exception message", 402);
+    $exception = new Exception("Exception message", 402);
     $res = $handler->render($this->request(), $exception);
     self::assertInstanceOf(JsonResponse::class, $res);
     /** @var JsonResponse $res */
@@ -103,7 +104,7 @@ class HandlerTest extends UnitTestCase
     self::assertInstanceOf(JsonResponse::class, $res);
     /** @var JsonResponse $res */
     $data = $res->getData(true);
-    self::assertArraySubset(['status' => 409, 'message' => 'Some players do already exist',
+    self::assertEquals(['status' => 409, 'message' => 'Some players do already exist',
       'name' => 'PlayerAlreadyExistsException', 'players' => []], $data);
     self::assertArrayHasKey('trace', $data);
     self::assertNotEmpty($data['trace']);
@@ -122,7 +123,7 @@ class HandlerTest extends UnitTestCase
     $errors = $this->createMock(MessageBag::class);
     $errors->method('messages')->willReturn(['username' => ['The username field is required.']]);
     $validator->method('errors')->willReturn($errors);
-    /** @var \Illuminate\Validation\Validator $validator */
+    /** @var Validator $validator */
     $exception = new ValidationException($validator, new Response('', 422));
     $request = $this->request();
     $res = $handler->render($request, $exception);

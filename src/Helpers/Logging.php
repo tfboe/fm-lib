@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Helpers;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
+use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
  * Class Logging
@@ -34,7 +35,7 @@ abstract class Logging
    * @param string $message the message to log
    * @param string $logger the logger to use
    * @param int $type the type of the message
-   * @throws \Tfboe\FmLib\Exceptions\ValueNotValid invalid logger
+   * @throws ValueNotValid invalid logger
    */
   public static function log(string $message, string $logger = Logs::GENERAL, int $type = Logger::INFO)
   {

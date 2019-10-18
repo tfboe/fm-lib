@@ -8,6 +8,7 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Application;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
@@ -56,7 +57,7 @@ class UserController extends BaseController
    * @param Application $app
    * @return JsonResponse
    * @throws AuthenticationException wrong credentials or errors during creating a token
-   * @throws \Illuminate\Validation\ValidationException
+   * @throws ValidationException
    */
   public function login(Request $request, Application $app): JsonResponse
   {
@@ -91,7 +92,7 @@ class UserController extends BaseController
    * @param Request $request the http request
    * @param Application $app
    * @return JsonResponse
-   * @throws \Illuminate\Validation\ValidationException
+   * @throws ValidationException
    */
   public function register(Request $request, Application $app): JsonResponse
   {

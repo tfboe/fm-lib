@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity;
 
+use DateTime;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntityInterface;
 
@@ -21,9 +22,9 @@ interface PlayerInterface extends BaseEntityInterface, TimestampableEntityInterf
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getBirthday(): \DateTime;
+  public function getBirthday(): DateTime;
 
   /**
    * @return string
@@ -41,9 +42,9 @@ interface PlayerInterface extends BaseEntityInterface, TimestampableEntityInterf
   public function getLastName(): string;
 
   /**
-   * @param \DateTime $birthday
+   * @param DateTime $birthday
    */
-  public function setBirthday(\DateTime $birthday);
+  public function setBirthday(DateTime $birthday);
 
   /**
    * @param string $firstName

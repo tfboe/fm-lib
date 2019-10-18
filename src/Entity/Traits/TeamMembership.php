@@ -52,11 +52,27 @@ trait TeamMembership
 
 //<editor-fold desc="Public Methods">
   /**
+   * @return DateTime|null
+   */
+  public function getEnd(): ?DateTime
+  {
+    return $this->end;
+  }
+
+  /**
    * @return PlayerInterface
    */
   public function getPlayer(): PlayerInterface
   {
     return $this->player;
+  }
+
+  /**
+   * @return DateTime|null
+   */
+  public function getStart(): ?DateTime
+  {
+    return $this->start;
   }
 
   /**
@@ -68,31 +84,21 @@ trait TeamMembership
   }
 
   /**
+   * @param DateTime|null $end
+   */
+  public function setEnd(?DateTime $end): void
+  {
+    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->end, $end)) {
+      $this->end = $end;
+    }
+  }
+
+  /**
    * @param PlayerInterface $player
    */
   public function setPlayer(PlayerInterface $player): void
   {
     $this->player = $player;
-  }
-
-  /**
-   * @param TeamInterface $team
-   */
-  public function setTeam(TeamInterface $team): void
-  {
-    if ($this->team !== null) {
-      $this->team->getMemberships()->remove($this->getId());
-    }
-    $this->team = $team;
-    $this->team->getMemberships()->set($this->getId(), $this);
-  }
-
-  /**
-   * @return DateTime|null
-   */
-  public function getStart(): ?DateTime
-  {
-    return $this->start;
   }
 
   /**
@@ -106,22 +112,15 @@ trait TeamMembership
   }
 
   /**
-   * @return DateTime|null
+   * @param TeamInterface $team
    */
-  public function getEnd(): ?DateTime
+  public function setTeam(TeamInterface $team): void
   {
-    return $this->end;
-  }
-
-  /**
-   * @param DateTime|null $end
-   */
-  public function setEnd(?DateTime $end): void
-  {
-    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->end, $end)) {
-      $this->end = $end;
+    if ($this->team !== null) {
+      $this->team->getMemberships()->remove($this->getId());
     }
+    $this->team = $team;
+    $this->team->getMemberships()->set($this->getId(), $this);
   }
-
 //</editor-fold desc="Public Methods">
 }

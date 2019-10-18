@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Helpers;
 
 
+use DateTime;
+
 /**
  * Interface TimestampableEntityInterface
  * @package Tfboe\FmLib\Entity\Helpers
@@ -18,25 +20,25 @@ interface TimestampableEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getCreatedAt(): \DateTime;
+  public function getCreatedAt(): DateTime;
 
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getUpdatedAt(): \DateTime;
+  public function getUpdatedAt(): DateTime;
 
   /**
-   * @param \DateTime $createdAt
+   * @param DateTime $createdAt
    * @return $this|TimestampableEntity
    */
-  public function setCreatedAt(\DateTime $createdAt);
+  public function setCreatedAt(DateTime $createdAt);
 
   /**
-   * @param \DateTime $updatedAt
+   * @param DateTime $updatedAt
    * @return $this|TimestampableEntity
    */
-  public function setUpdatedAt(\DateTime $updatedAt);
+  public function setUpdatedAt(DateTime $updatedAt);
 //</editor-fold desc="Public Methods">
 }

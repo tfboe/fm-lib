@@ -24,6 +24,7 @@ class Team extends BaseEntity implements TeamInterface
   use \Tfboe\FmLib\Entity\Traits\Team;
 
 //<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    */

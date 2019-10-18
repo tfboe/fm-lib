@@ -11,6 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Tests\Entity\RankingSystem;
@@ -25,6 +26,7 @@ class TournamentHierarchyEntityTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    */
   public function testConstructor()
@@ -36,12 +38,13 @@ class TournamentHierarchyEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testRankingSystems()
   {
     $entity = $this->entity();
-    /** @var $system RankingSystemInterface */
+    /** @var RankingSystemInterface $system */
     $system = $this->createStubWithId(RankingSystem::class);
     $entity->getRankingSystems()->set($system->getId(), $system);
     self::assertEquals(1, $entity->getRankingSystems()->count());
@@ -52,6 +55,7 @@ class TournamentHierarchyEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|TournamentHierarchyEntity
+   * @throws ReflectionException
    */
   private function entity(): MockObject
   {

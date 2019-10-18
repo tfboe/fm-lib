@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\NumericalId;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -22,6 +23,7 @@ class NumericalIdTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\NumericalId::getEntityId
+   * @throws ReflectionException
    */
   public function testEntityId()
   {
@@ -34,6 +36,7 @@ class NumericalIdTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\NumericalId::getId
+   * @throws ReflectionException
    */
   public function testId()
   {
@@ -48,6 +51,7 @@ class NumericalIdTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return NumericalId|MockObject a new player
+   * @throws ReflectionException
    */
   private function player(): MockObject
   {

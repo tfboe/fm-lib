@@ -10,9 +10,12 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Http\Controllers;
 
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\Http\Controllers\UserController;
@@ -31,6 +34,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -46,6 +50,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::datetimetzTransformer()
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testDatetimetzTransformer()
@@ -55,8 +60,8 @@ class BaseControllerTest extends UnitTestCase
     $closure = self::getMethod(BaseController::class, 'datetimetzTransformer')
       ->invokeArgs($controller, [TestEnum::class]);
     $string = "2017-01-01 00:00:00 Europe/Vienna";
-    $datetime = new \DateTime($string);
-    /** @var \DateTime $result */
+    $datetime = new DateTime($string);
+    /** @var DateTime $result */
     $result = $closure($string);
     self::assertEquals($datetime, $result);
     self::assertEquals($datetime->getTimezone(), $result->getTimezone());
@@ -64,8 +69,9 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::enumTransformer
-   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testEnumTransformer()
   {
@@ -78,6 +84,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testGetDatetimetzFormat()
@@ -89,6 +96,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testGetEntityManager()
@@ -101,8 +109,9 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    */
   public function testSetFromSpecificationWithDefault()
   {
@@ -118,8 +127,9 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testSetFromSpecificationWithProperty()
   {
@@ -135,8 +145,9 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByReference()
   {
@@ -156,6 +167,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByTransformer()
@@ -178,12 +190,13 @@ class BaseControllerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByTypeDateTime()
   {
     $value = "2005-02-28 16:35:01";
-    $datetime = new \DateTime($value);
+    $datetime = new DateTime($value);
     $specification = ['type' => 'datetime'];
 
     $controller = $this->controller();
@@ -197,6 +210,7 @@ class BaseControllerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByTypeDefault()
@@ -214,6 +228,7 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testValidateBySpecification()
@@ -237,6 +252,7 @@ class BaseControllerTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|BaseController
+   * @throws ReflectionException
    */
   private function controller(): MockObject
   {

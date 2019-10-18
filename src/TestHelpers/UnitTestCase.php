@@ -14,6 +14,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use ReflectionClass;
+use ReflectionException;
 
 /**
  * Class UnitTestCase
@@ -39,13 +41,13 @@ abstract class UnitTestCase extends TestCase
    * @param array $arguments the arguments to use for the constructor
    * @param string[] $mockedMethods the methods to mock in the class
    * @return MockObject the mocked object
-   * @throws \ReflectionException
+   * @throws ReflectionException
    */
   protected final function getMockWithMockedArguments(string $className, array $arguments = [],
                                                       array $mockedMethods = []): MockObject
   {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $reflection = new \ReflectionClass($className);
+    $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
     for ($i = count($arguments); $i < count($params); $i++) {
@@ -65,7 +67,7 @@ abstract class UnitTestCase extends TestCase
   protected final function getObjectWithMockedArguments($className, array $arguments = [])
   {
     /** @noinspection PhpUnhandledExceptionInspection */
-    $reflection = new \ReflectionClass($className);
+    $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
     for ($i = count($arguments); $i < count($params); $i++) {
@@ -80,7 +82,7 @@ abstract class UnitTestCase extends TestCase
    * Creates a stub with a given set of stubbed methods, which will return the given results
    * @param string $class the class name
    * @param array $methodResults a dictionary mapping method names to results of this methods
-   * @return MockObject the configured stub
+   * @return MockObject|mixed the configured stub
    */
   protected function createStub(string $class, array $methodResults = []): MockObject
   {
@@ -98,7 +100,7 @@ abstract class UnitTestCase extends TestCase
    * @param string $class the class to mock
    * @param string $entityId the id to assign
    * @param string $getterMethod the name of the getter method
-   * @return \PHPUnit\Framework\MockObject\MockObject the mocked instance
+   * @return MockObject|mixed the mocked instance
    */
   protected function createStubWithId(string $class, $entityId = "entity-id", $getterMethod = 'getId')
   {
@@ -112,11 +114,11 @@ abstract class UnitTestCase extends TestCase
    * @param array $results the result arrays the queries should return
    * @param string[] $expectedQueries the expected queries if set
    * @param string[] $otherMockedMethods list of other methods to mock
-   * @return MockObject the mocked entity manager
-   * @throws \ReflectionException
+   * @return MockObject|EntityManager the mocked entity manager
+   * @throws ReflectionException
    */
   protected function getEntityManagerMockForQueries(array $results, array $expectedQueries = [],
-                                                    array $otherMockedMethods = [])
+                                                    array $otherMockedMethods = []): MockObject
   {
     $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '',
       false, true, true, array_merge($otherMockedMethods, ['createQueryBuilder']));
@@ -157,11 +159,11 @@ abstract class UnitTestCase extends TestCase
    * @param string|null $expectedQuery the expected query if set
    * @param string[] $otherMockedMethods list of other methods to mock
    * @param int $amount the number of times this query gets sent
-   * @return MockObject the mocked entity manager
-   * @throws \ReflectionException
+   * @return MockObject|EntityManager the mocked entity manager
+   * @throws ReflectionException
    */
   protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
-                                                  array $otherMockedMethods = [], $amount = 1)
+                                                  array $otherMockedMethods = [], $amount = 1): MockObject
   {
     return $this->getEntityManagerMockForQueries(array_fill(0, $amount, $result),
       $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);

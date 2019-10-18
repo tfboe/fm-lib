@@ -16,8 +16,8 @@ namespace Tfboe\FmLib\Helpers;
 abstract class Logs extends BasicEnum
 {
 //<editor-fold desc="Fields">
+  const CHANGES = "changes";
   const GENERAL = "general";
   const TESTING = "testing";
-  const CHANGES = "changes";
 //</editor-fold desc="Fields">
 }

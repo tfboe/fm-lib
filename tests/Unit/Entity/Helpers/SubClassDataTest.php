@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Exceptions\MethodNotExistingException;
 use Tfboe\FmLib\Exceptions\PropertyNotExistingException;
@@ -24,10 +26,11 @@ class SubClassDataTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::addPropertyIfNotExistent
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    */
   public function testAddPropertyIfNotExistent()
   {
@@ -46,8 +49,9 @@ class SubClassDataTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
   public function testCall()
   {
@@ -65,8 +69,9 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::cloneSubClassDataFrom
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
   public function testCloneSubClassDataFrom()
   {
@@ -85,6 +90,7 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
+   * @throws ReflectionException
    */
   public function testInitSubClassDataAndHasProperty()
   {
@@ -116,9 +122,10 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::methodExists
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::addPropertyIfNotExistent
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::addPropertyIfNotExistent
    */
   public function testMethodExists()
   {
@@ -140,8 +147,9 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\MethodNotExistingException::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testNotExistingMethodCall()
   {
@@ -155,8 +163,9 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\MethodNotExistingException::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testNotExistingMethodSetterNoArgument()
   {
@@ -171,8 +180,9 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\PropertyNotExistingException::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testNotExistingPropertyGetCall()
   {
@@ -188,8 +198,9 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\PropertyNotExistingException::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
   public function testNotExistingPropertySetCall()
   {
@@ -205,9 +216,10 @@ class SubClassDataTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return \PHPUnit_Framework_MockObject_MockObject|SubClassData
+   * @return MockObject|SubClassData
+   * @throws ReflectionException
    */
-  private function mock(): \PHPUnit_Framework_MockObject_MockObject
+  private function mock(): MockObject
   {
     return $this->getMockForTrait(SubClassData::class);
   }

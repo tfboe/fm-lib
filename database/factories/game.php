@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -7,9 +8,12 @@ declare(strict_types=1);
  * Time: 5:44 PM
  */
 
-/** @var \LaravelDoctrine\ORM\Testing\Factory $factory */
+use LaravelDoctrine\ORM\Testing\Factory;
+use Tfboe\FmLib\Tests\Entity\Game;
 
-$factory->define(\Tfboe\FmLib\Tests\Entity\Game::class, function (/** @noinspection PhpUnusedParameterInspection */
+/** @var Factory $factory */
+
+$factory->define(Game::class, function (/** @noinspection PhpUnusedParameterInspection */
   \Faker\Generator $faker, array $attributes) {
   return [
     'gameNumber' => $attributes['gameNumber'],

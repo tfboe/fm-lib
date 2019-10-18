@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Helpers;
 
+use Laravel\Lumen\Application;
+
 /**
  * Trait ApplicationGetter
  * @package Tfboe\FmLib\Tests\Helpers
@@ -19,7 +21,7 @@ trait ApplicationGetter
   /**
    * Creates the application.
    *
-   * @return \Laravel\Lumen\Application
+   * @return Application
    */
   public function createApplication()
   {

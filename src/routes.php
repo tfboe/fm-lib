@@ -1,6 +1,10 @@
 <?php
 declare(strict_types=1);
-/** @var \Laravel\Lumen\Routing\Router $router */
+
+/** @var Router $router */
+
+use Laravel\Lumen\Routing\Router;
+
 $router = app('router');
 
 $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use ($router) {

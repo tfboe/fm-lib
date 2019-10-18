@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -7,15 +8,19 @@ declare(strict_types=1);
  * Time: 5:44 PM
  */
 
-/** @var \LaravelDoctrine\ORM\Testing\Factory $factory */
+use LaravelDoctrine\ORM\Testing\Factory;
+use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
 
-$factory->define(\Tfboe\FmLib\Tests\Entity\RankingSystem::class, function (\Faker\Generator $faker,
-                                                                           array $attributes) {
+/** @var Factory $factory */
+
+$factory->define(RankingSystem::class, function (\Faker\Generator $faker,
+                                                 array $attributes) {
   return [
     'defaultForLevel' => array_key_exists('defaultForLevel', $attributes) ? $attributes['defaultForLevel'] : null,
     'serviceName' => $attributes['serviceName'],
     'generationInterval' => array_key_exists('generationInterval', $attributes) ?
-      $attributes['generationInterval'] : \Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration::OFF,
+      $attributes['generationInterval'] : AutomaticInstanceGeneration::OFF,
     'subClassData' => [],
     'name' => $faker->name
   ];

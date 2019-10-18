@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Helpers;
 
+use ReflectionClass;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
@@ -168,9 +169,10 @@ abstract class BasicEnum
       $calledClass = get_called_class();
     }
     if (!array_key_exists($calledClass, self::$constCacheArray)) {
-      // ReflectionException => whe know that calledClass is a valid class since it is the result of get_called_class
+      // ReflectionException => whe know that calledClass is a valid class since it is the result of
+      //                        get_called_class
       /** @noinspection PhpUnhandledExceptionInspection */
-      $reflect = new \ReflectionClass($calledClass);
+      $reflect = new ReflectionClass($calledClass);
       $array = $reflect->getConstants();
       asort($array);
       self::$constCacheArray[$calledClass] = $array;

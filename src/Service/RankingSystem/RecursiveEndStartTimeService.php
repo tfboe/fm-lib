@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
+use DateTime;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 
@@ -20,7 +21,7 @@ use Tfboe\FmLib\Entity\TournamentInterface;
 class RecursiveEndStartTimeService implements TimeServiceInterface
 {
 //<editor-fold desc="Fields">
-  /** @var \DateTime[] */
+  /** @var DateTime[] */
   private $times = [];
 //</editor-fold desc="Fields">
 

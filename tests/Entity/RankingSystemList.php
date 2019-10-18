@@ -25,6 +25,7 @@ class RankingSystemList extends BaseEntity implements RankingSystemListInterface
   use \Tfboe\FmLib\Entity\Traits\RankingSystemList;
 
 //<editor-fold desc="Constructor">
+
   /**
    * RankingSystem constructor.
    */

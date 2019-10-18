@@ -9,7 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\Container\Container;
+use ReflectionException;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -24,6 +26,7 @@ class DynamicServiceLoadingServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\DynamicServiceLoadingService::__construct
+   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -37,9 +40,15 @@ class DynamicServiceLoadingServiceTest extends UnitTestCase
 
 
   /**
-   * @covers \Tfboe\FmLib\Service\DynamicServiceLoadingService::loadRankingSystemService
-   * @covers \Tfboe\FmLib\Service\DynamicServiceLoadingService::getClassWithNamespace
-   * @uses   \Tfboe\FmLib\Service\DynamicServiceLoadingService::__construct
+   * @covers     \Tfboe\FmLib\Service\DynamicServiceLoadingService::loadRankingSystemService
+   * @covers     \Tfboe\FmLib\Service\DynamicServiceLoadingService::getClassWithNamespace
+   * @throws BindingResolutionException
+   * @throws BindingResolutionException
+   * @throws BindingResolutionException
+   * @throws BindingResolutionException
+   * @throws ReflectionException
+   * @throws ReflectionException
+   * @uses       \Tfboe\FmLib\Service\DynamicServiceLoadingService::__construct
    */
   public function testLoadRankingSystemService()
   {

@@ -9,9 +9,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 
+use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use ReflectionException;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
@@ -30,8 +32,10 @@ class GameRankingSystemTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService::getEntitiesQueryBuilder
-   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @throws ReflectionException
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntityManager
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetEntitiesQueryBuilder()
   {
@@ -43,7 +47,7 @@ class GameRankingSystemTest extends UnitTestCase
     $rankingSystem->method('getId')->willReturn('ranking-system-id');
     /** @var QueryBuilder $builder */
     $builder = self::callProtectedMethod($system, "getEntitiesQueryBuilder",
-      [$rankingSystem, new \DateTime("2000-01-01"), new \DateTime("2001-01-01")]);
+      [$rankingSystem, new DateTime("2000-01-01"), new DateTime("2001-01-01")]);
     self::assertEquals(
       'SELECT g FROM Tfboe\FmLib\Entity\GameInterface g LEFT JOIN g.rankingSystems grs WITH grs = :ranking ' .
       'INNER JOIN g.match m LEFT JOIN m.rankingSystems mrs WITH mrs = :ranking INNER JOIN m.phase p LEFT JOIN ' .
@@ -58,6 +62,7 @@ class GameRankingSystemTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService::getLevel
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testLevel()

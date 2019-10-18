@@ -26,18 +26,6 @@ class IdGeneratorTest extends UnitTestCase
    */
   public function testCreateIdFrom()
   {
-    /**
-     * test function for generating an guid
-     * @return string fixed test string
-     */
-    function test_com_create_guid()
-    {
-      return "{test-guid}";
-    }
-
-    self::assertEquals('test-guid',
-      IdGenerator::createIdFrom('Tfboe\FmLib\Tests\Unit\Entity\Helpers\test_com_create_guid'));
-
     self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', IdGenerator::createIdFrom());
   }
 

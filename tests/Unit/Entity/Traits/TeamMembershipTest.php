@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
@@ -41,6 +42,7 @@ class TeamMembershipTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getTeam
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setTeam
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    */
   public function testTeam()

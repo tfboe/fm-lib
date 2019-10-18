@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 
+use DateTime;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Entity\RankingSystem;
@@ -33,7 +34,7 @@ class RankingSystemListTest extends UnitTestCase
   public function testConstructor()
   {
     $entity = $this->instance();
-    self::assertEquals(new \DateTime("2000-01-01"), $entity->getLastEntryTime());
+    self::assertEquals(new DateTime("2000-01-01"), $entity->getLastEntryTime());
     self::assertFalse($entity->isCurrent());
   }
 
@@ -57,8 +58,8 @@ class RankingSystemListTest extends UnitTestCase
   public function testLastEntry()
   {
     $instance = $this->instance();
-    $instance->setLastEntryTime(new \DateTime("2017-01-01"));
-    self::assertEquals(new \DateTime("2017-01-01"), $instance->getLastEntryTime());
+    $instance->setLastEntryTime(new DateTime("2017-01-01"));
+    self::assertEquals(new DateTime("2017-01-01"), $instance->getLastEntryTime());
   }
 
   /**
@@ -70,7 +71,7 @@ class RankingSystemListTest extends UnitTestCase
     $entity = $this->instance();
     $entity2 = $this->createMock(RankingSystemListEntry::class);
     $player = $this->createStubWithId(Player::class, 5, 'getId');
-    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
+    /** @var Player $player */
     $entity2->method('getPlayer')->willReturn($player);
     $entity->getEntries()->set($player->getId(), $entity2);
     self::assertEquals(1, $entity->getEntries()->count());

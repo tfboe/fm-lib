@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -7,9 +8,13 @@ declare(strict_types=1);
  * Time: 11:48 AM
  */
 
-/** @var \LaravelDoctrine\ORM\Testing\Factory $factory */
+use Illuminate\Support\Facades\Hash;
+use LaravelDoctrine\ORM\Testing\Factory;
+use Tfboe\FmLib\Tests\Entity\User;
 
-$factory->define(\Tfboe\FmLib\Tests\Entity\User::class, function (\Faker\Generator $faker, array $attributes) {
+/** @var Factory $factory */
+
+$factory->define(User::class, function (\Faker\Generator $faker, array $attributes) {
   if (array_key_exists('originalPassword', $attributes)) {
     $password = $attributes['originalPassword'];
   } else {
@@ -17,7 +22,7 @@ $factory->define(\Tfboe\FmLib\Tests\Entity\User::class, function (\Faker\Generat
   }
   /** @noinspection PhpUndefinedMethodInspection */
   return [
-    'password' => \Illuminate\Support\Facades\Hash::make($password),
+    'password' => Hash::make($password),
     'email' => $faker->email,
     'jwtVersion' => 1,
     'confirmedTermsMinorVersion' => 0,

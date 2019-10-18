@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 
 
+use DateTime;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
 use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
@@ -41,11 +42,11 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     /** @noinspection PhpUnhandledExceptionInspection */
     static::getProperty(Tournament::class, 'id')->setValue($tournament, 't1');
     $service = new RecursiveEndStartTimeService();
-    $endedAt = new \DateTime("2017-03-01");
+    $endedAt = new DateTime("2017-03-01");
     $tournament->setEndTime($endedAt);
     self::assertEquals($endedAt, $service->getTime($tournament));
 
-    $newEndedAt = new \DateTime("2017-06-01");
+    $newEndedAt = new DateTime("2017-06-01");
     $tournament->setEndTime($newEndedAt);
     self::assertEquals($endedAt, $service->getTime($tournament));
 
@@ -76,7 +77,7 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     $tournament = new Tournament();
     /** @noinspection PhpUnhandledExceptionInspection */
     static::getProperty(Tournament::class, 'id')->setValue($tournament, 't1');
-    $endedAt = new \DateTime("2017-05-01");
+    $endedAt = new DateTime("2017-05-01");
     $tournament->setEndTime($endedAt);
     $competition = new Competition();
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -101,17 +102,17 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     self::assertEquals($endedAt, $service->getTime($game));
 
     $service->clearTimes();
-    $phaseEndedAt = new \DateTime("2017-04-01");
+    $phaseEndedAt = new DateTime("2017-04-01");
     $phase->setStartTime($phaseEndedAt);
     self::assertEquals($phaseEndedAt, $service->getTime($game));
 
     $service->clearTimes();
-    $gameStartedAt = new \DateTime("2017-02-01");
+    $gameStartedAt = new DateTime("2017-02-01");
     $phase->setEndTime($gameStartedAt);
     self::assertEquals($gameStartedAt, $service->getTime($game));
 
     $service->clearTimes();
-    $gameEndedAt = new \DateTime("2017-03-01");
+    $gameEndedAt = new DateTime("2017-03-01");
     $phase->setEndTime($gameEndedAt);
     self::assertEquals($gameEndedAt, $service->getTime($game));
   }
@@ -135,7 +136,7 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     $tournament = new Tournament();
     /** @noinspection PhpUnhandledExceptionInspection */
     static::getProperty(Tournament::class, 'id')->setValue($tournament, 't1');
-    $endedAt = new \DateTime("2017-04-01");
+    $endedAt = new DateTime("2017-04-01");
     $tournament->setEndTime($endedAt);
     $competition = new Competition();
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -150,12 +151,12 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     self::assertEquals($endedAt, $service->getTime($phase));
 
     $service->clearTimes();
-    $startedAt = new \DateTime("2017-02-01");
+    $startedAt = new DateTime("2017-02-01");
     $phase->setStartTime($startedAt);
     self::assertEquals($startedAt, $service->getTime($phase));
 
     $service->clearTimes();
-    $endedAt = new \DateTime("2017-03-01");
+    $endedAt = new DateTime("2017-03-01");
     $phase->setEndTime($endedAt);
     self::assertEquals($endedAt, $service->getTime($phase));
   }
@@ -175,18 +176,18 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     $tournament = new Tournament();
     /** @noinspection PhpUnhandledExceptionInspection */
     static::getProperty(Tournament::class, 'id')->setValue($tournament, 't1');
-    $updatedAt = new \DateTime("2017-04-01");
+    $updatedAt = new DateTime("2017-04-01");
     $tournament->setUpdatedAt($updatedAt);
     $service = new RecursiveEndStartTimeService();
     self::assertEquals($updatedAt, $service->getTime($tournament));
 
     $service->clearTimes();
-    $startedAt = new \DateTime("2017-02-01");
+    $startedAt = new DateTime("2017-02-01");
     $tournament->setStartTime($startedAt);
     self::assertEquals($startedAt, $service->getTime($tournament));
 
     $service->clearTimes();
-    $endedAt = new \DateTime("2017-03-01");
+    $endedAt = new DateTime("2017-03-01");
     $tournament->setEndTime($endedAt);
     self::assertEquals($endedAt, $service->getTime($tournament));
   }

@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
@@ -108,8 +109,8 @@ class RankingSystemTest extends UnitTestCase
   public function testOpenSyncFrom()
   {
     $entity = $this->instance();
-    $entity->setOpenSyncFrom(new \DateTime("2017-01-01"));
-    self::assertEquals(new \DateTime("2017-01-01"), $entity->getOpenSyncFrom());
+    $entity->setOpenSyncFrom(new DateTime("2017-01-01"));
+    self::assertEquals(new DateTime("2017-01-01"), $entity->getOpenSyncFrom());
   }
 
   /**

@@ -28,6 +28,7 @@ class Ranking extends BaseEntity implements RankingInterface
 
 
 //<editor-fold desc="Constructor">
+
   /**
    * Ranking constructor.
    */

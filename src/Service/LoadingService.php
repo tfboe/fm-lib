@@ -72,18 +72,7 @@ class LoadingService implements LoadingServiceInterface
     //build groups for each type
     $toDoEntityIds = [];
     $done = [];
-    foreach ($entities as $entity) {
-      if (!array_key_exists($entity->getEntityId(), $done)) {
-        $done[$entity->getEntityId()] = true;
-        $class = $this->keyOfPropertyMap($entity, $propertyMap);
-        if ($class !== null) {
-          if (!array_key_exists($class, $toDoEntityIds)) {
-            $toDoEntityIds[$class] = [];
-          }
-          $toDoEntityIds[$class][] = $entity;
-        }
-      }
-    }
+    $this->collectToDo($entities, $toDoEntityIds, $done, $propertyMap);
     while (count($toDoEntityIds) > 0) {
       $entities = reset($toDoEntityIds);
 
@@ -101,7 +90,7 @@ class LoadingService implements LoadingServiceInterface
               return true;
             }
             if ($object instanceof AbstractLazyCollection) {
-              /** @var $object AbstractLazyCollection */
+              /** @var AbstractLazyCollection $object */
               if (!$object->isInitialized()) {
                 return true;
               }
@@ -123,19 +112,7 @@ class LoadingService implements LoadingServiceInterface
               if (!$object instanceof Collection) {
                 $object = new ArrayCollection([$object]);
               }
-              /** @var $object Collection|IdAble[] */
-              foreach ($object as $subObject) {
-                if (!array_key_exists($subObject->getEntityId(), $done)) {
-                  $done[$subObject->getEntityId()] = true;
-                  $subClass = $this->keyOfPropertyMap($subObject, $propertyMap);
-                  if ($subClass !== null) {
-                    if (!array_key_exists($subClass, $toDoEntityIds)) {
-                      $toDoEntityIds[$subClass] = [];
-                    }
-                    $toDoEntityIds[$subClass][] = $subObject;
-                  }
-                }
-              }
+              $this->collectToDo($object, $toDoEntityIds, $done, $propertyMap);
             }
           }
         }
@@ -145,6 +122,28 @@ class LoadingService implements LoadingServiceInterface
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
+  /**
+   * @param Collection|IdAble[] $entities
+   * @param array $toDoEntityIds
+   * @param array $done
+   * @param array $propertyMap
+   */
+  private function collectToDo(iterable $entities, array &$toDoEntityIds, array &$done, array $propertyMap)
+  {
+    foreach ($entities as $entity) {
+      if (!array_key_exists($entity->getEntityId(), $done)) {
+        $done[$entity->getEntityId()] = true;
+        $class = $this->keyOfPropertyMap($entity, $propertyMap);
+        if ($class !== null) {
+          if (!array_key_exists($class, $toDoEntityIds)) {
+            $toDoEntityIds[$class] = [];
+          }
+          $toDoEntityIds[$class][] = $entity;
+        }
+      }
+    }
+  }
+
   /**
    * Computes the key corresponding to the given entity in the given property map, or null if no key was found.
    * @param mixed $entity the entity to search the key for

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntityInterface;
@@ -47,9 +48,9 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
   public function getLists(): Collection;
 
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getOpenSyncFrom(): ?\DateTime;
+  public function getOpenSyncFrom(): ?DateTime;
 
   /**
    * @return string
@@ -64,14 +65,14 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
 
   /**
    * @param int $generationInterval
-   * @throws \Tfboe\FmLib\Exceptions\ValueNotValid
+   * @throws ValueNotValid
    */
   public function setGenerationInterval(int $generationInterval);
 
   /**
-   * @param \DateTime|null $openSyncFrom
+   * @param DateTime|null $openSyncFrom
    */
-  public function setOpenSyncFrom(?\DateTime $openSyncFrom);
+  public function setOpenSyncFrom(?DateTime $openSyncFrom);
 
   /**
    * @param string $serviceName

@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
@@ -30,6 +31,7 @@ class LoadingServiceTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Service\LoadingService::__construct
+   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -44,6 +46,7 @@ class LoadingServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesAlreadyLoaded()
@@ -53,6 +56,7 @@ class LoadingServiceTest extends UnitTestCase
     $tournament = $this->createMock(TournamentInterface::class);
     $tournament->method('getEntityId')->willReturn('t');
     $initializedCollection = new ArrayCollection();
+    /** @noinspection PhpUndefinedFieldInspection */
     $initializedCollection->__isInitialized__ = true;
     $tournament->method('getCompetitions')->willReturn($initializedCollection);
     $service->loadEntities([$tournament], [TournamentInterface::class => [["competitions"]]]);
@@ -62,13 +66,15 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesDefaultPropertiesGame()
   {
-    $service = new LoadingService($this->getEntityManagerMockForQuery([],
-      'SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 LEFT JOIN '
-      . 't1.playersB t3 WHERE t1.id IN(\'g\')'
+    $service = new LoadingService($this->getEntityManagerMockForQuery([], <<<DQL
+      SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 
+        LEFT JOIN t1.playersB t3 WHERE t1.id IN('g')
+DQL
     ));
     $game = $this->createMock(GameInterface::class);
     $game->method('getEntityId')->willReturn('g');
@@ -86,6 +92,7 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesMultipleLevels()
@@ -117,8 +124,9 @@ class LoadingServiceTest extends UnitTestCase
 
     $competition2->method('getPhases')->willReturn(new ArrayCollection([$phase2]));
 
-    $entityManager = $this->getEntityManagerMockForQueries([[], []], [
+    $entityManager = $this->getEntityManagerMockForQueries([[], []], [/** @lang DQL */
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\TournamentInterface t1 LEFT JOIN t1.competitions t2 WHERE t1.id IN(\'t\')',
+      /** @lang DQL */
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\CompetitionInterface t1 LEFT JOIN t1.phases t2 WHERE t1.id IN(\'c1\')'
     ]);
 
@@ -133,11 +141,12 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesNullProperty()
   {
-    $service = new LoadingService($this->getEntityManagerMockForQuery([],
+    $service = new LoadingService($this->getEntityManagerMockForQuery([], /** @lang DQL */
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\TournamentInterface t1 LEFT JOIN t1.competitions t2 WHERE t1.id IN(\'t\')'
     ));
     $tournament = $this->createMock(TournamentInterface::class);
@@ -150,11 +159,12 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesSimpleProperty()
   {
-    $service = new LoadingService($this->getEntityManagerMockForQuery([],
+    $service = new LoadingService($this->getEntityManagerMockForQuery([], /** @lang DQL */
       'SELECT t1, t2 FROM Tfboe\FmLib\Entity\CompetitionInterface t1 LEFT JOIN t1.tournament t2 WHERE t1.id IN(\'c\')'
     ));
     $competition = $this->createMock(CompetitionInterface::class);

@@ -59,7 +59,7 @@ class RankingSystemChangeTest extends UnitTestCase
   public function testPlayer()
   {
     $entity = $this->instance();
-    /** @var \Tfboe\FmLib\Tests\Entity\Player $player */
+    /** @var Player $player */
     $player = $this->createMock(Player::class);
     $entity->setPlayer($player);
     self::assertEquals($player, $entity->getPlayer());

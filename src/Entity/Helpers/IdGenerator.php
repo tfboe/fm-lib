@@ -22,6 +22,23 @@ use Tfboe\FmLib\Helpers\Random;
 class IdGenerator extends AbstractIdGenerator
 {
 //<editor-fold desc="Public Methods">
+  /**
+   * @param $entity
+   * @return string
+   */
+  public static function createIdFor($entity): string
+  {
+    /** @var UUIDEntityInterface $entity */
+    if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
+      return $entity->getId();
+    }
+    $mixBy = Random::stringToInt(get_class($entity));
+    if (is_subclass_of($entity, IdentifiableInterface::class)) {
+      /** @var IdentifiableInterface $entity */
+      $mixBy = $mixBy ^ $entity->getIdentifiableId();
+    }
+    return self::createIdFrom($mixBy);
+  }
 
   /**
    * creates a new id
@@ -59,24 +76,6 @@ class IdGenerator extends AbstractIdGenerator
     }
 
     return strtolower(vsprintf('%04X%04X-%04X-%04X-%04X-%04X%04X%04X', $vs));
-  }
-
-  /**
-   * @param $entity
-   * @return string
-   */
-  public static function createIdFor($entity): string
-  {
-    /** @var UUIDEntityInterface $entity */
-    if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
-      return $entity->getId();
-    }
-    $mixBy = Random::stringToInt(get_class($entity));
-    if (is_subclass_of($entity, IdentifiableInterface::class)) {
-      /** @var IdentifiableInterface $entity */
-      $mixBy = $mixBy ^ $entity->getIdentifiableId();
-    }
-    return self::createIdFrom($mixBy);
   }
 
   /**

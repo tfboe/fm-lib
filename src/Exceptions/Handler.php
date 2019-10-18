@@ -4,6 +4,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Exceptions;
 
 use Exception;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
@@ -29,10 +31,10 @@ class Handler extends ExceptionHandler
   /**
    * Render an exception into an HTTP response.
    *
-   * @param  \Illuminate\Http\Request $request
-   * @param  \Exception $exception
-   * @param  bool $printTrace if true a trace will be appended to the exception message
-   * @return \Illuminate\Http\Response
+   * @param Request $request
+   * @param Exception $exception
+   * @param bool $printTrace if true a trace will be appended to the exception message
+   * @return Response
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
   public function render($request, Exception $exception, $printTrace = false)
@@ -96,7 +98,7 @@ class Handler extends ExceptionHandler
    * Extracts the status and the message from the given exception and status code
    * @param Exception $exception the raised exception
    * @param string|null $statusCode the status code or null if unknown
-   * @param  bool $printTrace if true a trace will be appended to the exception message
+   * @param bool $printTrace if true a trace will be appended to the exception message
    * @return array containing the infos status and message
    */
   protected function getJsonMessage(Exception $exception, $statusCode = null, $printTrace = false)

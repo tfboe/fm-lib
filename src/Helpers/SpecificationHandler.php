@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Tfboe\FmLib\Helpers;
@@ -6,11 +7,16 @@ namespace Tfboe\FmLib\Helpers;
 
 use Closure;
 use DateTime;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 
+/**
+ * Trait SpecificationHandler
+ * @package Tfboe\FmLib\Helpers
+ */
 trait SpecificationHandler
 {
 //<editor-fold desc="Fields">
@@ -69,7 +75,7 @@ trait SpecificationHandler
     foreach ($specification as $key => $values) {
       if (!array_key_exists('ignore', $values) || $values['ignore'] != true) {
         $matches = [];
-        preg_match('/[^\.]*$/', $key, $matches);
+        preg_match('/[^.]*$/', $key, $matches);
         $arrKey = $matches[0];
         if (array_key_exists('property', $values)) {
           $property = $values['property'];
@@ -109,7 +115,7 @@ trait SpecificationHandler
       $value = $specification['transformer']($value);
     }
   }
-
+  /** @noinspection PhpDocRedundantThrowsInspection */ //bug???
   /**
    * Validates the parameters of a request by the validate fields of the given specification
    * @param Request $request the request
@@ -136,6 +142,7 @@ trait SpecificationHandler
    * @param Request $request
    * @param array $spec
    * @return mixed
+   * @throws ValidationException
    */
   abstract protected function validateSpec(Request $request, array $spec);
 //</editor-fold desc="Protected Methods">
@@ -152,7 +159,10 @@ trait SpecificationHandler
   private static function transformByType($value, $type)
   {
     if (strtolower($type) === 'date' || strtolower($type) === 'datetime') {
-      return new DateTime($value);
+      try {
+        return new DateTime($value);
+      } catch (Exception $e) {
+      }
     }
     return $value;
   }

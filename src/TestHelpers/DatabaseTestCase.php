@@ -7,8 +7,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\TestHelpers;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Schema\Table;
 use Faker\Factory;
+use Faker\Generator;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
@@ -23,7 +26,7 @@ abstract class DatabaseTestCase extends LumenTestCase
 {
 //<editor-fold desc="Fields">
   /**
-   * @var \Faker\Generator
+   * @var Generator
    */
   protected $faker;
 
@@ -83,7 +86,7 @@ abstract class DatabaseTestCase extends LumenTestCase
 
   /**
    * @param string[] $classNames
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function clearClassTables(array $classNames)
   {
@@ -97,11 +100,11 @@ abstract class DatabaseTestCase extends LumenTestCase
 
   /**
    * Clears the database by truncating all tables (very time consuming)
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function clearDatabase()
   {
-    /** @var \Doctrine\DBAL\Connection $connection */
+    /** @var Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $this->clearTables(array_map(function (Table $t) {
@@ -112,11 +115,11 @@ abstract class DatabaseTestCase extends LumenTestCase
 
   /**
    * @param string[] $tables
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function clearTables(array $tables)
   {
-    /** @var \Doctrine\DBAL\Connection $connection */
+    /** @var Connection $connection */
     /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $connection->query(sprintf('SET FOREIGN_KEY_CHECKS = 0;'));
@@ -195,7 +198,7 @@ abstract class DatabaseTestCase extends LumenTestCase
    * Boot the testing helper traits.
    *
    * @return void
-   * @throws \Doctrine\DBAL\DBALException
+   * @throws DBALException
    */
   protected function setUpTraits()
   {

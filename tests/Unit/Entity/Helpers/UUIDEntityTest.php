@@ -11,6 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -24,6 +25,7 @@ class UUIDEntityTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getEntityId
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
    */
   public function testEntityId()
@@ -36,6 +38,7 @@ class UUIDEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
    */
   public function testId()
@@ -50,6 +53,7 @@ class UUIDEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|UUIDEntity
+   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

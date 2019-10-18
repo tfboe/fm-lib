@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -24,11 +25,11 @@ class TermsTest extends LumenTestCase
 //<editor-fold desc="Public Methods">
   public function testGetLatestTerms()
   {
-    $terms1 = entity(Terms::class)->create(['text' => 'Terms1', 'minorVersion' => 1, 'majorVersion' => 1]);
-    $terms2 = entity(Terms::class)->create(['text' => 'Terms2', 'minorVersion' => 5, 'majorVersion' => 1]);
-    $terms3 = entity(Terms::class)->create(['text' => 'Terms3', 'minorVersion' => 1, 'majorVersion' => 2]);
+    entity(Terms::class)->create(['text' => 'Terms1', 'minorVersion' => 1, 'majorVersion' => 1]);
+    entity(Terms::class)->create(['text' => 'Terms2', 'minorVersion' => 5, 'majorVersion' => 1]);
+    entity(Terms::class)->create(['text' => 'Terms3', 'minorVersion' => 1, 'majorVersion' => 2]);
     $expected = ['text' => 'Terms4', 'minorVersion' => 2, 'majorVersion' => 2];
-    $terms4 = entity(Terms::class)->create($expected);
+    entity(Terms::class)->create($expected);
 
     $this->json('GET', '/getLatestTerms')->seeJsonEquals($expected);
   }

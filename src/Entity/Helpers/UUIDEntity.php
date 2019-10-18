@@ -44,19 +44,19 @@ trait UUIDEntity
   }
 
   /**
-   * @param string $id
-   */
-  public function setId(string $id)
-  {
-    $this->id = $id;
-  }
-
-  /**
    * @return bool
    */
   public function hasId(): bool
   {
     return $this->id !== null;
+  }
+
+  /**
+   * @param string $id
+   */
+  public function setId(string $id)
+  {
+    $this->id = $id;
   }
 //</editor-fold desc="Public Methods">
 }

@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 /**
  * Created by PhpStorm.
  * User: benedikt
@@ -7,8 +8,11 @@ declare(strict_types=1);
  * Time: 5:44 PM
  */
 
-/** @var \LaravelDoctrine\ORM\Testing\Factory $factory */
-$factory->define(\Tfboe\FmLib\Tests\Entity\Competition::class, function (
+use LaravelDoctrine\ORM\Testing\Factory;
+use Tfboe\FmLib\Tests\Entity\Competition;
+
+/** @var Factory $factory */
+$factory->define(Competition::class, function (
   /** @noinspection PhpUnusedParameterInspection */
   \Faker\Generator $faker, array $attributes) {
   return [

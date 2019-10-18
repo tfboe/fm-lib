@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
+use DateTime;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 
 /**
@@ -28,7 +29,7 @@ interface TimeServiceInterface
   /**
    * Gets the relevant time for the given entity for ordering purposes
    * @param TournamentHierarchyInterface $entity
-   * @return \DateTime
+   * @return DateTime
    */
   public function getTime(TournamentHierarchyInterface $entity);
 //</editor-fold desc="Public Methods">

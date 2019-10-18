@@ -11,6 +11,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\TournamentInterface;
@@ -20,6 +21,10 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /** @noinspection PhpMultipleClassesDeclarationsInOneFile */
 
+/**
+ * Class Tournament
+ * @package Tfboe\FmLib\Tests\Unit\Entity\Traits
+ */
 abstract class Tournament extends TournamentHierarchyEntity implements TournamentInterface
 {
   use \Tfboe\FmLib\Entity\Traits\Tournament;
@@ -38,10 +43,11 @@ class TournamentTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getChildren
-   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
   public function testCompetitionsAndChildren()
   {
@@ -58,9 +64,10 @@ class TournamentTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::init
-   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getTournamentListId
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
    */
   public function testConstructor()
   {
@@ -74,8 +81,9 @@ class TournamentTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setCreator
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getCreator
-   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    */
   public function testCreator()
   {
@@ -87,8 +95,9 @@ class TournamentTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getLocalIdentifier
-   * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    */
   public function testGetLocalIdentifier()
   {
@@ -100,6 +109,7 @@ class TournamentTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getLevel
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testLevel()
@@ -109,6 +119,7 @@ class TournamentTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getParent
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testParent()
@@ -119,6 +130,7 @@ class TournamentTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::setTournamentListId
    * @covers \Tfboe\FmLib\Entity\Traits\Tournament::getTournamentListId
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testTournamentListId()
@@ -132,6 +144,7 @@ class TournamentTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return Tournament|MockObject a new tournament
+   * @throws ReflectionException
    */
   private function tournament(): MockObject
   {

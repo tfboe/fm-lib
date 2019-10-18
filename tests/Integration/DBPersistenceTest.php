@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Integration;
 
+use DateTime;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Tfboe\FmLib\TestHelpers\DatabaseTestCase;
 use Tfboe\FmLib\Tests\Entity\Tournament;
@@ -41,8 +42,8 @@ class DBPersistenceTest extends DatabaseTestCase
   {
     $tournament = new Tournament();
     $tournament->setName("TestTournament");
-    $startTime = new \DateTime("2017-12-31 15:23:20 +02:00");
-    $endTime = new \DateTime("2017-12-31 16:23:20 +03:00");
+    $startTime = new DateTime("2017-12-31 15:23:20 +02:00");
+    $endTime = new DateTime("2017-12-31 16:23:20 +03:00");
     $tournament->setStartTime($startTime);
     $tournament->setEndTime($endTime);
     /** @noinspection PhpUndefinedMethodInspection */

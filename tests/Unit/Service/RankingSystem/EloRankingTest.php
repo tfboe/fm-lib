@@ -157,6 +157,9 @@ class EloRankingTest extends UnitTestCase
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::getEloAverage
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::hasProvisoryEntry
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::addNotRatedChanges
+   * @param bool $isPlayed if game was played
+   * @param int $gameResult the game result
+   * @param array $playerInfos all infos about each player and its expected changes
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
@@ -171,13 +174,11 @@ class EloRankingTest extends UnitTestCase
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalChangeFields()
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields
    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-   * @param bool $isPlayed if game was played
-   * @param int $gameResult the game result
-   * @param array $playerInfos all infos about each player and its expected changes
    */
   public function testGetChanges(bool $isPlayed, int $gameResult, array $playerInfos)
   {
     $repository = $this->createStub(ObjectRepository::class, ['findBy' => []]);
+    /** @var EntityManagerInterface $entityManager */
     $entityManager = $this->createStub(EntityManagerInterface::class, ['getRepository' => $repository]);
     $service = $this->service($entityManager, $this->getObjectCreator());
     /** @var EloRanking $player1 */
@@ -208,9 +209,9 @@ class EloRankingTest extends UnitTestCase
     }
     $entries = new ArrayCollection($entriesArray);
     $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
-    /** @var $list RankingSystemListInterface */
+    /** @var RankingSystemListInterface $list */
     foreach ($entries as $entry) {
-      /** @var $entry RankingSystemListEntryInterface */
+      /** @var RankingSystemListEntryInterface $entry */
       $entry->setRankingSystemList($list);
     }
     for ($i = 0; $i < count($playerInfos); $i++) {

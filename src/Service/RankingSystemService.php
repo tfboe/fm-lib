@@ -10,13 +10,16 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service;
 
 
+use DateTime;
 use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Exceptions\Internal;
 use Tfboe\FmLib\Helpers\Logging;
 
 /**
@@ -108,11 +111,15 @@ class RankingSystemService implements RankingSystemServiceInterface
     $result = [];
     //compute earliest influences
     foreach ($rankingSystems as $sys) {
-      $service = $this->dsls->loadRankingSystemService($sys->getServiceName());
-      $result[$sys->getId()] = [
-        "rankingSystem" => $sys,
-        "earliestInfluence" => $service->getEarliestInfluence($sys, $tournament)
-      ];
+      try {
+        $service = $this->dsls->loadRankingSystemService($sys->getServiceName());
+        $result[$sys->getId()] = [
+          "rankingSystem" => $sys,
+          "earliestInfluence" => $service->getEarliestInfluence($sys, $tournament)
+        ];
+      } catch (BindingResolutionException $e) {
+        Internal::error("The ranking system {$sys->getId()} has an invalid service name!");
+      }
     }
 
     return $result;
@@ -154,12 +161,13 @@ class RankingSystemService implements RankingSystemServiceInterface
           /** @var LastRecalculationInterface $lastRecalculation */
           $lastRecalculation = $em->find(LastRecalculationInterface::class, 1, LockMode::PESSIMISTIC_WRITE);
           $em->flush();
-          $lastRecalculation->setStartTime(new \DateTime());
+          $lastRecalculation->setStartTime(new DateTime());
           foreach ($rankingSystems as $rankingSystem) {
             $service = $this->dsls->loadRankingSystemService($rankingSystem->getServiceName());
-            $service->updateRankingFrom($rankingSystem, $rankingSystemOpenSyncFromValues[$rankingSystem->getId()]);
+            $service->updateRankingFrom($rankingSystem,
+              $rankingSystemOpenSyncFromValues[$rankingSystem->getId()]);
           }
-          $lastRecalculation->setEndTime(new \DateTime());
+          $lastRecalculation->setEndTime(new DateTime());
           $lastRecalculation->setVersion($lastRecalculation->getVersion() + 1);
         }
       );

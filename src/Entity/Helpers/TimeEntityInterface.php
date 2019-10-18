@@ -10,6 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Helpers;
 
 
+use DateTime;
+
 /**
  * Interface TimeEntityInterface
  * @package Tfboe\FmLib\Entity\Helpers
@@ -18,26 +20,26 @@ interface TimeEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getEndTime(): ?\DateTime;
+  public function getEndTime(): ?DateTime;
 
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getStartTime(): ?\DateTime;
+  public function getStartTime(): ?DateTime;
 
 
   /**
-   * @param \DateTime|null $endTime
+   * @param DateTime|null $endTime
    * @return $this|TimeEntity
    */
-  public function setEndTime(?\DateTime $endTime);
+  public function setEndTime(?DateTime $endTime);
 
   /**
-   * @param \DateTime|null $startTime
+   * @param DateTime|null $startTime
    * @return $this|TimeEntity
    */
-  public function setStartTime(?\DateTime $startTime);
+  public function setStartTime(?DateTime $startTime);
 //</editor-fold desc="Public Methods">
 }

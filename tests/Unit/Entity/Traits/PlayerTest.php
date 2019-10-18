@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
+use DateTime;
 use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -26,8 +27,8 @@ class PlayerTest extends UnitTestCase
   public function testBirthday()
   {
     $player = $this->player();
-    $player->setBirthday(new \DateTime('1992-02-02 02:02:02'));
-    self::assertEquals(new \DateTime('1992-02-02 02:02:02'), $player->getBirthday());
+    $player->setBirthday(new DateTime('1992-02-02 02:02:02'));
+    self::assertEquals(new DateTime('1992-02-02 02:02:02'), $player->getBirthday());
   }
 
   /**
@@ -55,7 +56,7 @@ class PlayerTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return \Tfboe\FmLib\Tests\Entity\Player a new player
+   * @return Player a new player
    */
   private function player(): Player
   {

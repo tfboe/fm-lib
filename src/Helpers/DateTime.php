@@ -1,9 +1,14 @@
 <?php
+declare(strict_types=1);
 
 
 namespace Tfboe\FmLib\Helpers;
 
 
+/**
+ * Class DateTime
+ * @package Tfboe\FmLib\Helpers
+ */
 abstract class DateTime
 {
 //<editor-fold desc="Public Methods">

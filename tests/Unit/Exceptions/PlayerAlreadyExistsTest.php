@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Exceptions;
 
 
+use DateTime;
 use Tfboe\FmLib\Exceptions\PlayerAlreadyExists;
 use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -45,7 +46,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
     $player = new Player();
     $player->setFirstName('first');
     $player->setLastName('last');
-    $player->setBirthday(new \DateTime('1990-02-02'));
+    $player->setBirthday(new DateTime('1990-02-02'));
     /** @noinspection PhpUnhandledExceptionInspection */
     /** @noinspection PhpUnhandledExceptionInspection */
     $idProperty = self::getProperty(Player::class, 'id');
@@ -58,7 +59,7 @@ class PlayerAlreadyExistsTest extends UnitTestCase
     $player2 = new Player();
     $player2->setFirstName('first2');
     $player2->setLastName('last2');
-    $player2->setBirthday(new \DateTime('1992-04-04'));
+    $player2->setBirthday(new DateTime('1992-04-04'));
     $idProperty->setValue($player2, 1);
 
 

@@ -9,6 +9,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\TestHelpers;
 
+use ReflectionClass;
+use ReflectionException;
+use ReflectionMethod;
+use ReflectionProperty;
+
 /**
  * Trait ReflectionMethods
  * @package Tfboe\FmLib\TestHelpers
@@ -35,12 +40,12 @@ trait ReflectionMethods
    * Gets a protected or private method and makes it accessible
    * @param string $class the class name
    * @param string $name the method name
-   * @return \ReflectionMethod the accessible method object
-   * @throws \ReflectionException the given class does not exist
+   * @return ReflectionMethod the accessible method object
+   * @throws ReflectionException the given class does not exist
    */
-  protected static function getMethod(string $class, string $name): \ReflectionMethod
+  protected static function getMethod(string $class, string $name): ReflectionMethod
   {
-    $class = new \ReflectionClass($class);
+    $class = new ReflectionClass($class);
     $method = $class->getMethod($name);
     $method->setAccessible(true);
     return $method;
@@ -50,12 +55,12 @@ trait ReflectionMethods
    * Gets a protected or private property and makes it accessible
    * @param string $class the class name
    * @param string $name the method name
-   * @return \ReflectionProperty the accessible property object
-   * @throws \ReflectionException the given class does not exist
+   * @return ReflectionProperty the accessible property object
+   * @throws ReflectionException the given class does not exist
    */
-  protected static function getProperty(string $class, string $name): \ReflectionProperty
+  protected static function getProperty(string $class, string $name): ReflectionProperty
   {
-    $class = new \ReflectionClass($class);
+    $class = new ReflectionClass($class);
     /** @noinspection PhpStatementHasEmptyBodyInspection */
     while (!$class->hasProperty($name) && ($class = $class->getParentClass()) !== null) {
     }

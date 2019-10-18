@@ -9,7 +9,10 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
+use DateTime;
+use DateTimeZone;
 use Doctrine\DBAL\Platforms\AbstractPlatform;
+use Doctrine\DBAL\Types\ConversionException;
 use Doctrine\DBAL\Types\DateTimeType;
 
 /**
@@ -25,11 +28,11 @@ class UTCDateTimeType extends DateTimeType
 //<editor-fold desc="Public Methods">
   /**
    * {@inheritdoc}
-   * @throws \Doctrine\DBAL\Types\ConversionException
+   * @throws ConversionException
    */
   public function convertToDatabaseValue($value, AbstractPlatform $platform)
   {
-    if ($value instanceof \DateTime) {
+    if ($value instanceof DateTime) {
       $value = clone $value;
       $value->setTimezone(self::getUtc());
     }
@@ -41,11 +44,11 @@ class UTCDateTimeType extends DateTimeType
 //<editor-fold desc="Private Methods">
   /**
    * Gets the utc datetime zone
-   * @return \DateTimeZone
+   * @return DateTimeZone
    */
-  private static function getUtc(): \DateTimeZone
+  private static function getUtc(): DateTimeZone
   {
-    return self::$utc ? self::$utc : self::$utc = new \DateTimeZone('UTC');
+    return self::$utc ? self::$utc : self::$utc = new DateTimeZone('UTC');
   }
 //</editor-fold desc="Private Methods">
 }

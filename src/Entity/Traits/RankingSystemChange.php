@@ -21,6 +21,18 @@ use Tfboe\FmLib\Entity\RankingSystemInterface;
 /**
  * Trait RankingSystemChange
  * @package Tfboe\FmLib\Entity\Traits
+ *
+ * Dynamic method hints for Elo ranking
+ * @method int getPlayedGames()
+ * @method setPlayedGames(int $playedGames)
+ * @method int getRatedGames()
+ * @method setRatedGames(int $ratedGames)
+ * @method float getProvisoryRanking()
+ * @method setProvisoryRanking(float $provisoryRanking)
+ * @method setTeamElo(float $teamElo)
+ * @method float getTeamElo()
+ * @method setOpponentElo(float $opponentElo)
+ * @method float getOpponentElo()
  */
 trait RankingSystemChange
 {

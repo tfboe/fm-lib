@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
 use Tfboe\FmLib\Exceptions\ValueNotValid;
@@ -25,6 +26,7 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setPlayed
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::isPlayed
+   * @throws ReflectionException
    */
   public function testPlayed()
   {
@@ -37,6 +39,8 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResult
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testResult()
@@ -50,6 +54,7 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResultA
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResultA
+   * @throws ReflectionException
    */
   public function testResultA()
   {
@@ -62,6 +67,7 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResultB
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResultB
+   * @throws ReflectionException
    */
   public function testResultB()
   {
@@ -73,8 +79,10 @@ class ResultEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
+   * @throws ReflectionException
+   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    */
   public function testResultNotValidException()
   {
@@ -90,6 +98,7 @@ class ResultEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|ResultEntity
+   * @throws ReflectionException
    */
   private function mock(): MockObject
   {
