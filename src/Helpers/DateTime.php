@@ -14,13 +14,7 @@ abstract class DateTime
    */
   public static function eq(?\DateTime $d1, ?\DateTime $d2)
   {
-    if ($d1 === null && $d2 === null) {
-      return true;
-    }
-    if ($d1 === null || $d2 === null) {
-      return false;
-    }
-    return $d1->getTimestamp() === $d2->getTimestamp() && $d1->getTimezone() === $d2->getTimezone();
+    return $d1 == $d2 && ($d1 === null || $d1->getTimezone()->getName() === $d2->getTimezone()->getName());
   }
 //</editor-fold desc="Public Methods">
 }
