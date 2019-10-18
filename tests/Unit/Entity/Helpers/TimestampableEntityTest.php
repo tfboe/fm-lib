@@ -26,6 +26,7 @@ class TimestampableEntityTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::setCreatedAt
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::getCreatedAt
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testCreatedAt()
   {
@@ -39,6 +40,7 @@ class TimestampableEntityTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::setUpdatedAt
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::getUpdatedAt
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateAt()
   {

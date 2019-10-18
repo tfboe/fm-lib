@@ -52,6 +52,7 @@ class BaseControllerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::datetimetzTransformer()
    * @throws Exception
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::datetimetzTransformer
    */
   public function testDatetimetzTransformer()
   {
@@ -72,6 +73,7 @@ class BaseControllerTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::enumTransformer
    */
   public function testEnumTransformer()
   {
@@ -148,6 +150,7 @@ class BaseControllerTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
    */
   public function testTransformValueByReference()
   {

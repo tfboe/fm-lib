@@ -10,9 +10,11 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\QualificationSystemInterface;
-use Tfboe\FmLib\Tests\Entity\QualificationSystem;
+use Tfboe\FmLib\Entity\Traits\QualificationSystem;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -25,6 +27,7 @@ class QualificationSystemTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::setNextPhase
    * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::getNextPhase
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testNextPhase()
@@ -36,7 +39,7 @@ class QualificationSystemTest extends UnitTestCase
     $system->setNextPhase($phase);
     self::assertEquals($phase, $system->getNextPhase());
     self::assertEquals(1, $system->getNextPhase()->getPreQualifications()->count());
-    self::assertEquals($system, $system->getNextPhase()->getPreQualifications()[0]);
+    self::assertEquals($system, $system->getNextPhase()->getPreQualifications()['id']);
 
     $phase2 = $this->createStub(PhaseInterface::class, ['getPreQualifications' => new ArrayCollection()]);
 
@@ -45,12 +48,13 @@ class QualificationSystemTest extends UnitTestCase
     self::assertEquals($phase2, $system->getNextPhase());
     self::assertEquals(1, $system->getNextPhase()->getPreQualifications()->count());
     self::assertEquals(0, $phase->getPreQualifications()->count());
-    self::assertEquals($system, $system->getNextPhase()->getPreQualifications()[0]);
+    self::assertEquals($system, $system->getNextPhase()->getPreQualifications()['id']);
   }
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::setPreviousPhase
    * @covers \Tfboe\FmLib\Entity\Traits\QualificationSystem::getPreviousPhase
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testPreviousPhase()
@@ -62,7 +66,7 @@ class QualificationSystemTest extends UnitTestCase
     $system->setPreviousPhase($phase);
     self::assertEquals($phase, $system->getPreviousPhase());
     self::assertEquals(1, $system->getPreviousPhase()->getPostQualifications()->count());
-    self::assertEquals($system, $system->getPreviousPhase()->getPostQualifications()[0]);
+    self::assertEquals($system, $system->getPreviousPhase()->getPostQualifications()['id']);
 
     $phase2 = $this->createStub(PhaseInterface::class, ['getPostQualifications' => new ArrayCollection()]);
 
@@ -71,17 +75,18 @@ class QualificationSystemTest extends UnitTestCase
     self::assertEquals($phase2, $system->getPreviousPhase());
     self::assertEquals(1, $system->getPreviousPhase()->getPostQualifications()->count());
     self::assertEquals(0, $phase->getPostQualifications()->count());
-    self::assertEquals($system, $system->getPreviousPhase()->getPostQualifications()[0]);
+    self::assertEquals($system, $system->getPreviousPhase()->getPostQualifications()['id']);
   }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return QualificationSystemInterface a new qualification system
+   * @return MockObject|QualificationSystemInterface
+   * @throws ReflectionException
    */
-  private function system(): QualificationSystemInterface
+  private function system(): MockObject
   {
-    return new QualificationSystem();
+    return $this->getPartialMockForTrait(QualificationSystem::class, ['getId' => 'id']);
   }
 //</editor-fold desc="Private Methods">
 }

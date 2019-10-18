@@ -16,8 +16,8 @@ use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
+use Tfboe\FmLib\Entity\Traits\QualificationSystem;
 use Tfboe\FmLib\Helpers\Level;
-use Tfboe\FmLib\Tests\Entity\QualificationSystem;
 use Tfboe\FmLib\Tests\Entity\Ranking;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -134,10 +134,11 @@ class PhaseTest extends UnitTestCase
   {
     $phase = $this->phase();
     self::callProtectedMethod($phase, 'init');
-    $qualificationSystem = new QualificationSystem();
+    /** @var QualificationSystem $qualificationSystem */
+    $qualificationSystem = $this->qualificationSystemWithId();
     $qualificationSystem->setPreviousPhase($phase);
     self::assertEquals(1, $phase->getPostQualifications()->count());
-    self::assertEquals($qualificationSystem, $phase->getPostQualifications()[0]);
+    self::assertEquals($qualificationSystem, $phase->getPostQualifications()["id"]);
   }
 
   /**
@@ -164,10 +165,11 @@ class PhaseTest extends UnitTestCase
   {
     $phase = $this->phase();
     self::callProtectedMethod($phase, 'init');
-    $qualificationSystem = new QualificationSystem();
+    /** @var QualificationSystem $qualificationSystem */
+    $qualificationSystem = $this->qualificationSystemWithId();
     $qualificationSystem->setNextPhase($phase);
     self::assertEquals(1, $phase->getPreQualifications()->count());
-    self::assertEquals($qualificationSystem, $phase->getPreQualifications()[0]);
+    self::assertEquals($qualificationSystem, $phase->getPreQualifications()["id"]);
   }
 
   /**
@@ -197,6 +199,16 @@ class PhaseTest extends UnitTestCase
   private function phase(): MockObject
   {
     return $this->getMockForAbstractClass(Phase::class);
+  }
+
+  /**
+   * @return MockObject|QualificationSystem
+   * @throws ReflectionException
+   * @throws ReflectionException
+   */
+  private function qualificationSystemWithId(): MockObject
+  {
+    return $this->getPartialMockForTrait(QualificationSystem::class, ['getId' => 'id']);
   }
 //</editor-fold desc="Private Methods">
 }

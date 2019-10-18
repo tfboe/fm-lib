@@ -149,7 +149,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager = $this->getEntityManagerMockForQuery([$change1, $change2], null, ['persist', 'flush', 'remove',
       'getRepository']);
     $entityManager->expects(self::once())->method('flush');
-    $entityManager->expects(self::exactly(2))->method('remove')->withConsecutive($change2, $change1);
+    $entityManager->expects(self::exactly(2))->method('remove')->withConsecutive([$change2], [$change1]);
     $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, ['deleteOldChanges']);
     /** @noinspection PhpUnhandledExceptionInspection */
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
@@ -658,6 +658,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateRankingCreateMonthlyLists()
   {
@@ -734,6 +735,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsEarlier()
   {
@@ -773,6 +775,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsNotNullAndTournamentNotRanked()
   {
@@ -845,6 +848,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsNullAndTournamentNotRanked()
   {

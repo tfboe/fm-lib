@@ -86,11 +86,9 @@ class PlayerServiceTest extends UnitTestCase
     ]);
 
     /** @var EntityManagerInterface $em */
-    $em = $this->getEntityManagerMockForQuery([$tournament], <<<DQL
-      SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te
-      INNER JOIN te.memberships m WHERE m.player = (:id)
-DQL
-    );
+    $em = $this->getEntityManagerMockForQuery([$tournament], /** @lang DQL */
+      "SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te " .
+      "INNER JOIN te.memberships m WHERE m.player = (:id)");
 
     /** @var LoadingServiceInterface $loadingService */
     $loadingService = $this->createStub(LoadingServiceInterface::class);
@@ -169,11 +167,9 @@ DQL
 
 
     /** @var EntityManagerInterface $em */
-    $em = $this->getEntityManagerMockForQuery([$tournament], <<<DQL
-      SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te
-      INNER JOIN te.memberships m WHERE m.player = (:id)
-DQL
-    );
+    $em = $this->getEntityManagerMockForQuery([$tournament], /** @lang DQL */
+      "SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te " .
+      "INNER JOIN te.memberships m WHERE m.player = (:id)");
     /** @var LoadingServiceInterface|MockObject $ls */
     $ls = $this->createMock(LoadingServiceInterface::class);
     $ls->expects(self::once())->method('loadEntities')->with([$tournament])->willReturnCallback(

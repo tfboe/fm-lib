@@ -48,6 +48,7 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
+   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesAlreadyLoaded()
   {
@@ -68,13 +69,14 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
+   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesDefaultPropertiesGame()
   {
-    $service = new LoadingService($this->getEntityManagerMockForQuery([], <<<DQL
-      SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 
-        LEFT JOIN t1.playersB t3 WHERE t1.id IN('g')
-DQL
+    $service = new LoadingService($this->getEntityManagerMockForQuery([],
+      /** @lang DQL */
+      "SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 " .
+      "LEFT JOIN t1.playersB t3 WHERE t1.id IN('g')"
     ));
     $game = $this->createMock(GameInterface::class);
     $game->method('getEntityId')->willReturn('g');
@@ -94,6 +96,7 @@ DQL
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
+   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesMultipleLevels()
   {
@@ -143,6 +146,7 @@ DQL
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
+   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesNullProperty()
   {
@@ -161,6 +165,7 @@ DQL
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
+   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesSimpleProperty()
   {

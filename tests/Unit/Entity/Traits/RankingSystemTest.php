@@ -105,6 +105,7 @@ class RankingSystemTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\RankingSystem::getOpenSyncFrom
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystem::init
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testOpenSyncFrom()
   {

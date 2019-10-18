@@ -11,9 +11,11 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\RankingInterface;
-use Tfboe\FmLib\Tests\Entity\Ranking;
+use Tfboe\FmLib\Entity\Traits\Ranking;
 use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -26,13 +28,14 @@ class RankingTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::init
-   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
   public function testConstructor()
   {
     $ranking = $this->ranking();
-    self::assertInstanceOf(Ranking::class, $ranking);
+    self::assertInstanceOf(RankingInterface::class, $ranking);
     self::assertEquals('', $ranking->getName());
     self::assertInstanceOf(Collection::class, $ranking->getTeams());
     self::assertEquals(0, $ranking->getTeams()->count());
@@ -41,10 +44,11 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getPhase
-   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testPhase()
   {
@@ -55,7 +59,7 @@ class RankingTest extends UnitTestCase
     $ranking->setPhase($phase);
     self::assertEquals($phase, $ranking->getPhase());
     self::assertEquals(1, $ranking->getPhase()->getRankings()->count());
-    self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getUniqueRank()]);
+    self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getId()]);
 
     $phase2 = $this->createStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
 
@@ -64,12 +68,13 @@ class RankingTest extends UnitTestCase
     self::assertEquals($phase2, $ranking->getPhase());
     self::assertEquals(1, $ranking->getPhase()->getRankings()->count());
     self::assertEquals(0, $phase->getRankings()->count());
-    self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getUniqueRank()]);
+    self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getId()]);
   }
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setRank
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getRank
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testRank()
@@ -81,8 +86,9 @@ class RankingTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
-   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team
+   * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testTeams()
   {
@@ -97,6 +103,7 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testUniqueRank()
@@ -109,11 +116,12 @@ class RankingTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return RankingInterface a new ranking
+   * @return MockObject|Ranking a new ranking
+   * @throws ReflectionException
    */
-  private function ranking(): RankingInterface
+  private function ranking(): MockObject
   {
-    return new Ranking();
+    return $this->getMockedEntity("Ranking", ['getId' => 'id']);
   }
 //</editor-fold desc="Private Methods">
 }
