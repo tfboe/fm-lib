@@ -86,7 +86,7 @@ trait TimeEntity
    */
   public function setEndTime(?\DateTime $endTime)
   {
-    if (!DateTime::eq($endTime, $this->getEndTime())) {
+    if ($this->endTime === null || !DateTime::eq($endTime, $this->getEndTime())) {
       $this->endTime = $endTime;
       $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
       $this->endLocalized = true;
@@ -100,7 +100,7 @@ trait TimeEntity
    */
   public function setStartTime(?\DateTime $startTime)
   {
-    if (!DateTime::eq($startTime, $this->getStartTime())) {
+    if ($this->startTime === null || !DateTime::eq($startTime, $this->getStartTime())) {
       $this->startTime = $startTime;
       $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
       $this->startLocalized = true;
