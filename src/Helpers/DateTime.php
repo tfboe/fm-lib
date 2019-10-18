@@ -14,7 +14,7 @@ abstract class DateTime
    */
   public static function eq(?\DateTime $d1, ?\DateTime $d2)
   {
-    if ($d1 === null && $d1 === null) {
+    if ($d1 === null && $d2 === null) {
       return true;
     }
     if ($d1 === null || $d2 === null) {
