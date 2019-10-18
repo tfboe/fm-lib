@@ -192,18 +192,21 @@ abstract class UnitTestCase extends TestCase
       $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);
   }
 
+  /** @noinspection PhpTooManyParametersInspection */
   /**
    * @param string $className
    * @param array $methods
    * @param array $additionalInterfaces
    * @param string|null $baseClass
    * @param bool $callParentConstructor
+   * @param bool $hasInit
    * @return MockObject
    * @throws ReflectionException
    */
   protected function getMockedEntity(string $className, array $methods = [], array $additionalInterfaces = [],
                                      ?string $baseClass = BaseEntity::class,
-                                     bool $callParentConstructor = false): MockObject
+                                     bool $callParentConstructor = false,
+                                     bool $hasInit = true): MockObject
   {
     $dynNamespace = "Dynamic\\Generated";
     $dynClassName = $dynNamespace . "\\" . $className;
@@ -213,6 +216,7 @@ abstract class UnitTestCase extends TestCase
       $additionalInterfaces[] = $namespace . $className . "Interface";
       $interfaces = implode(", \\", $additionalInterfaces);
       $parentConstructor = $callParentConstructor ? "parent::__construct();" : "";
+      $init = $hasInit ? "\$this->init();" : "";
       $class = <<<PHP
 namespace $dynNamespace;
 class $className ${base}implements $interfaces
@@ -221,7 +225,7 @@ class $className ${base}implements $interfaces
   public function __construct()
   {
     $parentConstructor
-    \$this->init();
+    $init
   }
 }
 PHP;

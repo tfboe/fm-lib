@@ -10,16 +10,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Http\Controllers;
 
-use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use Illuminate\Http\Request;
-use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
-use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\Http\Controllers\UserController;
-use Tfboe\FmLib\TestHelpers\TestEnum;
 use Tfboe\FmLib\Tests\Entity\User;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -49,54 +44,6 @@ class BaseControllerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::datetimetzTransformer()
-   * @throws Exception
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::datetimetzTransformer
-   */
-  public function testDatetimetzTransformer()
-  {
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $closure = self::getMethod(BaseController::class, 'datetimetzTransformer')
-      ->invokeArgs($controller, [TestEnum::class]);
-    $string = "2017-01-01 00:00:00 Europe/Vienna";
-    $datetime = new DateTime($string);
-    /** @var DateTime $result */
-    $result = $closure($string);
-    self::assertEquals($datetime, $result);
-    self::assertEquals($datetime->getTimezone(), $result->getTimezone());
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::enumTransformer
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Helpers\BasicEnum
-   * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::enumTransformer
-   */
-  public function testEnumTransformer()
-  {
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $closure = self::getMethod(BaseController::class, 'enumTransformer')->invokeArgs($controller, [TestEnum::class]);
-    self::assertEquals(1, $closure('INT_KEY'));
-    self::assertEquals('value', $closure('KEY'));
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testGetDatetimetzFormat()
-  {
-    $controller = $this->controller();
-    $format = static::callProtectedMethod($controller, "getDatetimetzFormat");
-    self::assertEquals('Y-m-d H:i:s e', $format);
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
@@ -110,47 +57,11 @@ class BaseControllerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
+   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
    * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
-   */
-  public function testSetFromSpecificationWithDefault()
-  {
-    $value = "test-value";
-    $specification['prop'] = ['default' => $value];
-    $object = self::getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
-    $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $method = self::getMethod(UserController::class, 'setFromSpecification');
-    $method->invokeArgs($controller, [$object, $specification, []]);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testSetFromSpecificationWithProperty()
-  {
-    $value = 'test-value';
-    $specification['attr'] = ['property' => 'prop'];
-    $object = self::getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
-    $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $method = self::getMethod(UserController::class, 'setFromSpecification');
-    $method->invokeArgs($controller, [$object, $specification, ['attr' => $value]]);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
+   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByReference()
   {
@@ -169,68 +80,8 @@ class BaseControllerTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTransformer()
-  {
-    $value = "5";
-    $transformer = function ($input) {
-      self::assertEquals("5", $input);
-      return 6;
-    };
-    $specification = ['transformer' => $transformer];
-
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $method = self::getMethod(UserController::class, 'transformValue');
-    $method->invokeArgs($controller, [&$value, $specification]);
-
-    self::assertEquals(6, $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @throws Exception
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTypeDateTime()
-  {
-    $value = "2005-02-28 16:35:01";
-    $datetime = new DateTime($value);
-    $specification = ['type' => 'datetime'];
-
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $method = self::getMethod(UserController::class, 'transformValue');
-    $method->invokeArgs($controller, [&$value, $specification]);
-
-    self::assertEquals($datetime, $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @throws ReflectionException
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTypeDefault()
-  {
-    $value = "2005-02-28 16:35:01";
-    $specification = ['type' => 'default'];
-
-    $controller = $this->controller();
-    /** @noinspection PhpUnhandledExceptionInspection */
-    $method = self::getMethod(UserController::class, 'transformValue');
-    $method->invokeArgs($controller, [&$value, $specification]);
-
-    self::assertEquals("2005-02-28 16:35:01", $value);
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification
+   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateSpec
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
@@ -251,17 +102,4 @@ class BaseControllerTest extends UnitTestCase
     $method->invokeArgs($controller, [$request, $specification]);
   }
 //</editor-fold desc="Public Methods">
-
-//<editor-fold desc="Private Methods">
-  /**
-   * @return MockObject|BaseController
-   * @throws ReflectionException
-   */
-  private function controller(): MockObject
-  {
-    return $this->getMockForAbstractClass(BaseController::class, [
-      $this->createMock(EntityManagerInterface::class)
-    ]);
-  }
-//</editor-fold desc="Private Methods">
 }

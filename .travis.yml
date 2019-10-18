@@ -8,10 +8,11 @@ services:
   - mysql
 
 env:
-  #- UNIT=1 CODE_COVERAGE=1 PREFER_LOWEST="--prefer-lowest" //composer can't resolve prefer-lowest in reasonable time
-- UNIT=1 CODE_COVERAGE=1 PREFER_LOWEST=""
-  #- INTEGRATION=1 CODE_COVERAGE=1 PREFER_LOWEST="--prefer-lowest" //composer can't resolve prefer-lowest in reasonable time
-- INTEGRATION=1 CODE_COVERAGE=1 PREFER_LOWEST=""
+  #- UNIT=1 CODE_COVERAGE=1 PREFER_LOWEST="--prefer-lowest" #composer can't resolve prefer-lowest in reasonable time
+  - UNIT=1 CODE_COVERAGE=1 PREFER_LOWEST=""
+  #- INTEGRATION=1 CODE_COVERAGE=1 PREFER_LOWEST="--prefer-lowest" #composer can't resolve prefer-lowest in reasonable
+  #time
+  - INTEGRATION=1 CODE_COVERAGE=1 PREFER_LOWEST=""
 
 cache:
   directories:

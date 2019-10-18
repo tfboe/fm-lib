@@ -9,7 +9,10 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
+use DateTime;
+use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
+use Exception;
 use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
@@ -27,6 +30,33 @@ class TeamMembershipTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
+   * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getEnd
+   * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setEnd
+   * @throws Exception
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   */
+  public function testEnd()
+  {
+    $membership = $this->membership();
+
+    $end = new DateTime("2019-01-01", new DateTimeZone("+00:00"));
+    $membership->setEnd($end);
+    self::assertEquals($end, $membership->getEnd());
+
+    $endEq = new DateTime("2019-01-01");
+    $membership->setEnd($end);
+    self::assertTrue($end === $membership->getEnd());
+    self::assertTrue($endEq !== $membership->getEnd());
+    self::assertEquals($endEq, $membership->getEnd());
+
+    $endEq->setTimezone(new DateTimeZone("+12:00"));
+    $membership->setEnd($endEq);
+    self::assertTrue($end !== $membership->getEnd());
+    self::assertTrue($endEq === $membership->getEnd());
+    self::assertEquals($end, $membership->getEnd());
+  }
+
+  /**
    * @covers   \Tfboe\FmLib\Entity\Traits\TeamMembership::getPlayer
    * @covers   \Tfboe\FmLib\Entity\Traits\TeamMembership::setPlayer
    */
@@ -37,6 +67,33 @@ class TeamMembershipTest extends UnitTestCase
     $player = $this->createMock(PlayerInterface::class);
     $membership->setPlayer($player);
     self::assertEquals($player, $membership->getPlayer());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getStart
+   * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setStart
+   * @throws Exception
+   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   */
+  public function testStart()
+  {
+    $membership = $this->membership();
+
+    $start = new DateTime("2019-01-01", new DateTimeZone("+00:00"));
+    $membership->setStart($start);
+    self::assertEquals($start, $membership->getStart());
+
+    $startEq = new DateTime("2019-01-01");
+    $membership->setStart($start);
+    self::assertTrue($start === $membership->getStart());
+    self::assertTrue($startEq !== $membership->getStart());
+    self::assertEquals($startEq, $membership->getStart());
+
+    $startEq->setTimezone(new DateTimeZone("+12:00"));
+    $membership->setStart($startEq);
+    self::assertTrue($start !== $membership->getStart());
+    self::assertTrue($startEq === $membership->getStart());
+    self::assertEquals($start, $membership->getStart());
   }
 
   /**

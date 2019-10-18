@@ -11,7 +11,6 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
-use Tfboe\FmLib\Http\Controllers\BaseController;
 
 /**
  * Trait SpecificationHandler
@@ -120,10 +119,9 @@ trait SpecificationHandler
    * Validates the parameters of a request by the validate fields of the given specification
    * @param Request $request the request
    * @param array $specification the specification
-   * @return $this|BaseController
    * @throws ValidationException
    */
-  protected function validateBySpecification(Request $request, array $specification): BaseController
+  protected function validateBySpecification(Request $request, array $specification): void
   {
     $arr = [];
     foreach ($specification as $key => $values) {
@@ -134,8 +132,7 @@ trait SpecificationHandler
         $request->merge([$key => $values['transformBeforeValidation']($request->get($key))]);
       }
     }
-    $this->validate($request, $arr);
-    return $this;
+    $this->validateSpec($request, $arr);
   }
 
   /**

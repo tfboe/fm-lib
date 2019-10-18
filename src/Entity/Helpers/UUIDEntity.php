@@ -50,13 +50,15 @@ trait UUIDEntity
   {
     return $this->id !== null;
   }
-
-  /**
-   * @param string $id
-   */
-  public function setId(string $id)
-  {
-    $this->id = $id;
-  }
 //</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Protected Methods">
+  /**
+   * Sets an id
+   */
+  protected function setId(): void
+  {
+    $this->id = IdGenerator::createIdFor($this);
+  }
+//</editor-fold desc="Protected Methods">
 }

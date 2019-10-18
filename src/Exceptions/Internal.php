@@ -33,8 +33,7 @@ class Internal
    */
   public static function error($message)
   {
-    trigger_error($message, E_USER_ERROR);
-    return null;
+    return trigger_error($message, E_USER_ERROR);
   }
 //</editor-fold desc="Public Methods">
 }

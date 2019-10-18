@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity;
 
 
+use DateTime;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
 
 /**
@@ -20,9 +21,19 @@ interface TeamMembershipInterface extends UUIDEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**
+   * @return DateTime|null
+   */
+  public function getEnd(): ?DateTime;
+
+  /**
    * @return PlayerInterface
    */
   public function getPlayer(): PlayerInterface;
+
+  /**
+   * @return DateTime|null
+   */
+  public function getStart(): ?DateTime;
 
   /**
    * @return TeamInterface
@@ -30,9 +41,19 @@ interface TeamMembershipInterface extends UUIDEntityInterface
   public function getTeam(): TeamInterface;
 
   /**
+   * @param DateTime|null $end
+   */
+  public function setEnd(?DateTime $end): void;
+
+  /**
    * @param PlayerInterface $player
    */
   public function setPlayer(PlayerInterface $player): void;
+
+  /**
+   * @param DateTime|null $start
+   */
+  public function setStart(?DateTime $start): void;
 
   /**
    * @param TeamInterface $team
