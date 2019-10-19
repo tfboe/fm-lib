@@ -7,7 +7,7 @@ use Laravel\Lumen\Routing\Router;
 
 $router = $this->app->make('router');
 
-$router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use ($router) {
+$router->group(['namespace' => '\Tfboe\FmLib\Http\Controllers'], function () use ($router) {
   /**
    * @api {post} /register Register
    * @apiVersion 0.1.0

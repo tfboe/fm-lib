@@ -620,7 +620,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $createdEntry = null;
     $entityManager = $this->createMock(EntityManager::class);
     $entityManager->expects(self::once())->method('persist')->willReturnCallback(
-      function (RankingSystemListEntryInterface $entry) use (&$createdEntry, $player, $list) {
+      function (RankingSystemListEntryInterface $entry) use (&$createdEntry) {
         $createdEntry = $entry;
       });
 
@@ -1284,7 +1284,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * prepares a new ranking system service for update ranking from
    * @param MockObject $ranking
    * @param EntityManagerInterface|null $entityManager
-   * @param null $listsArray
+   * @param RankingSystemList[]|null $listsArray
    * @param int $numListsToUpdate
    * @param array $mockedMethods
    * @param array $entities
@@ -1293,7 +1293,7 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   private function prepareUpdateRankingFrom(MockObject $ranking, ?EntityManagerInterface $entityManager = null,
                                             $listsArray = null, $numListsToUpdate = 1, $mockedMethods = [],
-                                            $entities = [])
+                                            $entities = []): MockObject
   {
     if ($entityManager === null) {
       $entityManager = $this->getEntityManagerMockForQuery([]);

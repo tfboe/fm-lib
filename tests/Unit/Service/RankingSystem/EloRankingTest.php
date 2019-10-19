@@ -17,6 +17,7 @@ use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
@@ -179,9 +180,10 @@ class EloRankingTest extends UnitTestCase
     $players = [];
     $playersAArray = [];
     $playersBArray = [];
-    for ($i = 0; $i < count($playerInfos); $i++) {
+    $numPlayerInfos = count($playerInfos);
+    for ($i = 0; $i < $numPlayerInfos; $i++) {
       $players[$i] = $this->createStub(Player::class, ['getId' => $i]);
-      if ($i < count($playerInfos) / 2) {
+      if ($i < $numPlayerInfos / 2) {
         $playersAArray[] = $players[$i];
       } else {
         $playersBArray[] = $players[$i];
@@ -196,7 +198,7 @@ class EloRankingTest extends UnitTestCase
     ]);
 
     $entriesArray = [];
-    for ($i = 0; $i < count($playerInfos); $i++) {
+    for ($i = 0; $i < $numPlayerInfos; $i++) {
       $entriesArray[$i] = $this->getRankingSystemListEntry($service, $players[$i]);
     }
     $entries = new ArrayCollection($entriesArray);
@@ -206,7 +208,7 @@ class EloRankingTest extends UnitTestCase
       /** @var RankingSystemListEntryInterface $entry */
       $entry->setRankingSystemList($list);
     }
-    for ($i = 0; $i < count($playerInfos); $i++) {
+    for ($i = 0; $i < $numPlayerInfos; $i++) {
       $info = $playerInfos[$i];
       $entry = $list->getEntries()[$i];
       $entry->setPoints($info['points']);
@@ -251,13 +253,13 @@ class EloRankingTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @param RankingSystemChangeInterface[] $changes
+   * @param RankingSystemChangeInterface[]|RankingSystemChange $changes
    * @param array $playerInfos
    * @param TournamentHierarchyEntity $entity
    */
   private function assertChanges(array $changes, array $playerInfos, TournamentHierarchyEntity $entity)
   {
-    for ($i = 0; $i < count($changes); $i++) {
+    for ($i = 0, $c = count($changes); $i < $c; $i++) {
       $change = $changes[$i];
       self::assertEquals($entity, $change->getHierarchyEntity());
       self::assertEquals($playerInfos[$i]["pointChange"], $change->getPointsChange(), '', 0.01);

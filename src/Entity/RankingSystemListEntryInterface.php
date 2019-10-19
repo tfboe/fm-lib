@@ -16,14 +16,6 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
 /**
  * Interface RankingSystemListEntryInterface
  * @package Tfboe\FmLib\Entity
- *
- * Dynamic method hints for Elo ranking
- * @method int getPlayedGames()
- * @method RankingSystemListEntryInterface setPlayedGames(int $playedGames)
- * @method int getRatedGames()
- * @method RankingSystemListEntryInterface setRatedGames(int $ratedGames)
- * @method float getProvisoryRanking()
- * @method RankingSystemListEntryInterface setProvisoryRanking(float $provisoryRanking)
  */
 interface RankingSystemListEntryInterface extends BaseEntityInterface, UUIDEntityInterface, SubClassDataInterface
 {

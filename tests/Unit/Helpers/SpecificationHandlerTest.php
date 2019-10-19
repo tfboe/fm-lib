@@ -85,8 +85,8 @@ class SpecificationHandlerTest extends UnitTestCase
   public function testSetFromSpecificationWithDefault()
   {
     $value = "test-value";
-    $specification['prop'] = ['default' => $value];
-    $object = self::getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
+    $specification = ['prop' => ['default' => $value]];
+    $object = $this->getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
     $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
     $handler = $this->handler();
     /** @noinspection PhpUnhandledExceptionInspection */
@@ -103,8 +103,8 @@ class SpecificationHandlerTest extends UnitTestCase
   public function testSetFromSpecificationWithProperty()
   {
     $value = 'test-value';
-    $specification['attr'] = ['property' => 'prop'];
-    $object = self::getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
+    $specification = ['attr' => ['property' => 'prop']];
+    $object = $this->getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
     $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
     $handler = $this->handler();
     /** @noinspection PhpUnhandledExceptionInspection */

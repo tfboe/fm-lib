@@ -77,6 +77,7 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function register()
   {
+    $this->app->register(LumenServiceProvider::class);
     parent::register();
     //register middleware
     $this->app->routeMiddleware(['auth' => Authenticate::class]);
@@ -90,7 +91,6 @@ class FmLibServiceProvider extends ServiceProvider
     /** @noinspection PhpUnhandledExceptionInspection */ // \Doctrine\DBAL\DBALException datetime is a valid type
     Type::overrideType('datetime', UTCDateTimeType::class);
 
-    $this->app->register(LumenServiceProvider::class);
     $this->app->register(DoctrineServiceProvider::class);
     $this->app->register(GedmoExtensionsServiceProvider::class);
     $this->app->register(JwtAuthGuardServiceProvider::class);

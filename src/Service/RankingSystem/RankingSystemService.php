@@ -20,10 +20,11 @@ use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
-use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface as EntityRankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 
@@ -33,7 +34,7 @@ use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
  * @package Tfboe\FmLib\Service\RankingSystemService
  * @SuppressWarnings(PHPMD) TODO: refactor this class and remove suppress warnings
  */
-abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface
+abstract class RankingSystemService implements RankingSystemInterface
 {
 //<editor-fold desc="Fields">
   /** @var EntityManagerInterface */
@@ -90,7 +91,8 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   /**
    * @inheritDoc
    */
-  public function getEarliestInfluence(RankingSystemInterface $ranking, TournamentInterface $tournament): ?DateTime
+  public function getEarliestInfluence(EntityRankingSystemInterface $ranking,
+                                       TournamentInterface $tournament): ?DateTime
   {
     return $this->getEarliestEntityInfluence($ranking, $tournament, false);
   }
@@ -99,7 +101,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @inheritdoc
    * @throws PreconditionFailedException
    */
-  public function updateRankingForTournament(RankingSystemInterface $ranking, TournamentInterface $tournament,
+  public function updateRankingForTournament(EntityRankingSystemInterface $ranking, TournamentInterface $tournament,
                                              ?DateTime $oldInfluence)
   {
     $earliestInfluence = $this->getEarliestInfluence($ranking, $tournament);
@@ -116,7 +118,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
    * @inheritDoc
    * @throws PreconditionFailedException
    */
-  public function updateRankingFrom(RankingSystemInterface $ranking, DateTime $from)
+  public function updateRankingFrom(EntityRankingSystemInterface $ranking, DateTime $from)
   {
     // can only be called once per ranking system!!!
     if (array_key_exists($ranking->getId(), $this->updateRankingCalls)) {
@@ -198,13 +200,13 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
   /**
    * Gets the relevant entities for updating
-   * @param RankingSystemInterface $ranking the ranking for which to get the entities
+   * @param EntityRankingSystemInterface $ranking the ranking for which to get the entities
    * @param DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities
    *                       with time value exactly $from
-   * @param DateTime to search for entities with a time value SMALLER OR EQUAL than $to
+   * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
    * @return TournamentHierarchyEntity[]
    */
-  protected final function getEntities(RankingSystemInterface $ranking, DateTime $from, DateTime $to): array
+  protected final function getEntities(EntityRankingSystemInterface $ranking, DateTime $from, DateTime $to): array
   {
     $query = $this->getEntitiesQueryBuilder($ranking, $from, $to);
     return $query->getQuery()->getResult();
@@ -236,11 +238,12 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   /**
    * Gets or creates a tournament system change entry for the given entity, ranking and player.
    * @param TournamentHierarchyInterface $entity the tournament hierarchy entity to search for
-   * @param RankingSystemInterface $ranking the ranking system to search for
+   * @param EntityRankingSystemInterface $ranking the ranking system to search for
    * @param PlayerInterface $player the player to search for
-   * @return RankingSystemChangeInterface the found or newly created ranking system change
+   * @return RankingSystemChangeInterface|RankingSystemChange the found or newly created ranking system change
    */
-  protected final function getOrCreateChange(TournamentHierarchyInterface $entity, RankingSystemInterface $ranking,
+  protected final function getOrCreateChange(TournamentHierarchyInterface $entity,
+                                             EntityRankingSystemInterface $ranking,
                                              PlayerInterface $player)
   {
     $key1 = $entity->getId();
@@ -324,13 +327,13 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
   /**
    * Gets a query for getting the relevant entities for updating
-   * @param RankingSystemInterface $ranking the ranking for which to get the entities
+   * @param EntityRankingSystemInterface $ranking the ranking for which to get the entities
    * @param DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities
    *                       with time value exactly $from
    * @param DateTime to search for entities with a time value SMALLER OR EQUAL than $to
    * @return QueryBuilder
    */
-  protected abstract function getEntitiesQueryBuilder(RankingSystemInterface $ranking,
+  protected abstract function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking,
                                                       DateTime $from, DateTime $to): QueryBuilder;
 
   /**
@@ -441,14 +444,14 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
 
   /**
    * Gets the earliest influence for the given entity
-   * @param RankingSystemInterface $ranking the ranking system for which to get the influence
+   * @param EntityRankingSystemInterface $ranking the ranking system for which to get the influence
    * @param TournamentHierarchyInterface $entity the entity to analyze
    * @param bool $parentIsRanked true iff a predecessor contained the given ranking in its ranking systems
    * @return DateTime|null the earliest influence or null if $parentIsRanked is false and the entity and all its
    *                        successors do not have the ranking in its ranking systems
    */
-  private function getEarliestEntityInfluence(RankingSystemInterface $ranking, TournamentHierarchyInterface $entity,
-                                              bool $parentIsRanked): ?DateTime
+  private function getEarliestEntityInfluence(EntityRankingSystemInterface $ranking,
+                                              TournamentHierarchyInterface $entity, bool $parentIsRanked): ?DateTime
   {
     $this->timeService->clearTimes();
     $entityIsRanked = $parentIsRanked || $entity->getRankingSystems()->containsKey($ranking->getId());
@@ -481,13 +484,13 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   }
 
   /**
-   * @param RankingSystemInterface $ranking
+   * @param EntityRankingSystemInterface $ranking
    * @param RankingSystemListInterface $lastReusable
    * @param RankingSystemListInterface $list
    * @param DateTime|null $lastListTime
    * @return array|TournamentHierarchyEntity[]
    */
-  private function getNextEntities(RankingSystemInterface $ranking, RankingSystemListInterface $lastReusable,
+  private function getNextEntities(EntityRankingSystemInterface $ranking, RankingSystemListInterface $lastReusable,
                                    RankingSystemListInterface $list, ?DateTime &$lastListTime)
   {
     $this->deleteOldChanges();
@@ -534,14 +537,16 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     } else {
       $year += 1;
     }
-    return (new DateTime())->setDate($year, $month, 1)->setTime(0, 0, 0);
+    $dateTime = (new DateTime())->setDate($year, $month, 1);
+    $dateTime->setTime(0, 0, 0);
+    return $dateTime;
   }
 
   /**
-   * @param RankingSystemInterface $ranking
+   * @param EntityRankingSystemInterface $ranking
    * @param TournamentHierarchyEntity[] $entities
    */
-  private function markOldChangesAsDeleted(RankingSystemInterface $ranking, array $entities)
+  private function markOldChangesAsDeleted(EntityRankingSystemInterface $ranking, array $entities)
   {
     assert(count($this->oldChanges) == 0);
     $this->changes = [];
@@ -585,7 +590,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
   {
     $nextGeneration = $this->getNextGenerationTime($lastListTime, $list->getRankingSystem()->getGenerationInterval());
     $this->cloneInto($list, $base);
-    for ($i = 0; $i < count($entities); $i++) {
+    for ($i = 0, $c = count($entities); $i < $c; $i++) {
       $time = $this->timeService->getTime($entities[$i]);
       if (!$list->isCurrent() && $time > $list->getLastEntryTime()) {
         $this->flushAndForgetEntities($entities, $i);
@@ -603,6 +608,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
           $list->getRankingSystem()->getGenerationInterval());
         //clear entityManager to save memory
         $this->flushAndForgetEntities($entities, $i);
+        $c = count($entities);
       }
       $changes = $this->getChanges($entities[$i], $list);
       foreach ($changes as $change) {
@@ -623,8 +629,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
         $this->entityManager->persist($change);
       }
     }
-    $current = count($entities);
-    $this->flushAndForgetEntities($entities, $current);
+    $this->flushAndForgetEntities($entities, $c);
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */

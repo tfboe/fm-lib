@@ -72,7 +72,6 @@ class UserController extends BaseController
     $credentials = $request->only('email', 'password');
 
     /** @var string $token */
-    $token = null;
     try {
       // attempt to verify the credentials and create a token for the user
       $token = Auth::attempt($credentials);
@@ -83,8 +82,10 @@ class UserController extends BaseController
       // something went wrong whilst attempting to encode the token
       throw new AuthenticationException('could not create token');
     }
-    return $this->getLoginResponse($request, $token);
-
+    return $this->getLoginResponse($request,
+      /** @scrutinizer ignore-type */ //scrutinizer thinks token is boolean as defined in Auth::attempt, but JwtGuard
+      //returns a string token on success instead of a boolean
+      $token);
   }
 
   /**
@@ -136,7 +137,7 @@ class UserController extends BaseController
    * Gets additional input specifications for the login action
    * @param array $specification the specification to add to / modify
    */
-  protected function addAdditionalLoginSpecifications(array &$specification)
+  protected function addAdditionalLoginSpecifications(/** @scrutinizer ignore-unused */ array &$specification)
   {
     //do nothing by default
   }
@@ -145,7 +146,7 @@ class UserController extends BaseController
    * adds additional register specifications
    * @param array $specification the specification to add to / modify
    */
-  protected function addAdditionalRegisterSpecifications(array &$specification)
+  protected function addAdditionalRegisterSpecifications(/** @scrutinizer ignore-unused */ array &$specification)
   {
     //do nothing by default
   }
@@ -156,7 +157,10 @@ class UserController extends BaseController
    * @param array $specification the specification
    * @param array $input the given request input
    */
-  protected function createAdditionalRegisterEntities(UserInterface $user, array $specification, array $input)
+  protected function createAdditionalRegisterEntities(
+    /** @scrutinizer ignore-unused */ UserInterface $user,
+    /** @scrutinizer ignore-unused */ array $specification,
+    /** @scrutinizer ignore-unused */ array $input)
   {
     //do nothing by default
   }
@@ -201,7 +205,7 @@ class UserController extends BaseController
    * Can be used to modify token generation parameters.
    * @param Request $request
    */
-  protected function preLogin(Request $request)
+  protected function preLogin(/** @scrutinizer ignore-unused */ Request $request)
   {
   }
 //</editor-fold desc="Protected Methods">

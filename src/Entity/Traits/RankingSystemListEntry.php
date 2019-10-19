@@ -14,11 +14,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
+use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 
 /**
  * Trait RankingSystemListEntry
  * @package Tfboe\FmLib\Entity\Traits
+ *
+ * Dynamic method hints for Elo ranking
+ * @method int getPlayedGames()
+ * @method RankingSystemListEntryInterface setPlayedGames(int $playedGames)
+ * @method int getRatedGames()
+ * @method RankingSystemListEntryInterface setRatedGames(int $ratedGames)
+ * @method float getProvisoryRanking()
+ * @method RankingSystemListEntryInterface setProvisoryRanking(float $provisoryRanking)
  */
 trait RankingSystemListEntry
 {
