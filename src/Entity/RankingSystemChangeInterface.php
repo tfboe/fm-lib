@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Entity;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\SubClassDataInterface;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
 
 /**
@@ -48,9 +47,9 @@ interface RankingSystemChangeInterface extends BaseEntityInterface, UUIDEntityIn
   public function getRankingSystem(): RankingSystemInterface;
 
   /**
-   * @param TournamentHierarchyInterface $hierarchyEntity
+   * @param TournamentHierarchyEntity $hierarchyEntity
    */
-  public function setHierarchyEntity(TournamentHierarchyInterface $hierarchyEntity);
+  public function setHierarchyEntity(TournamentHierarchyEntity $hierarchyEntity);
 
   /**
    * @param PlayerInterface $player

@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\TermsInterface;
+use Tfboe\FmLib\Exceptions\Internal;
 
 /**
  * Class TermsService
@@ -53,6 +54,9 @@ class TermsService implements TermsServiceInterface
       ->setMaxResults(1)
       ->getQuery()
       ->getOneOrNullResult();
+    if ($terms === null) {
+      Internal::error("The terms table is empty!");
+    }
     return $terms;
   }
 //</editor-fold desc="Public Methods">

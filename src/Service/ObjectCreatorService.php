@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Service;
 
+use Illuminate\Support\Facades\Config;
+
 /**
  * Class ObjectCreatorService
  * @package Tfboe\FmLib\Service
@@ -23,7 +25,7 @@ class ObjectCreatorService implements ObjectCreatorServiceInterface
    */
   public function createObjectFromInterface(string $interface, $args = [], $config = null)
   {
-    $class = ($config == null ? config('fm-lib') : $config)['entityMaps'][$interface];
+    $class = ($config == null ? Config::get('fm-lib') : $config)['entityMaps'][$interface];
     return new $class(...$args);
   }
 //</editor-fold desc="Public Methods">

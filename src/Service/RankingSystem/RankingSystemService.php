@@ -237,12 +237,12 @@ abstract class RankingSystemService implements RankingSystemInterface
   /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * Gets or creates a tournament system change entry for the given entity, ranking and player.
-   * @param TournamentHierarchyInterface $entity the tournament hierarchy entity to search for
+   * @param TournamentHierarchyEntity $entity the tournament hierarchy entity to search for
    * @param EntityRankingSystemInterface $ranking the ranking system to search for
    * @param PlayerInterface $player the player to search for
    * @return RankingSystemChangeInterface|RankingSystemChange the found or newly created ranking system change
    */
-  protected final function getOrCreateChange(TournamentHierarchyInterface $entity,
+  protected final function getOrCreateChange(TournamentHierarchyEntity $entity,
                                              EntityRankingSystemInterface $ranking,
                                              PlayerInterface $player)
   {
@@ -330,7 +330,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param EntityRankingSystemInterface $ranking the ranking for which to get the entities
    * @param DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities
    *                       with time value exactly $from
-   * @param DateTime to search for entities with a time value SMALLER OR EQUAL than $to
+   * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
    * @return QueryBuilder
    */
   protected abstract function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking,

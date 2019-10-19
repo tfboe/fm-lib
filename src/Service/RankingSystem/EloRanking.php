@@ -140,7 +140,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param RankingSystemListEntryInterface[]|RankingSystemListEntry[] $entries
    * @param float $result
    * @param float $expectationDiff
-   * @param GameInterface $game
+   * @param GameInterface|TournamentHierarchyEntity $game
    * @param float $teamAverage
    * @param float $opponentAverage
    * @param bool $teamHasProvisory

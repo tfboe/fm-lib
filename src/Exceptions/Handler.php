@@ -4,8 +4,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Exceptions;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
 
@@ -34,7 +34,7 @@ class Handler extends ExceptionHandler
    * @param Request $request
    * @param Exception $exception
    * @param bool $printTrace if true a trace will be appended to the exception message
-   * @return Response
+   * @return JsonResponse
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
   public function render($request, Exception $exception, $printTrace = false)

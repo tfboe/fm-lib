@@ -91,6 +91,12 @@ trait Tournament
   }
 
   /**
+   * Will be implemented in TournamentHierarchyEntity
+   * @return string
+   */
+  public abstract function getId(): string;
+
+  /**
    * @inheritDoc
    */
   public function getParent(): ?TournamentHierarchyInterface

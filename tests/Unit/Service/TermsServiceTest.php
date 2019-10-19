@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Service;
 
 use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\TermsInterface;
@@ -46,6 +47,22 @@ class TermsServiceTest extends UnitTestCase
       'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
     $service = $this->service($em);
     self::assertTrue($terms === $service->getLatestTerms());
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\TermsService::getLatestTerms
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Service\TermsService::__construct
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
+   */
+  public function testGetLatestTermsNotExisting()
+  {
+    $em = $this->getEntityManagerMockForQuery([], /** @lang DQL */
+      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
+    $this->expectException(Error::class);
+    $this->expectExceptionMessage("The terms table is empty!");
+    $service = $this->service($em);
+    $service->getLatestTerms();
   }
 //</editor-fold desc="Public Methods">
 

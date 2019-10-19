@@ -13,7 +13,6 @@ namespace Tfboe\FmLib\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
@@ -116,9 +115,9 @@ trait RankingSystemChange
   }
 
   /**
-   * @param TournamentHierarchyInterface $hierarchyEntity
+   * @param TournamentHierarchyEntity $hierarchyEntity
    */
-  public function setHierarchyEntity(TournamentHierarchyInterface $hierarchyEntity)
+  public function setHierarchyEntity(TournamentHierarchyEntity $hierarchyEntity)
   {
     $this->hierarchyEntity = $hierarchyEntity;
   }

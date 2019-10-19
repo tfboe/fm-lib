@@ -14,7 +14,7 @@ use DateTime;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
 use Tfboe\FmLib\Entity\GameInterface;
-use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface as EntityRankingSystemInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 
@@ -28,7 +28,7 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
   /**
    * @inheritDoc
    */
-  protected function getEntitiesQueryBuilder(RankingSystemInterface $ranking, DateTime $from,
+  protected function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking, DateTime $from,
                                              DateTime $to): QueryBuilder
   {
     // query all relevant games
