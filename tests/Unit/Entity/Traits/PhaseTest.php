@@ -21,20 +21,6 @@ use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Tests\Entity\Ranking;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
-
-/** @noinspection PhpMultipleClassesDeclarationsInOneFile */
-
-/**
- * Class Phase
- * @package Tfboe\FmLib\Tests\Unit\Entity\Traits
- */
-abstract class Phase implements PhaseInterface
-{
-  use \Tfboe\FmLib\Entity\Traits\Phase;
-}
-
-/** @noinspection PhpMultipleClassesDeclarationsInOneFile */
-
 /**
  * Class TournamentTest
  * @package Tfboe\FmLib\Tests\Unit\Entity
@@ -50,6 +36,8 @@ class PhaseTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::setPhaseNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPhaseNumber
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testCompetitionAndParent()
   {
@@ -81,6 +69,8 @@ class PhaseTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getPreQualifications
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::getRankings
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testInit()
   {
@@ -98,6 +88,8 @@ class PhaseTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getLevel
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testLevel()
   {
@@ -109,6 +101,7 @@ class PhaseTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getChildren
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testMatchesAndChildren()
   {
@@ -146,6 +139,8 @@ class PhaseTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPhaseNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getLocalIdentifier
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testPhaseNumberAndLocalIdentifier()
   {
@@ -159,6 +154,7 @@ class PhaseTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Phase::getPreQualifications
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\QualificationSystem
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase::init
    */
   public function testPreviousQualificationSystems()
@@ -193,12 +189,12 @@ class PhaseTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Phase|MockObject a new phase
+   * @return PhaseInterface|MockObject a new phase
    * @throws ReflectionException
    */
   private function phase(): MockObject
   {
-    return $this->getMockForAbstractClass(Phase::class);
+    return $this->getMockedTournamentHierarchyEntity("Phase");
   }
 
   /**

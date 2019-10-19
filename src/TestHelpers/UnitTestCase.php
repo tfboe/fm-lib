@@ -69,7 +69,7 @@ abstract class UnitTestCase extends TestCase
     $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
-    for ($i = count($arguments); $i < count($params); $i++) {
+    for ($i = count($arguments), $c = count($params); $i < $c; $i++) {
       $allArguments[] = $this->createMock($params[$i]->getClass()->name);
     }
     return $this->getMockForAbstractClass($className, $allArguments, '', true, true, true, $mockedMethods);
@@ -89,7 +89,7 @@ abstract class UnitTestCase extends TestCase
     $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
-    for ($i = count($arguments); $i < count($params); $i++) {
+    for ($i = count($arguments), $c = count($params); $i < $c; $i++) {
       $allArguments[$i] = $this->createMock($params[$i]->getClass()->name);
     }
     return new $className(...$allArguments);

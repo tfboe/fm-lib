@@ -6,7 +6,6 @@ namespace Tfboe\FmLib\Service;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
@@ -27,11 +26,11 @@ class LoadingService implements LoadingServiceInterface
 {
 //<editor-fold desc="Fields">
   /**
-   * @var string
+   * @var string[][][]
    */
   protected $defaultPropertiesToLoad;
   /**
-   * @var EntityManager
+   * @var EntityManagerInterface
    */
   private $em;
 //</editor-fold desc="Fields">

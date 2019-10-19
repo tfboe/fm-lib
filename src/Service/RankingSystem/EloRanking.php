@@ -18,6 +18,7 @@ use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface as EntityRankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
 use Tfboe\FmLib\Entity\Traits\RankingSystemListEntry;
 
 /**
@@ -111,7 +112,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 //<editor-fold desc="Private Methods">
   /**
-   * @param RankingSystemChangeInterface[] $changes
+   * @param RankingSystemChangeInterface[]|RankingSystemChange[] $changes
    * @param Collection|PlayerInterface[] $players
    * @param TournamentHierarchyEntity $entity
    * @param EntityRankingSystemInterface $ranking

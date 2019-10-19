@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Helpers;
 
 use Closure;
-use DateTime;
+use DateTime as CoreDateTime;
 use Exception;
 
 /**
@@ -23,7 +23,7 @@ abstract class TransformerFactory
   /**
    * @return Callable
    */
-  static function booleanTransformer(): Callable
+  public static function booleanTransformer(): Callable
   {
     return function ($value) {
       if ($value === 'true') {
@@ -44,7 +44,7 @@ abstract class TransformerFactory
   public static function datetimetzTransformer(string $datetimetzFormat): Callable
   {
     return function ($dateString) use ($datetimetzFormat) {
-      return DateTime::createFromFormat($datetimetzFormat, $dateString);
+      return CoreDateTime::createFromFormat($datetimetzFormat, $dateString);
     };
   }
 
@@ -76,7 +76,7 @@ abstract class TransformerFactory
    * @param array $mapping
    * @return Callable
    */
-  static function finiteMappingTransformation(array $mapping): Callable
+  public static function finiteMappingTransformation(array $mapping): Callable
   {
     return function ($x) use ($mapping) {
       if (array_key_exists($x, $mapping)) {

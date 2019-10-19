@@ -80,7 +80,7 @@ abstract class DatabaseTestCase extends LumenTestCase
    * Adds additional attributes given to the create entity method
    * @param mixed[] $attributes
    */
-  protected function addAdditionalNewUserAttributes(array &$attributes)
+  protected function addAdditionalNewUserAttributes(/** @scrutinizer ignore-unused */ array &$attributes)
   {
   }
 
@@ -139,7 +139,9 @@ abstract class DatabaseTestCase extends LumenTestCase
   {
     $result = [];
     for ($i = 0; $i < $number; $i++) {
-      $result[] = entity($this->resolveEntity(PlayerInterface::class))->create();
+      /** @var PlayerInterface $playerEntity */
+      $playerEntity = entity($this->resolveEntity(PlayerInterface::class))->create();
+      $result[] = $playerEntity;
     }
     return $result;
   }
@@ -175,10 +177,10 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function createUser()
   {
     $password = $this->newPassword();
-    /** @var UserInterface $user */
     $attributes = ['originalPassword' => $password];
     $this->addAdditionalNewUserAttributes($attributes);
     $user = entity($this->resolveEntity(UserInterface::class))->create($attributes);
+    /** @var UserInterface $user */
     return [
       'password' => $password,
       'user' => $user

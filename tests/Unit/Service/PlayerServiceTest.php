@@ -174,7 +174,7 @@ class PlayerServiceTest extends UnitTestCase
     $ls = $this->createMock(LoadingServiceInterface::class);
     $ls->expects(self::once())->method('loadEntities')->with([$tournament])->willReturnCallback(
       function ($a) use ($competition) {
-        /** @var TournamentInterface|MockObject $t */
+        /** @var MockObject $t */
         $t = $a[0];
         $t->method('getCompetitions')->willReturn(new ArrayCollection([$competition]));
       });

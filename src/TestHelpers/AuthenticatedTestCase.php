@@ -86,7 +86,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     $this->user = $userInfo['user'];
     $this->userPassword = $userInfo['password'];
     /** @noinspection PhpUnhandledExceptionInspection */
-    $this->token = Auth::attempt(['email' => $this->user->getEmail(), 'password' => $userInfo['password']]);
+    $this->token = (string)Auth::attempt(['email' => $this->user->getEmail(), 'password' => $userInfo['password']]);
     $this->refreshApplication();
     /** @noinspection PhpUndefinedMethodInspection */
     $this->user = EntityManager::find(UserInterface::class, $this->user->getId());

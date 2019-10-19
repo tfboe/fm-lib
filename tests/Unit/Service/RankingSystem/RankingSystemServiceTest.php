@@ -1326,7 +1326,6 @@ class RankingSystemServiceTest extends UnitTestCase
     $queryBuilder->expects(static::exactly($numListsToUpdate))->method('getQuery')->willReturn($query);
     $service->expects(static::exactly($numListsToUpdate))->method('getEntitiesQueryBuilder')
       ->with($ranking)->willReturn($queryBuilder);
-    /** @var RankingSystemService $service */
 
     return $service;
   }

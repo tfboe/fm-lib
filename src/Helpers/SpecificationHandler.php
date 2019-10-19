@@ -6,7 +6,7 @@ namespace Tfboe\FmLib\Helpers;
 
 
 use Closure;
-use DateTime;
+use DateTime as CoreDateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -157,8 +157,9 @@ trait SpecificationHandler
   {
     if (strtolower($type) === 'date' || strtolower($type) === 'datetime') {
       try {
-        return new DateTime($value);
+        return new CoreDateTime($value);
       } catch (Exception $e) {
+        //we return the value itself if it is not parsable by DateTime
       }
     }
     return $value;

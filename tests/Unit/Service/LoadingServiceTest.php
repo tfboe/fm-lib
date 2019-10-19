@@ -12,6 +12,8 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\PersistentCollection;
 use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
@@ -56,9 +58,10 @@ class LoadingServiceTest extends UnitTestCase
 
     $tournament = $this->createMock(TournamentInterface::class);
     $tournament->method('getEntityId')->willReturn('t');
-    $initializedCollection = new ArrayCollection();
-    /** @noinspection PhpUndefinedFieldInspection */
-    $initializedCollection->__isInitialized__ = true;
+    $initializedCollection = new PersistentCollection(
+      $this->createStub(EntityManagerInterface::class),
+      $this->createStub(ClassMetadata::class),
+      new ArrayCollection());
     $tournament->method('getCompetitions')->willReturn($initializedCollection);
     $service->loadEntities([$tournament], [TournamentInterface::class => [["competitions"]]]);
   }
