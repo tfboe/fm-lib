@@ -41,7 +41,7 @@ trait Game
    * @ORM\JoinTable(name="relation__game_playersA",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="id")})
-   * @var Collection|PlayerInterface
+   * @var Collection|PlayerInterface[]
    */
   private $playersA;
 
@@ -50,7 +50,7 @@ trait Game
    * @ORM\JoinTable(name="relation__game_playersB",
    *      joinColumns={@ORM\JoinColumn(name="game_id", referencedColumnName="id")},
    *      inverseJoinColumns={@ORM\JoinColumn(name="player_id", referencedColumnName="id")})
-   * @var Collection|PlayerInterface
+   * @var Collection|PlayerInterface[]
    */
   private $playersB;
 

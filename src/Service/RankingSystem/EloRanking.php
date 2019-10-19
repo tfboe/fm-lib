@@ -15,9 +15,11 @@ use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
-use Tfboe\FmLib\Entity\RankingSystemInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface as EntityRankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
+use Tfboe\FmLib\Entity\Traits\RankingSystemListEntry;
 
 /**
  * Class EloRanking
@@ -110,13 +112,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 //<editor-fold desc="Private Methods">
   /**
-   * @param RankingSystemChangeInterface[] $changes
+   * @param RankingSystemChangeInterface[]|RankingSystemChange[] $changes
    * @param Collection|PlayerInterface[] $players
    * @param TournamentHierarchyEntity $entity
-   * @param RankingSystemInterface $ranking
+   * @param EntityRankingSystemInterface $ranking
    */
   private function addNotRatedChanges(array &$changes, Collection $players, TournamentHierarchyEntity $entity,
-                                      RankingSystemInterface $ranking)
+                                      EntityRankingSystemInterface $ranking)
   {
     foreach ($players as $player) {
       $change = $this->getOrCreateChange($entity, $ranking, $player);
@@ -134,7 +136,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
   /**
    * @param array $changes
-   * @param RankingSystemListEntryInterface[] $entries
+   * @param RankingSystemListEntryInterface[]|RankingSystemListEntry[] $entries
    * @param float $result
    * @param float $expectationDiff
    * @param GameInterface $game
