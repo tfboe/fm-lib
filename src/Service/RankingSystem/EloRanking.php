@@ -122,6 +122,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   {
     foreach ($players as $player) {
       $change = $this->getOrCreateChange($entity, $ranking, $player);
+      /** @var RankingSystemChange $change */
       $change->setTeamElo(0.0);
       $change->setOpponentElo(0.0);
       $change->setPointsChange(0.0);
@@ -152,6 +153,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
     foreach ($entries as $entry) {
       $change = $this->getOrCreateChange($game, $entry->getRankingSystemList()->getRankingSystem(),
         $entry->getPlayer());
+      /** @var RankingSystemChange $change */
       $change->setPlayedGames(1);
       $change->setTeamElo($teamHasProvisory ? 0.0 : $teamAverage);
       $change->setOpponentElo($opponentHasProvisory ? 0.0 : $opponentAverage);
@@ -207,7 +209,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
   /**
    * Computes the average rating of the given entries
-   * @param RankingSystemListEntryInterface[] $entries must be nonempty
+   * @param RankingSystemListEntryInterface[]|RankingSystemListEntry[] $entries must be nonempty
    * @return float
    */
   private function getEloAverage(array $entries): float
@@ -221,7 +223,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
   /**
    * Checks if the given list of entries has at least one provisory entry
-   * @param RankingSystemListEntryInterface[] $entries
+   * @param RankingSystemListEntryInterface[]|RankingSystemListEntry[] $entries
    * @return bool
    */
   private function hasProvisoryEntry(array $entries): bool
