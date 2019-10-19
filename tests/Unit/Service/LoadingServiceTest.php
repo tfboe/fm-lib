@@ -46,9 +46,9 @@ class LoadingServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
-   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesAlreadyLoaded()
   {
@@ -67,14 +67,13 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
-   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesDefaultPropertiesGame()
   {
-    $service = new LoadingService($this->getEntityManagerMockForQuery([],
-      /** @lang DQL */
+    $service = new LoadingService($this->getEntityManagerMockForQuery([], /** @lang DQL */
       "SELECT t1, t2, t3 FROM Tfboe\FmLib\Entity\GameInterface t1 LEFT JOIN t1.playersA t2 " .
       "LEFT JOIN t1.playersB t3 WHERE t1.id IN('g')"
     ));
@@ -94,9 +93,9 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
-   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesMultipleLevels()
   {
@@ -144,9 +143,9 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
-   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesNullProperty()
   {
@@ -163,9 +162,9 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
+   * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
-   * @uses   \Tfboe\FmLib\Service\LoadingService::collectToDo
    */
   public function testLoadEntitiesSimpleProperty()
   {

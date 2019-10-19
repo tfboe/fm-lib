@@ -12,6 +12,8 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use PHPUnit\Framework\Error\Error;
+use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
@@ -231,6 +233,42 @@ class RankingSystemServiceTest extends UnitTestCase
         $ranking4->getId() => ["rankingSystem" => $ranking4, "earliestInfluence" => new DateTime("2017-03-01")],
       ],
       $service->getRankingSystemsEarliestInfluences($tournament));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getChildren
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
+   * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::init
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
+   * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   */
+  public function testGetRankingSystemsEarliestInfluencesWithInvalidId()
+  {
+    /** @var DynamicServiceLoadingService|MockObject $serviceLoader */
+    $serviceLoader = $this->createMock(DynamicServiceLoadingService::class);
+    $serviceLoader->expects(self::once())
+      ->method("loadRankingSystemService")
+      ->with('invalid')
+      ->willThrowException(new BindingResolutionException());
+
+    /** @var EntityManagerInterface $entityManager */
+    $entityManager = $this->getMockForAbstractClass(EntityManagerInterface::class);
+    $service = new RankingSystemService($serviceLoader, $entityManager);
+    $tournament = new Tournament();
+    $ranking2 = $this->createStubWithId(RankingSystem::class, 'r2');
+    $ranking2->method('getServiceName')->willReturn("invalid");
+    /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking2 */
+    $tournament->getRankingSystems()->set($ranking2->getId(), $ranking2);
+
+    $this->expectException(Error::class);
+    $this->expectExceptionMessage("The ranking system r2 has an invalid service name!");
+
+    $service->getRankingSystemsEarliestInfluences($tournament);
   }
 
   /**

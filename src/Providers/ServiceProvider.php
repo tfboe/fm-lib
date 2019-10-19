@@ -9,6 +9,8 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Providers;
 
+use Laravel\Lumen\Application;
+
 /**
  * Class FmLibServiceProvider
  * @package Tfboe\FmLib\Providers
@@ -17,6 +19,13 @@ abstract class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
 //<editor-fold desc="Fields">
   protected $singletons = [];
+
+  /**
+   * The application instance.
+   *
+   * @var Application
+   */
+  protected $app;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">

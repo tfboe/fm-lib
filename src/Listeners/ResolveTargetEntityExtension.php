@@ -7,6 +7,7 @@ use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\ResolveTargetEntityListener;
+use Illuminate\Support\Facades\Config;
 use LaravelDoctrine\ORM\Extensions\Extension;
 
 /**
@@ -25,7 +26,7 @@ class ResolveTargetEntityExtension implements Extension
   {
     $resolveTargetEntityListener = new ResolveTargetEntityListener();
 
-    foreach (config('fm-lib.entityMaps', []) as $interface => $concrete) {
+    foreach (Config::get('fm-lib.entityMaps', []) as $interface => $concrete) {
       $resolveTargetEntityListener->addResolveTargetEntity($interface, $concrete, []);
     }
 

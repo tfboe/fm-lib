@@ -150,14 +150,26 @@ abstract class UnitTestCase extends TestCase
       function () use ($entityManager, &$results, &$expectedQueries) {
         $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
           '', true, true, true, ['getQuery']);
+        /** @var MockObject|AbstractQuery $query */
         $query = $this->getMockBuilder(AbstractQuery::class)
           ->disableOriginalConstructor()
           ->disableOriginalClone()
           ->disableArgumentCloning()
           ->disallowMockingUnknownTypes()
-          ->setMethods(['setLockMode', 'getSQL', '_doExecute', 'getResult'])
+          ->setMethods(['setLockMode', 'getSQL', '_doExecute', 'getResult', 'getOneOrNullResult'])
           ->getMock();
         $query->expects(static::once())->method('getResult')->willReturn(array_shift($results));
+        $query->expects(static::atMost(1))->method('getOneOrNullResult')->willReturnCallback(
+          function () use ($query) {
+            $res = $query->getResult();
+            if (count($res) === 0) {
+              return null;
+            } else {
+              reset($res);
+              return $res[key($res)];
+            }
+          }
+        );
         $query->method('setLockMode')->willReturn($query);
         if ($expectedQueries !== []) {
           $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
@@ -193,9 +205,10 @@ abstract class UnitTestCase extends TestCase
   }
 
   /** @noinspection PhpTooManyParametersInspection */
+
   /**
    * @param string $className
-   * @param array $methods
+   * @param array $methodNames
    * @param array $additionalInterfaces
    * @param string|null $baseClass
    * @param bool $callParentConstructor
@@ -203,7 +216,7 @@ abstract class UnitTestCase extends TestCase
    * @return MockObject
    * @throws ReflectionException
    */
-  protected function getMockedEntity(string $className, array $methods = [], array $additionalInterfaces = [],
+  protected function getMockedEntity(string $className, array $methodNames = [], array $additionalInterfaces = [],
                                      ?string $baseClass = BaseEntity::class,
                                      bool $callParentConstructor = false,
                                      bool $hasInit = true): MockObject
@@ -231,8 +244,7 @@ class $className ${base}implements $interfaces
 PHP;
       eval($class);
     }
-    $o = $this->getMockForAbstractClass($dynClassName, [], '', true, true, true, array_keys($methods));
-    $this->stubMethods($o, $methods);
+    $o = $this->getMockForAbstractClass($dynClassName, [], '', true, true, true, $methodNames);
     return $o;
   }
 
@@ -246,7 +258,7 @@ PHP;
   protected function getMockedTournamentHierarchyEntity(string $className, array $methods = [],
                                                         array $additionalInterfaces = [])
   {
-    return $this->getMockedEntity($className, $methods, $additionalInterfaces, TournamentHierarchyEntity::class, true);
+    return $this->getStubbedEntity($className, $methods, $additionalInterfaces, TournamentHierarchyEntity::class, true);
   }
 
   /** @noinspection PhpTooManyParametersInspection */
@@ -269,6 +281,28 @@ PHP;
   {
     $o = $this->getMockForTrait($traitName, $arguments, $mockClassName, $callOriginalConstructor,
       $callOriginalClone, $callAutoload, array_keys($methods), $cloneArguments);
+    $this->stubMethods($o, $methods);
+    return $o;
+  }
+
+  /** @noinspection PhpTooManyParametersInspection */
+  /**
+   * @param string $className
+   * @param array $methods
+   * @param array $additionalInterfaces
+   * @param string|null $baseClass
+   * @param bool $callParentConstructor
+   * @param bool $hasInit
+   * @return MockObject
+   * @throws ReflectionException
+   */
+  protected function getStubbedEntity(string $className, array $methods = [], array $additionalInterfaces = [],
+                                      ?string $baseClass = BaseEntity::class,
+                                      bool $callParentConstructor = false,
+                                      bool $hasInit = true): MockObject
+  {
+    $o = $this->getMockedEntity($className, array_keys($methods), $additionalInterfaces, $baseClass,
+      $callParentConstructor, $hasInit);
     $this->stubMethods($o, $methods);
     return $o;
   }

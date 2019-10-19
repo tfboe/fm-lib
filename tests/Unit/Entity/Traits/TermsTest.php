@@ -66,7 +66,7 @@ class TermsTest extends UnitTestCase
    */
   private function terms(): MockObject
   {
-    return $this->getMockedEntity("Terms", [], [], BaseEntity::class, false, false);
+    return $this->getStubbedEntity("Terms", [], [], BaseEntity::class, false, false);
   }
 //</editor-fold desc="Private Methods">
 }

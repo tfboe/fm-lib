@@ -8,6 +8,7 @@ use Illuminate\Contracts\Hashing\Hasher;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Application;
 use Tfboe\FmLib\Entity\UserInterface;
@@ -96,7 +97,7 @@ class UserController extends BaseController
    */
   public function register(Request $request, Application $app): JsonResponse
   {
-    $userClass = config('fm-lib')['entityMaps']['Tfboe\FmLib\Entity\UserInterface'];
+    $userClass = Config::get('fm-lib')['entityMaps'][UserInterface::class];
     $specification = [];
     $specification['user'] = $this->getCredentialSpecification($app);
     $specification['user']['email']['validation'] .= '|unique:' . $userClass . ',email';

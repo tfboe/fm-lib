@@ -44,110 +44,102 @@ class EloRankingTest extends UnitTestCase
     return [
       [false, Result::TEAM_A_WINS, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
       ]],
       [true, Result::TEAM_A_WINS, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => 7.8605068927035,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => 7.8605068927035,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => -7.8605068927035,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 0.0,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
       ]],
       [true, Result::TEAM_B_WINS, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => -12.139493107296,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => -12.139493107296,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 12.139493107296,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 12.139493107296,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
       ]],
       [true, Result::DRAW, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => -2.1394931072965,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => -2.1394931072965,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1400.5, "opponentElo" => 1325.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 2.1394931072965,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 2.1394931072965,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1325.0, "opponentElo" => 1400.5],
       ]],
       [true, Result::NULLED, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
       ]],
       [true, Result::NOT_YET_FINISHED, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1200.0, "rated" => 60, "played" => 70, "ranked" => 75, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 0],
+          "ratedGamesChange" => 0, "playedChange" => 0, "teamElo" => 0.0, "opponentElo" => 0.0],
       ]],
       [true, Result::TEAM_A_WINS, [
         ["points" => 0.0, "rated" => 15, "played" => 19, "ranked" => 20, "pointChange" => 1515.78125,
-          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 14.78125],
+          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 14.78125,
+          "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1300.0, "rated" => 20, "played" => 20, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 1],
+          "ratedGamesChange" => 0, "playedChange" => 1, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1450.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 1],
+          "ratedGamesChange" => 0, "playedChange" => 1, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 0.0, "rated" => 10, "played" => 10, "ranked" => 15, "pointChange" => 0.0,
           "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1200.0,
-          "provisoryChange" => -20.386363636364],
+          "provisoryChange" => -20.386363636364, "teamElo" => 0.0, "opponentElo" => 0.0],
       ]],
       [true, Result::TEAM_A_WINS, [
         ["points" => 0.0, "rated" => 15, "played" => 15, "ranked" => 20, "pointChange" => 0.0,
-          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 6.1875],
+          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 6.1875,
+          "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 2000.0, "rated" => 20, "played" => 20, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 1],
+          "ratedGamesChange" => 0, "playedChange" => 1, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 1200.0, "rated" => 100, "played" => 100, "ranked" => 100, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 1],
+          "ratedGamesChange" => 0, "playedChange" => 1, "teamElo" => 0.0, "opponentElo" => 0.0],
         ["points" => 0.0, "rated" => 10, "played" => 10, "ranked" => 15, "pointChange" => 0.0,
           "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1200.0,
-          "provisoryChange" => 31.863636363636],
+          "provisoryChange" => 31.863636363636, "teamElo" => 0.0, "opponentElo" => 0.0],
       ]],
       [true, Result::TEAM_A_WINS, [
         ["points" => 1501.0, "rated" => 53, "played" => 74, "ranked" => 102, "pointChange" => 4.7840781802172,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1501.0, "opponentElo" => 1300.0],
         ["points" => 1300.0, "rated" => 20, "played" => 32, "ranked" => 26, "pointChange" => -4.7840781802172,
-          "ratedGamesChange" => 1, "playedChange" => 1],
+          "ratedGamesChange" => 1, "playedChange" => 1, "teamElo" => 1300.0, "opponentElo" => 1501.0],
       ]],
       [true, Result::TEAM_A_WINS, [
         ["points" => 0.0, "rated" => 15, "played" => 15, "ranked" => 20, "pointChange" => 0.0,
-          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 12.4375],
+          "ratedGamesChange" => 1, "playedChange" => 1, "provisoryRanking" => 1501.0, "provisoryChange" => 12.4375,
+          "teamElo" => 0.0, "opponentElo" => 1300.0],
         ["points" => 1300.0, "rated" => 20, "played" => 20, "ranked" => 26, "pointChange" => 0.0,
-          "ratedGamesChange" => 0, "playedChange" => 1],
+          "ratedGamesChange" => 0, "playedChange" => 1, "teamElo" => 1300.0, "opponentElo" => 0.0],
       ]],
     ];
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalFields
-   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
-   */
-  public function testGetAdditionalFields()
-  {
-    $service = $this->service();
-    $additionalFields = static::callProtectedMethod($service, 'getAdditionalFields', []);
-    self::assertEquals(['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => 1200.0], $additionalFields);
   }
 
   /**
@@ -157,6 +149,10 @@ class EloRankingTest extends UnitTestCase
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::getEloAverage
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::hasProvisoryEntry
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::addNotRatedChanges
+   * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalChangeFields
+   * @covers       \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalFields
+   * @covers       \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields
+   * @covers       \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @param bool $isPlayed if game was played
    * @param int $gameResult the game result
    * @param array $playerInfos all infos about each player and its expected changes
@@ -166,13 +162,9 @@ class EloRankingTest extends UnitTestCase
    * @uses         \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
    * @uses         \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses         \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalFields
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntriesOfPlayers
    * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\EloRanking::getAdditionalChangeFields()
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields
    * @SuppressWarnings(PHPMD.CyclomaticComplexity)
    */
   public function testGetChanges(bool $isPlayed, int $gameResult, array $playerInfos)
@@ -274,6 +266,8 @@ class EloRankingTest extends UnitTestCase
       self::assertEquals(
         array_key_exists('provisoryChange', $playerInfos[$i]) ? $playerInfos[$i]['provisoryChange'] : 0,
         $change->getProvisoryRanking(), '', 0.01);
+      self::assertEquals($playerInfos[$i]["teamElo"], $change->getTeamElo());
+      self::assertEquals($playerInfos[$i]["opponentElo"], $change->getOpponentElo());
     }
   }
 

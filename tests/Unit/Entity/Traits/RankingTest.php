@@ -121,7 +121,7 @@ class RankingTest extends UnitTestCase
    */
   private function ranking(): MockObject
   {
-    return $this->getMockedEntity("Ranking", ['getId' => 'id']);
+    return $this->getStubbedEntity("Ranking", ['getId' => 'id']);
   }
 //</editor-fold desc="Private Methods">
 }

@@ -42,7 +42,7 @@ class LastRecalculationTest extends UnitTestCase
    */
   private function lastRecalculation(): MockObject
   {
-    return $this->getMockedEntity("LastRecalculation", [], [], BaseEntity::class, false, false);
+    return $this->getStubbedEntity("LastRecalculation", [], [], BaseEntity::class, false, false);
   }
 //</editor-fold desc="Private Methods">
 }

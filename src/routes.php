@@ -5,7 +5,7 @@ declare(strict_types=1);
 
 use Laravel\Lumen\Routing\Router;
 
-$router = app('router');
+$router = $this->app->make('router');
 
 $router->group(['namespace' => 'Tfboe\FmLib\Http\Controllers'], function () use ($router) {
   /**

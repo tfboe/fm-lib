@@ -60,7 +60,7 @@ class FmLibServiceProvider extends ServiceProvider
    */
   public function boot()
   {
-    app()->configure('fm-lib');
+    $this->app->configure('fm-lib');
 
     /** @noinspection PhpUndefinedMethodInspection */
 //    Validator::extend('IntegerType', function (/** @noinspection PhpUnusedParameterInspection */
@@ -79,7 +79,7 @@ class FmLibServiceProvider extends ServiceProvider
   {
     parent::register();
     //register middleware
-    app()->routeMiddleware(['auth' => Authenticate::class]);
+    $this->app->routeMiddleware(['auth' => Authenticate::class]);
 
     if ($this->app->environment() !== 'production') {
       if (class_exists('\Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider')) {

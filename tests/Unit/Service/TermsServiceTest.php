@@ -1,0 +1,62 @@
+<?php
+declare(strict_types=1);
+/**
+ * Created by PhpStorm.
+ * User: benedikt
+ * Date: 1/3/18
+ * Time: 3:53 PM
+ */
+
+namespace Tfboe\FmLib\Tests\Unit\Service;
+
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
+use Tfboe\FmLib\Entity\TermsInterface;
+use Tfboe\FmLib\Service\TermsService;
+use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
+
+
+/**
+ * Class PlayerServiceTest
+ * @package Tfboe\FmLib\Tests\Unit\Service
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ */
+class TermsServiceTest extends UnitTestCase
+{
+//<editor-fold desc="Public Methods">
+  /**
+   * @covers \Tfboe\FmLib\Service\TermsService::__construct
+   */
+  public function testConstructor()
+  {
+    $service = $this->service($this->createStub(EntityManagerInterface::class));
+    self::assertInstanceOf(TermsService::class, $service);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\TermsService::getLatestTerms
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Service\TermsService::__construct
+   */
+  public function testGetLatestTerms()
+  {
+    $terms = $this->createStub(TermsInterface::class);
+    $em = $this->getEntityManagerMockForQuery([$terms], /** @lang DQL */
+      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
+    $service = $this->service($em);
+    self::assertTrue($terms === $service->getLatestTerms());
+  }
+//</editor-fold desc="Public Methods">
+
+//<editor-fold desc="Private Methods">
+  /**
+   * @param EntityManagerInterface|MockObject $em
+   * @return TermsService
+   */
+  private function service($em)
+  {
+    return new TermsService($em);
+  }
+//</editor-fold desc="Private Methods">
+}

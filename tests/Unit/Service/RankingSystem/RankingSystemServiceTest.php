@@ -512,7 +512,6 @@ class RankingSystemServiceTest extends UnitTestCase
         self::assertEquals($ranking, $change->getRankingSystem());
         self::assertEquals($player, $change->getPlayer());
       });
-    $service->method('getAdditionalFields')->willReturn(['additional' => 0.0]);
 
     $change = static::callProtectedMethod($service, 'getOrCreateChange', [$entity, $ranking, $player]);
     self::assertEquals($persisted, $change);

@@ -15,7 +15,6 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use Exception;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
@@ -25,7 +24,6 @@ use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Exceptions\Internal;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 
@@ -515,6 +513,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     return $entities;
   }
 
+  /** @noinspection PhpDocMissingThrowsInspection */ //new DateTime() does not throw an exception
   /**
    * @param DateTime $time the time of the last list
    * @param int $generationLevel the list generation level
@@ -535,12 +534,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     } else {
       $year += 1;
     }
-    try {
-      $now = new DateTime();
-      return $now->setDate($year, $month, 1)->setTime(0, 0, 0);
-    } catch (Exception $e) {
-      return Internal::error("Couldn't get current time!");
-    }
+    return (new DateTime())->setDate($year, $month, 1)->setTime(0, 0, 0);
   }
 
   /**
