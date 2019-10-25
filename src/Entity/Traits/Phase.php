@@ -63,7 +63,7 @@ trait Phase
   private $rankings;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\MatchInterface", mappedBy="phase", indexBy="matchNumber")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\MatchInterface", mappedBy="phase", indexBy="id")
    * @var Collection|MatchInterface[]
    */
   private $matches;
@@ -156,10 +156,10 @@ trait Phase
   public function setCompetition(CompetitionInterface $competition)
   {
     if ($this->competition !== null) {
-      $this->competition->getPhases()->remove($this->getPhaseNumber());
+      $this->competition->getPhases()->remove($this->getId());
     }
     $this->competition = $competition;
-    $competition->getPhases()->set($this->getPhaseNumber(), $this);
+    $competition->getPhases()->set($this->getId(), $this);
   }
 
   /**

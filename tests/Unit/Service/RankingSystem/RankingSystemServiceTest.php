@@ -18,9 +18,13 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
+use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
+use Tfboe\FmLib\Entity\MatchInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
@@ -31,10 +35,8 @@ use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystem\TimeServiceInterface;
-use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
 use Tfboe\FmLib\Tests\Entity\Match;
-use Tfboe\FmLib\Tests\Entity\Phase;
 use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Entity\RankingSystem;
 use Tfboe\FmLib\Tests\Entity\RankingSystemChange;
@@ -209,12 +211,15 @@ class RankingSystemServiceTest extends UnitTestCase
     $service->method("getLevel")->willReturn(Level::GAME);
     /** @var RankingSystemService $service */
     $tournament = new Tournament();
-    $competition = new Competition();
+    /** @var CompetitionInterface $competition */
+    $competition = $this->getStubbedTournamentHierarchyEntity("Competition", ["getId" => "cId"]);
     $competition->setName("TestCompetition")->setTournament($tournament);
-    $phase = new Phase();
+    /** @var PhaseInterface $phase */
+    $phase = $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "pId"]);
     $phase->setPhaseNumber(1);
     $phase->setCompetition($competition);
-    $match = new Match();
+    /** @var MatchInterface $match */
+    $match = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId"]);
     $match->setMatchNumber(1);
     $match->setPhase($phase);
     self::assertNull($service->getEarliestInfluence($ranking, $tournament));
@@ -222,21 +227,24 @@ class RankingSystemServiceTest extends UnitTestCase
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertNull($service->getEarliestInfluence($ranking, $tournament));
 
-    $game = new Game();
+    /** @var GameInterface $game */
+    $game = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId1"]);
     $game->setGameNumber(1);
     $game->setMatch($match);
     $gameEndTime = new DateTime("2017-06-01 00:00:00");
     $game->setEndTime($gameEndTime);
     self::assertEquals($gameEndTime, $service->getEarliestInfluence($ranking, $tournament));
 
-    $game2 = new Game();
+    /** @var GameInterface $game2 */
+    $game2 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId2"]);
     $game2->setGameNumber(2);
     $game2->setMatch($match);
     $game2EndTime = new DateTime("2017-05-01 00:00:00");
     $game2->setEndTime($game2EndTime);
     self::assertEquals($game2EndTime, $service->getEarliestInfluence($ranking, $tournament));
 
-    $game3 = new Game();
+    /** @var GameInterface $game3 */
+    $game3 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId3"]);
     $game3->setGameNumber(3);
     $game3->setMatch($match);
     $game3EndTime = new DateTime("2017-07-01 00:00:00");
@@ -282,15 +290,19 @@ class RankingSystemServiceTest extends UnitTestCase
     $service->method("getLevel")->willReturn(Level::GAME);
     /** @var RankingSystemService $service */
     $tournament = new Tournament();
-    $competition = new Competition();
+    /** @var CompetitionInterface $competition */
+    $competition = $this->getStubbedTournamentHierarchyEntity("Competition", ["getId" => "cId"]);
     $competition->setName("TestCompetition")->setTournament($tournament);
-    $phase = new Phase();
+    /** @var PhaseInterface $phase */
+    $phase = $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "pId"]);
     $phase->setPhaseNumber(1);
     $phase->setCompetition($competition);
-    $match = new Match();
+    /** @var Match $match */
+    $match = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId"]);
     $match->setMatchNumber(1);
     $match->setPhase($phase);
-    $game = new Game();
+    /** @var Game $game */
+    $game = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId"]);
     $game->setGameNumber(1);
     $game->setMatch($match);
     $endTime1 = new DateTime("2017-12-01 00:00:00");
@@ -298,7 +310,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $game->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime1, $service->getEarliestInfluence($ranking, $tournament));
 
-    $game2 = new Game();
+    /** @var Game $game2 */
+    $game2 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId2"]);
     $game2->setGameNumber(2);
     $game2->setMatch($match);
     $endTime2 = new DateTime("2017-11-01 00:00:00");
@@ -308,10 +321,12 @@ class RankingSystemServiceTest extends UnitTestCase
     $match->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime2, $service->getEarliestInfluence($ranking, $tournament));
 
-    $match2 = new Match();
+    /** @var Match $match2 */
+    $match2 = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId2"]);
     $match2->setMatchNumber(2);
     $match2->setPhase($phase);
-    $game3 = new Game();
+    /** @var Game $game3 */
+    $game3 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId3"]);
     $game3->setGameNumber(1);
     $game3->setMatch($match2);
     $endTime3 = new DateTime("2017-10-01 00:00:00");
@@ -321,13 +336,16 @@ class RankingSystemServiceTest extends UnitTestCase
     $phase->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime3, $service->getEarliestInfluence($ranking, $tournament));
 
-    $phase2 = new Phase();
+    /** @var PhaseInterface $phase2 */
+    $phase2 = $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "pId2"]);
     $phase2->setPhaseNumber(2);
     $phase2->setCompetition($competition);
-    $match3 = new Match();
+    /** @var Match $match3 */
+    $match3 = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId3"]);
     $match3->setMatchNumber(1);
     $match3->setPhase($phase2);
-    $game4 = new Game();
+    /** @var Game $game4 */
+    $game4 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId4"]);
     $game4->setGameNumber(1);
     $game4->setMatch($match3);
     $endTime4 = new DateTime("2017-09-01 00:00:00");
@@ -337,22 +355,27 @@ class RankingSystemServiceTest extends UnitTestCase
     $competition->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
-    $competition2 = new Competition();
+    /** @var CompetitionInterface $competition2 */
+    $competition2 = $this->getStubbedTournamentHierarchyEntity("Competition", ["getId" => "cId2"]);
     $competition2->setName("TestCompetition2")->setTournament($tournament);
-    $phase3 = new Phase();
+    /** @var PhaseInterface $phase3 */
+    $phase3 = $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "pId3"]);
     $phase3->setPhaseNumber(1);
     $phase3->setCompetition($competition2);
-    $match4 = new Match();
+    /** @var Match $match4 */
+    $match4 = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId4"]);
     $match4->setMatchNumber(1);
     $match4->setPhase($phase3);
-    $game5 = new Game();
+    /** @var Game $game5 */
+    $game5 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId5"]);
     $game5->setGameNumber(1);
     $game5->setMatch($match4);
     $endTime5 = new DateTime("2017-01-01 00:00:00");
     $game5->setEndTime($endTime5);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
-    $game6 = new Game();
+    /** @var Game $game6 */
+    $game6 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId6"]);
     $game6->setGameNumber(2);
     $game6->setMatch($match4);
     $endTime6 = new DateTime("2017-10-01 00:00:00");
@@ -360,7 +383,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $game6->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
-    $game7 = new Game();
+    /** @var Game $game7 */
+    $game7 = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId7"]);
     $game7->setGameNumber(3);
     $game7->setMatch($match4);
     $endTime7 = new DateTime("2017-08-01 00:00:00");

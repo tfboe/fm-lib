@@ -91,10 +91,10 @@ trait Team
   public function setCompetition(CompetitionInterface $competition)
   {
     if ($this->competition !== null) {
-      $this->competition->getTeams()->remove($this->getStartNumber());
+      $this->competition->getTeams()->remove($this->getId());
     }
     $this->competition = $competition;
-    $this->competition->getTeams()->set($this->getStartNumber(), $this);
+    $this->competition->getTeams()->set($this->getId(), $this);
   }
 
   /**

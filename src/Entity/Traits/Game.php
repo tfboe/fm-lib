@@ -26,7 +26,9 @@ use Tfboe\FmLib\Helpers\Level;
  */
 trait Game
 {
-  use ResultEntity;
+  use ResultEntity {
+    init as resultInit;
+  }
 
 //<editor-fold desc="Fields">
 
@@ -140,10 +142,10 @@ trait Game
   public function setMatch(MatchInterface $match)
   {
     if ($this->match !== null) {
-      $this->match->getGames()->remove($this->getGameNumber());
+      $this->match->getGames()->remove($this->getId());
     }
     $this->match = $match;
-    $match->getGames()->set($this->getGameNumber(), $this);
+    $match->getGames()->set($this->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 
@@ -155,6 +157,7 @@ trait Game
   {
     $this->playersA = new ArrayCollection();
     $this->playersB = new ArrayCollection();
+    $this->resultInit();
   }
 //</editor-fold desc="Protected Final Methods">
 }

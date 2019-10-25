@@ -42,13 +42,14 @@ class PhaseTest extends UnitTestCase
   public function testCompetitionAndParent()
   {
     $phase = $this->phase();
-    $competition = $this->createStub(CompetitionInterface::class, ['getPhases' => new ArrayCollection()]);
+    $competition = $this->createStub(CompetitionInterface::class,
+      ['getPhases' => new ArrayCollection(), 'getId' => 'competitionId']);
     $phase->setPhaseNumber(1);
     /** @var CompetitionInterface $competition */
     $phase->setCompetition($competition);
     self::assertEquals($competition, $phase->getCompetition());
     self::assertEquals(1, $phase->getCompetition()->getPhases()->count());
-    self::assertEquals($phase, $phase->getCompetition()->getPhases()[$phase->getPhaseNumber()]);
+    self::assertEquals($phase, $phase->getCompetition()->getPhases()[$phase->getId()]);
     self::assertEquals($phase->getCompetition(), $phase->getParent());
 
     $competition2 = $this->createStub(CompetitionInterface::class, ['getPhases' => new ArrayCollection()]);
@@ -58,7 +59,7 @@ class PhaseTest extends UnitTestCase
     self::assertEquals($competition2, $phase->getCompetition());
     self::assertEquals(1, $phase->getCompetition()->getPhases()->count());
     self::assertEquals(0, $competition->getPhases()->count());
-    self::assertEquals($phase, $phase->getCompetition()->getPhases()[$phase->getPhaseNumber()]);
+    self::assertEquals($phase, $phase->getCompetition()->getPhases()[$phase->getId()]);
     self::assertEquals($phase->getCompetition(), $phase->getParent());
   }
 
@@ -110,9 +111,9 @@ class PhaseTest extends UnitTestCase
     $match = $this->createStub(MatchInterface::class, ['getMatchNumber' => 1]);
     self::assertEquals($phase->getMatches(), $phase->getChildren());
     /** @var MatchInterface $match */
-    $phase->getMatches()->set($match->getMatchNumber(), $match);
+    $phase->getMatches()->set($match->getId(), $match);
     self::assertEquals(1, $phase->getMatches()->count());
-    self::assertEquals($match, $phase->getMatches()[1]);
+    self::assertEquals($match, $phase->getMatches()[$match->getId()]);
     self::assertEquals($phase->getMatches(), $phase->getChildren());
   }
 
@@ -131,7 +132,7 @@ class PhaseTest extends UnitTestCase
     $qualificationSystem = $this->qualificationSystemWithId();
     $qualificationSystem->setPreviousPhase($phase);
     self::assertEquals(1, $phase->getPostQualifications()->count());
-    self::assertEquals($qualificationSystem, $phase->getPostQualifications()["id"]);
+    self::assertEquals($qualificationSystem, $phase->getPostQualifications()[$qualificationSystem->getId()]);
   }
 
   /**
@@ -165,7 +166,7 @@ class PhaseTest extends UnitTestCase
     $qualificationSystem = $this->qualificationSystemWithId();
     $qualificationSystem->setNextPhase($phase);
     self::assertEquals(1, $phase->getPreQualifications()->count());
-    self::assertEquals($qualificationSystem, $phase->getPreQualifications()["id"]);
+    self::assertEquals($qualificationSystem, $phase->getPreQualifications()[$qualificationSystem->getId()]);
   }
 
   /**
@@ -194,7 +195,7 @@ class PhaseTest extends UnitTestCase
    */
   private function phase(): MockObject
   {
-    return $this->getMockedTournamentHierarchyEntity("Phase");
+    return $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "id"]);
   }
 
   /**
@@ -204,7 +205,7 @@ class PhaseTest extends UnitTestCase
    */
   private function qualificationSystemWithId(): MockObject
   {
-    return $this->getPartialMockForTrait(QualificationSystem::class, ['getId' => 'id']);
+    return $this->getPartialMockForTrait(QualificationSystem::class, ['getId' => 'qualificationSystemId']);
   }
 //</editor-fold desc="Private Methods">
 }

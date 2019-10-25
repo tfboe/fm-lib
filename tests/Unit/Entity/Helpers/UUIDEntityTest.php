@@ -73,6 +73,18 @@ class UUIDEntityTest extends UnitTestCase
     self::callProtectedMethod($entity, 'setId');
     self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', $entity->getId());
   }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Traits\User::__toString
+   * @throws ReflectionException
+   */
+  public function testToString()
+  {
+    $entity = $this->mock();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
+    self::assertEquals("UUIDEntity:test-id", strval($entity));
+  }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
@@ -82,7 +94,7 @@ class UUIDEntityTest extends UnitTestCase
    */
   private function mock(): MockObject
   {
-    return $this->getMockForTrait(UUIDEntity::class);
+    return $this->getMockForTrait(UUIDEntity::class, [], "UUIDEntity");
   }
 //</editor-fold desc="Private Methods">
 }

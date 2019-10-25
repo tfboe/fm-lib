@@ -15,8 +15,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\RankingInterface;
+use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\Traits\Ranking;
-use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -93,11 +93,11 @@ class RankingTest extends UnitTestCase
   public function testTeams()
   {
     $ranking = $this->ranking();
-    $team = new Team();
+    $team = $this->createStub(TeamInterface::class, ["getId" => "teamId"]);
     $team->setStartNumber(1);
-    $ranking->getTeams()->set($team->getStartNumber(), $team);
+    $ranking->getTeams()->set($team->getId(), $team);
     self::assertEquals(1, $ranking->getTeams()->count());
-    self::assertEquals($team, $ranking->getTeams()[1]);
+    self::assertEquals($team, $ranking->getTeams()[$team->getId()]);
   }
 
   /**

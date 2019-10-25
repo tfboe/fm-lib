@@ -15,15 +15,15 @@ use Illuminate\Contracts\Container\BindingResolutionException;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
+use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
+use Tfboe\FmLib\Entity\MatchInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\RankingSystemInterface;
 use Tfboe\FmLib\Service\RankingSystemService;
-use Tfboe\FmLib\Tests\Entity\Competition;
-use Tfboe\FmLib\Tests\Entity\Game;
-use Tfboe\FmLib\Tests\Entity\Match;
-use Tfboe\FmLib\Tests\Entity\Phase;
 use Tfboe\FmLib\Tests\Entity\RankingSystem;
 use Tfboe\FmLib\Tests\Entity\Tournament;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -203,9 +203,11 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var \Tfboe\FmLib\Entity\RankingSystemInterface $ranking2 */
     $tournament->getRankingSystems()->set($ranking2->getId(), $ranking2);
 
-    $competition = new Competition();
+    /** @var CompetitionInterface $competition */
+    $competition = $this->getStubbedTournamentHierarchyEntity("Competition", ["getId" => "cId"]);
     $competition->setName("TestCompetition")->setTournament($tournament);
-    $phase = new Phase();
+    /** @var PhaseInterface $phase */
+    $phase = $this->getStubbedTournamentHierarchyEntity("Phase", ["getId" => "pId"]);
     $phase->setPhaseNumber(1);
     $phase->setCompetition($competition);
     $ranking3 = $this->createStubWithId(RankingSystem::class, 'r3');
@@ -214,10 +216,12 @@ class RankingSystemServiceTest extends UnitTestCase
 
     $phase->getRankingSystems()->set($ranking3->getId(), $ranking3);
 
-    $match = new Match();
+    /** @var MatchInterface $match */
+    $match = $this->getStubbedTournamentHierarchyEntity("Match", ["getId" => "mId"]);
     $match->setMatchNumber(1);
     $match->setPhase($phase);
-    $game = new Game();
+    /** @var GameInterface $game */
+    $game = $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "gId"]);
     $game->setGameNumber(1);
     $game->setMatch($match);
     $ranking4 = $this->createStubWithId(RankingSystem::class, 'r4');

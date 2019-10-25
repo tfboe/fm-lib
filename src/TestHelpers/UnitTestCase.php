@@ -255,8 +255,8 @@ PHP;
    * @return MockObject
    * @throws ReflectionException
    */
-  protected function getMockedTournamentHierarchyEntity(string $className, array $methods = [],
-                                                        array $additionalInterfaces = [])
+  protected function getStubbedTournamentHierarchyEntity(string $className, array $methods = [],
+                                                         array $additionalInterfaces = [])
   {
     return $this->getStubbedEntity($className, $methods, $additionalInterfaces, TournamentHierarchyEntity::class, true);
   }

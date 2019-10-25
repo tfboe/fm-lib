@@ -70,5 +70,10 @@ interface SubClassDataInterface
    * @throws PropertyNotExistingException
    */
   public function setProperty(string $name, $value);
+
+  /**
+   * @return string[]
+   */
+  public function getKeys(): array;
 //</editor-fold desc="Public Methods">
 }

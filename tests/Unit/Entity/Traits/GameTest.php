@@ -13,8 +13,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
+use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
-use Tfboe\FmLib\Entity\Traits\Game;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -32,6 +32,8 @@ class GameTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getChildren
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testChildren()
   {
@@ -46,6 +48,8 @@ class GameTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getLocalIdentifier
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    */
   public function testGameNumberAndLocalIdentifier()
   {
@@ -61,6 +65,8 @@ class GameTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getPlayersB
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getPlayersA
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    */
   public function testInit()
   {
@@ -75,6 +81,9 @@ class GameTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getLevel
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    */
   public function testLevel()
   {
@@ -88,6 +97,9 @@ class GameTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::setGameNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getGameNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    */
   public function testMatchAndParent()
   {
@@ -101,7 +113,7 @@ class GameTest extends UnitTestCase
     $game->setMatch($match);
     self::assertEquals($match, $game->getMatch());
     self::assertEquals(1, $game->getMatch()->getGames()->count());
-    self::assertEquals($game, $game->getMatch()->getGames()[$game->getGameNumber()]);
+    self::assertEquals($game, $game->getMatch()->getGames()[$game->getId()]);
     self::assertEquals($game->getMatch(), $game->getParent());
 
     $match2 = $this->createMock(MatchInterface::class);
@@ -113,7 +125,7 @@ class GameTest extends UnitTestCase
     self::assertEquals($match2, $game->getMatch());
     self::assertEquals(1, $game->getMatch()->getGames()->count());
     self::assertEquals(0, $match->getGames()->count());
-    self::assertEquals($game, $game->getMatch()->getGames()[$game->getGameNumber()]);
+    self::assertEquals($game, $game->getMatch()->getGames()[$game->getId()]);
     self::assertEquals($game->getMatch(), $game->getParent());
   }
 
@@ -122,6 +134,7 @@ class GameTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
    */
   public function testPlayersA()
   {
@@ -139,6 +152,7 @@ class GameTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
    */
   public function testPlayersB()
   {
@@ -154,12 +168,12 @@ class GameTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Game|MockObject a new game
+   * @return GameInterface|MockObject a new game
    * @throws ReflectionException
    */
   private function game(): MockObject
   {
-    return $this->getMockForTrait(Game::class);
+    return $this->getStubbedTournamentHierarchyEntity("Game", ["getId" => "id"]);
   }
 //</editor-fold desc="Private Methods">
 }

@@ -146,6 +146,19 @@ class SubClassDataTest extends UnitTestCase
   }
 
   /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getKeys
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::initSubClassData
+   */
+  public function testKeys()
+  {
+    $entity = $this->mock();
+    $keys = ["test1", "test2", "test3"];
+    $entity->initSubClassData($keys);
+    self::assertEquals($keys, $entity->getKeys());
+  }
+
+  /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\MethodNotExistingException::__construct

@@ -13,9 +13,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
+use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Entity\Traits\Competition;
-use Tfboe\FmLib\Entity\Traits\Phase;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -32,6 +32,8 @@ class CompetitionTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
    */
   public function testGetLocalIdentifier()
   {
@@ -45,6 +47,8 @@ class CompetitionTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::getTeams
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::getPhases
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
    */
   public function testInit()
   {
@@ -59,6 +63,8 @@ class CompetitionTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Competition::getLevel()
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
    */
   public function testLevel()
   {
@@ -69,21 +75,20 @@ class CompetitionTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Competition::getPhases
    * @covers \Tfboe\FmLib\Entity\Traits\Competition::getChildren
    * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
-   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
-   * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    */
   public function testPhasesAndChildren()
   {
     $competition = $this->competition();
     self::callProtectedMethod($competition, 'init');
-    /** @var Phase $phase */
-    $phase = $this->getMockForTrait(Phase::class);
+    /** @var PhaseInterface $phase */
+    $phase = $this->createStubWithId(PhaseInterface::class, "id");
     $phase->setPhaseNumber(1);
     self::assertEquals($competition->getPhases(), $competition->getChildren());
-    $competition->getPhases()->set($phase->getPhaseNumber(), $phase);
+    $competition->getPhases()->set($phase->getId(), $phase);
     self::assertEquals(1, $competition->getPhases()->count());
-    self::assertEquals($phase, $competition->getPhases()[1]);
+    self::assertEquals($phase, $competition->getPhases()[$phase->getId()]);
     self::assertEquals($competition->getPhases(), $competition->getChildren());
   }
 
@@ -91,18 +96,20 @@ class CompetitionTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Competition::getTeams
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Traits\Team
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    */
   public function testTeams()
   {
     $competition = $this->competition();
     self::callProtectedMethod($competition, 'init');
-    $team = new Team();
+    /** @var Team|MockObject $team */
+    $team = $this->getStubbedEntity("Team", ["getId" => "id"]);
     $team->setStartNumber(1);
-    $competition->getTeams()->set($team->getStartNumber(), $team);
+    $competition->getTeams()->set($team->getId(), $team);
     self::assertEquals(1, $competition->getTeams()->count());
-    self::assertEquals($team, $competition->getTeams()[1]);
+    self::assertEquals($team, $competition->getTeams()[$team->getId()]);
   }
 
   /**
@@ -113,21 +120,22 @@ class CompetitionTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
    */
   public function testTournamentAndParent()
   {
     $competition = $this->competition();
+    /** @var TournamentInterface|MockObject $tournament */
     $tournament = $this->createMock(TournamentInterface::class);
     $competitions = new ArrayCollection();
     $tournament->method('getCompetitions')->willReturn($competitions);
     $competition->setName('test competition');
 
-    /** @var TournamentInterface $tournament */
     $competition->setTournament($tournament);
     self::assertEquals($tournament, $competition->getTournament());
     self::assertEquals($competition->getTournament(), $competition->getParent());
     self::assertEquals(1, $competition->getTournament()->getCompetitions()->count());
-    self::assertEquals($competition, $competition->getTournament()->getCompetitions()[$competition->getName()]);
+    self::assertEquals($competition, $competition->getTournament()->getCompetitions()[$competition->getId()]);
 
     $tournament2 = $this->createMock(TournamentInterface::class);
     $competitions2 = new ArrayCollection();
@@ -139,18 +147,18 @@ class CompetitionTest extends UnitTestCase
     self::assertEquals($competition->getTournament(), $competition->getParent());
     self::assertEquals(1, $competition->getTournament()->getCompetitions()->count());
     self::assertEquals(0, $tournament->getCompetitions()->count());
-    self::assertEquals($competition, $competition->getTournament()->getCompetitions()[$competition->getName()]);
+    self::assertEquals($competition, $competition->getTournament()->getCompetitions()[$competition->getId()]);
   }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Competition|MockObject a new competition
+   * @return CompetitionInterface|MockObject a new competition
    * @throws ReflectionException
    */
   private function competition(): MockObject
   {
-    return $this->getMockForTrait(Competition::class);
+    return $this->getStubbedTournamentHierarchyEntity("Competition", ["getId" => "id"]);
   }
 //</editor-fold desc="Private Methods">
 }

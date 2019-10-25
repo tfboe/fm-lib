@@ -78,6 +78,24 @@ class ResultEntityTest extends UnitTestCase
   }
 
   /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::init
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResult
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResultA
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResultB
+   * @uses   \Tfboe\FmLib\Entity\Traits\Match::isPlayed
+   */
+  public function testInit()
+  {
+    $entity = $this->mock();
+    self::callProtectedMethod($entity, 'init');
+    self::assertEquals(0, $entity->getResultA());
+    self::assertEquals(0, $entity->getResultB());
+    self::assertEquals(Result::NOT_YET_FINISHED, $entity->getResult());
+    self::assertEquals(false, $entity->isPlayed());
+  }
+
+  /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
    * @throws ReflectionException
    * @throws ValueNotValid

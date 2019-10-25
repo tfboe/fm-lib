@@ -44,6 +44,15 @@ trait UUIDEntity
   }
 
   /**
+   * @inheritDoc
+   */
+  public function __toString()
+  {
+    return get_class($this) . ":" . $this->id;
+  }
+
+
+  /**
    * @return bool
    */
   public function hasId(): bool

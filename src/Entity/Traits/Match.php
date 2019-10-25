@@ -26,7 +26,9 @@ use Tfboe\FmLib\Helpers\Level;
  */
 trait Match
 {
-  use ResultEntity;
+  use ResultEntity {
+    init as resultInit;
+  }
 
 //<editor-fold desc="Fields">
 
@@ -37,14 +39,14 @@ trait Match
   private $phase;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__match_rankingA")
    * @var Collection|RankingInterface[]
    */
   private $rankingsA;
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__match_rankingB")
    * @var Collection|RankingInterface[]
    */
@@ -57,7 +59,7 @@ trait Match
   private $matchNumber;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\GameInterface", mappedBy="match", indexBy="gameNumber")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\GameInterface", mappedBy="match", indexBy="id")
    * @var Collection|GameInterface[]
    */
   private $games;
@@ -150,10 +152,10 @@ trait Match
   public function setPhase(PhaseInterface $phase)
   {
     if ($this->phase !== null) {
-      $this->phase->getMatches()->remove($this->getMatchNumber());
+      $this->phase->getMatches()->remove($this->getId());
     }
     $this->phase = $phase;
-    $phase->getMatches()->set($this->getMatchNumber(), $this);
+    $phase->getMatches()->set($this->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 
@@ -166,6 +168,7 @@ trait Match
     $this->rankingsA = new ArrayCollection();
     $this->rankingsB = new ArrayCollection();
     $this->games = new ArrayCollection();
+    $this->resultInit();
   }
 //</editor-fold desc="Protected Final Methods">
 }

@@ -118,5 +118,13 @@ trait ResultEntity
     $this->resultB = $resultB;
     return $this;
   }
+
+  private final function init()
+  {
+    $this->resultA = 0;
+    $this->resultB = 0;
+    $this->result = Result::NOT_YET_FINISHED;
+    $this->played = false;
+  }
 //</editor-fold desc="Public Methods">
 }

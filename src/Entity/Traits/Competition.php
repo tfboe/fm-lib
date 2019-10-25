@@ -38,13 +38,13 @@ trait Competition
   private $tournament;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", mappedBy="competition", indexBy="startNumber")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", mappedBy="competition", indexBy="id")
    * @var Collection|TeamInterface[]
    */
   private $teams;
 
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", mappedBy="competition", indexBy="phaseNumber")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\PhaseInterface", mappedBy="competition", indexBy="id")
    * @var Collection|PhaseInterface[]
    */
   private $phases;
@@ -114,10 +114,10 @@ trait Competition
   public function setTournament(TournamentInterface $tournament)
   {
     if ($this->tournament !== null) {
-      $this->tournament->getCompetitions()->remove($this->getName());
+      $this->tournament->getCompetitions()->remove($this->getId());
     }
     $this->tournament = $tournament;
-    $tournament->getCompetitions()->set($this->getName(), $this);
+    $tournament->getCompetitions()->set($this->getId(), $this);
     return $this;
   }
 //</editor-fold desc="Public Methods">

@@ -43,7 +43,7 @@ trait Tournament
    */
   private $creator;
   /**
-   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", mappedBy="tournament",indexBy="name")
+   * @ORM\OneToMany(targetEntity="\Tfboe\FmLib\Entity\CompetitionInterface", mappedBy="tournament",indexBy="id")
    * @var Collection|CompetitionInterface[]
    */
   private $competitions;

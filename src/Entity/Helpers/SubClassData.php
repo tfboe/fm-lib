@@ -151,6 +151,14 @@ trait SubClassData
 
     return false;
   }
+
+  /**
+   * @return string[]
+   */
+  public function getKeys(): array
+  {
+    return array_keys($this->subClassData);
+  }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">

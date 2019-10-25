@@ -29,7 +29,7 @@ trait Ranking
 //<editor-fold desc="Fields">
 
   /**
-   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", indexBy="startNumber")
+   * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\TeamInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__ranking_teams")
    * @var Collection|TeamInterface[]
    */

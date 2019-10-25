@@ -11,10 +11,10 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TeamMembershipInterface;
-use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -41,7 +41,7 @@ class TeamTest extends UnitTestCase
     $team->setCompetition($competition);
     self::assertEquals($competition, $team->getCompetition());
     self::assertEquals(1, $team->getCompetition()->getTeams()->count());
-    self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getStartNumber()]);
+    self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getId()]);
 
     $competition2 = $this->createStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
 
@@ -50,7 +50,7 @@ class TeamTest extends UnitTestCase
     self::assertEquals($competition2, $team->getCompetition());
     self::assertEquals(1, $team->getCompetition()->getTeams()->count());
     self::assertEquals(0, $competition->getTeams()->count());
-    self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getStartNumber()]);
+    self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getId()]);
   }
 
   /**
@@ -58,10 +58,10 @@ class TeamTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::getMemberships
    */
-  public function testConstructor()
+  public function testInit()
   {
     $team = $this->team();
-    self::assertInstanceOf(Team::class, $team);
+    self::assertInstanceOf(TeamInterface::class, $team);
     self::assertInstanceOf(Collection::class, $team->getMemberships());
     self::assertEquals(0, $team->getMemberships()->count());
     self::assertEquals("", $team->getName());
@@ -108,12 +108,14 @@ class TeamTest extends UnitTestCase
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
-   * @return TeamInterface a new team
+   * @return TeamInterface|MockObject
    */
-  private function team(): TeamInterface
+  private function team(): MockObject
   {
-    return new Team();
+    /** @noinspection PhpUnhandledExceptionInspection */ //will never throw
+    return $this->getStubbedEntity("Team", ["getId" => "id"]);
   }
 //</editor-fold desc="Private Methods">
 }

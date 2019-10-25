@@ -56,9 +56,9 @@ class TournamentTest extends UnitTestCase
     $competition = $this->createStub(CompetitionInterface::class, ['getName' => 'comp name']);
     self::assertEquals($tournament->getCompetitions(), $tournament->getChildren());
     /** @var CompetitionInterface $competition */
-    $tournament->getCompetitions()->set($competition->getName(), $competition);
+    $tournament->getCompetitions()->set($competition->getId(), $competition);
     self::assertEquals(1, $tournament->getCompetitions()->count());
-    self::assertEquals($competition, $tournament->getCompetitions()[$competition->getName()]);
+    self::assertEquals($competition, $tournament->getCompetitions()[$competition->getId()]);
     self::assertEquals($tournament->getCompetitions(), $tournament->getChildren());
   }
 

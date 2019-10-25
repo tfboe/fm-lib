@@ -234,7 +234,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $result;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+  /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * Gets or creates a tournament system change entry for the given entity, ranking and player.
    * @param TournamentHierarchyEntity $entity the tournament hierarchy entity to search for
@@ -275,7 +275,6 @@ abstract class RankingSystemService implements RankingSystemInterface
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
-
   /**
    * @param RankingSystemListInterface $list the list in which to search for the entry or in which to add it
    * @param PlayerInterface $player the player to search for
@@ -296,8 +295,6 @@ abstract class RankingSystemService implements RankingSystemInterface
     }
     return $list->getEntries()->get($playerId);
   }
-
-  /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
 //</editor-fold desc="Protected Final Methods">
 
 //<editor-fold desc="Protected Methods">
