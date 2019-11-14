@@ -277,9 +277,7 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
-  //TODO: handle this test case (related to integer-type validation which is at the moment deactivated due to a
-  //      incompatibility to lumen 5.7, see src/Providers/FmLibServiceProvider.php
-  /*public function testRegistrationWithStringAsConfirmedTermsMinorVersion()
+  public function testRegistrationWithStringAsConfirmedTermsMinorVersion()
   {
     $this->json('POST', '/register', [
       'email' => 'test@user1.com',
@@ -289,7 +287,19 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
       ["confirmedTermsMinorVersion" => ["The confirmed terms minor version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
-  }*/
+  }
+
+  public function testRegistrationWithStringAsConfirmedTermsMajorVersion()
+  {
+    $this->json('POST', '/register', [
+      'email' => 'test@user1.com',
+      'password' => 'testPassword',
+      'confirmedTermsMinorVersion' => 5,
+      'confirmedTermsMajorVersion' => "1"
+    ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
+      ["confirmedTermsMinorVersion" => ["The confirmed terms major version must be an integer."]],
+      "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
+  }
 
   public function testTooShortPasswordLogin()
   {

@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Providers;
 
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Application;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
@@ -36,6 +37,20 @@ class FmLibServiceProviderTest extends UnitTestCase
     $app = $this->createMock(Application::class);
     $app->expects(self::once())->method('configure')->with('fm-lib');
     $provider = $this->provider($app);
+    $checker = function ($rule, $callback, $error) {
+      self::assertEquals("IntegerType", $rule);
+      self::assertEquals('The :attribute must be an integer.', $error);
+      self::assertEquals(false, $callback(null, "noInt", null, null));
+      self::assertEquals(false, $callback(null, "5", null, null));
+      self::assertEquals(true, $callback(null, 5, null, null));
+      self::assertEquals(true, $callback(null, 0, null, null));
+      self::assertEquals(true, $callback(null, -5, null, null));
+
+      return true;
+    };
+    Validator::shouldReceive('extend')
+      ->once()
+      ->withArgs($checker);
     $provider->boot();
   }
 

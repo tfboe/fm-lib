@@ -263,8 +263,8 @@ class UserControllerTest extends UnitTestCase
       self::assertEquals([
         'email' => 'required|email|unique:UserClass,email',
         'password' => 'required|string|min:8',
-        'confirmedTermsMinorVersion' => 'required|integer|min:0',
-        'confirmedTermsMajorVersion' => 'required|integer|min:1'
+        'confirmedTermsMinorVersion' => 'required|IntegerType|min:0',
+        'confirmedTermsMajorVersion' => 'required|IntegerType|min:1'
       ], $spec);
       self::assertTrue($request === $r);
     });

@@ -13,6 +13,7 @@ use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
+use Illuminate\Support\Facades\Validator;
 use Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider;
 use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
@@ -63,10 +64,10 @@ class FmLibServiceProvider extends ServiceProvider
     $this->app->configure('fm-lib');
 
     /** @noinspection PhpUndefinedMethodInspection */
-//    Validator::extend('IntegerType', function (/** @noinspection PhpUnusedParameterInspection */
-//      $attribute, $value, $parameters, $validator) {
-//      return is_int($value);
-//    }, 'The :attribute must be an integer.');
+    Validator::extend('IntegerType', function (/** @noinspection PhpUnusedParameterInspection */
+      $attribute, $value, $parameters, $validator) {
+      return is_int($value);
+    }, 'The :attribute must be an integer.');
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */ //\Doctrine\DBAL\DBALException
