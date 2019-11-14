@@ -109,6 +109,9 @@ class RandomTest extends UnitTestCase
     $random = new Random("08791234abcdef778899aeef87224effffffeeee123234641aaa");
     self::assertIsInt($random->extractEntropy(PHP_INT_MAX, PHP_INT_MIN));
     self::assertIsInt($random->extractEntropy(PHP_INT_MAX - 1, PHP_INT_MIN + 1));
+    $random = new Random("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+    self::assertEquals(PHP_INT_MAX, $random->extractEntropy(PHP_INT_MAX, PHP_INT_MIN));
+    self::assertEquals(PHP_INT_MAX - 13, $random->extractEntropy(PHP_INT_MAX - 1, PHP_INT_MIN + 1));
   }
 //</editor-fold desc="Public Methods">
 }
