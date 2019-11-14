@@ -297,7 +297,7 @@ class UserUnauthenticatedTest extends DatabaseTestCase
       'confirmedTermsMinorVersion' => 5,
       'confirmedTermsMajorVersion' => "1"
     ])->seeStatusCode(422)->seeJsonEquals(["errors" =>
-      ["confirmedTermsMinorVersion" => ["The confirmed terms major version must be an integer."]],
+      ["confirmedTermsMajorVersion" => ["The confirmed terms major version must be an integer."]],
       "message" => "The given data was invalid.", "name" => "ValidationException", "status" => 422]);
   }
 
