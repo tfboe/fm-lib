@@ -64,8 +64,11 @@ class UUIDEntityTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   * @uses   \Tfboe\FmLib\Helpers\Random::stringToInt
+   * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
    * @uses   \Tfboe\FmLib\Entity\Traits\User::getId
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testSetId()
   {

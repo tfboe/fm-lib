@@ -15,6 +15,7 @@ use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\IdentifiableInterface;
 use Tfboe\FmLib\Entity\Helpers\IdGenerator;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
+use Tfboe\FmLib\Helpers\Random;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -27,7 +28,10 @@ class IdGeneratorTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   * @uses   \Tfboe\FmLib\Helpers\Random::stringToInt
+   * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testCreateIdFor()
   {
@@ -66,29 +70,32 @@ class IdGeneratorTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   * @uses   \Tfboe\FmLib\Helpers\Random::stringToInt
+   * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testCreateIdForIdAble()
   {
     $e1 = $this->getMockBuilder(IdentifiableInterface::class)
       ->setMockClassName("CreateIdForIdAbleA")
       ->getMock();
-    $e1->method("getIdentifiableId")->willReturn(1);
+    $e1->method("getIdentifiableId")->willReturn("A");
 
     $e2 = $this->getMockBuilder(IdentifiableInterface::class)
       ->setMockClassName("CreateIdForIdAbleA")
       ->getMock();
-    $e2->method("getIdentifiableId")->willReturn(1);
+    $e2->method("getIdentifiableId")->willReturn("A");
 
     $e3 = $this->getMockBuilder(IdentifiableInterface::class)
       ->setMockClassName("CreateIdForIdAbleB")
       ->getMock();
-    $e3->method("getIdentifiableId")->willReturn(1);
+    $e3->method("getIdentifiableId")->willReturn("A");
 
     $e4 = $this->getMockBuilder(IdentifiableInterface::class)
       ->setMockClassName("CreateIdForIdAbleA")
       ->getMock();
-    $e4->method("getIdentifiableId")->willReturn(2);
+    $e4->method("getIdentifiableId")->willReturn("B");
 
     srand(10);
     $id1 = IdGenerator::createIdFor($e1);
@@ -128,59 +135,40 @@ class IdGeneratorTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testCreateIdFromDeterminism()
   {
     srand(10);
     $id1 = IdGenerator::createIdFrom();
-    $id2 = IdGenerator::createIdFrom(-10);
-    $id3 = IdGenerator::createIdFrom(10);
+    $id2 = IdGenerator::createIdFrom(new Random("0Acb05f"));
+    $id3 = IdGenerator::createIdFrom(new Random("Acb05f"));
     self::assertNotEquals($id1, $id2);
     self::assertNotEquals($id2, $id3);
     self::assertNotEquals($id1, $id3);
     srand(10);
     self::assertEquals($id1, IdGenerator::createIdFrom());
-    self::assertEquals($id2, IdGenerator::createIdFrom(-10));
-    self::assertEquals($id3, IdGenerator::createIdFrom(10));
+    self::assertEquals($id2, IdGenerator::createIdFrom(new Random("0Acb05f")));
+    self::assertEquals($id3, IdGenerator::createIdFrom(new Random("Acb05f")));
     srand(10);
-    self::assertNotEquals($id2, IdGenerator::createIdFrom(-10));
-    self::assertNotEquals($id3, IdGenerator::createIdFrom(10));
+    self::assertNotEquals($id2, IdGenerator::createIdFrom(new Random("0Acb05f")));
+    self::assertNotEquals($id3, IdGenerator::createIdFrom(new Random("Acb05f")));
     self::assertNotEquals($id1, IdGenerator::createIdFrom());
     srand(10);
-    self::assertNotEquals($id1, IdGenerator::createIdFrom(-10));
-    self::assertNotEquals($id2, IdGenerator::createIdFrom(10));
+    self::assertNotEquals($id1, IdGenerator::createIdFrom(new Random("0Acb05f")));
+    self::assertNotEquals($id2, IdGenerator::createIdFrom(new Random("Acb05f")));
     self::assertNotEquals($id3, IdGenerator::createIdFrom());
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   */
-  public function testCreateIdFromMixByExtremes()
-  {
-    self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', IdGenerator::createIdFrom(PHP_INT_MAX));
-    self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', IdGenerator::createIdFrom(PHP_INT_MIN));
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   */
-  public function testCreateIdFromMixByNegative()
-  {
-    self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', IdGenerator::createIdFrom(-10));
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   */
-  public function testCreateIdFromMixByPositive()
-  {
-    self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', IdGenerator::createIdFrom(10));
   }
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
-   * @uses   \Tfboe\FmLib\Helpers\Random::stringToInt
+   * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testCreateIdWithExistingId()
   {
@@ -206,7 +194,10 @@ class IdGeneratorTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\IdGenerator::generate
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
-   * @uses   \Tfboe\FmLib\Helpers\Random::stringToInt
+   * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
   public function testGenerate()
   {

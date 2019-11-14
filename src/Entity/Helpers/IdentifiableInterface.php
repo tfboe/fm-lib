@@ -13,8 +13,13 @@ interface IdentifiableInterface
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @return int
+   * @return string
    */
-  public function getIdentifiableId(): int;
+  public function getIdentifiableId(): string;
+
+  /**
+   * @return bool
+   */
+  public function isUnique(): bool;
 //</editor-fold desc="Public Methods">
 }

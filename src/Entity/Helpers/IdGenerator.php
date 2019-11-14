@@ -32,46 +32,36 @@ class IdGenerator extends AbstractIdGenerator
     if (is_subclass_of($entity, UUIDEntityInterface::class) && $entity->hasId()) {
       return $entity->getId();
     }
-    $mixBy = Random::stringToInt(get_class($entity));
+    $mixByString = get_class($entity);
+    $useRandomness = true;
     if (is_subclass_of($entity, IdentifiableInterface::class)) {
       /** @var IdentifiableInterface $entity */
-      $mixBy = $mixBy ^ $entity->getIdentifiableId();
+      $mixByString .= "|" . $entity->getIdentifiableId();
+      $useRandomness = !$entity->isUnique();
     }
-    return self::createIdFrom($mixBy);
+    $mixBy = Random::stringToRandom($mixByString);
+    return self::createIdFrom($mixBy, $useRandomness);
   }
 
   /**
    * creates a new id
-   * @param int|null $mixBy
+   * @param Random|null $mixBy
    * @return string the new id
    */
-  public static function createIdFrom(?int $mixBy = null)
+  public static function createIdFrom(?Random $mixBy = null, bool $useRandomness = true)
   {
-    $v10 = mt_rand(0, 1);
-    if ($mixBy !== null && $mixBy < 0) {
-      $v10 = $v10 ^ 1;
-      $mixBy = -($mixBy + 1);
-    }
-    $v11 = mt_rand(0, 0x7FFF);
-    if ($mixBy !== null) {
-      $v11 = $v11 ^ ($mixBy & 0x7FFF);
-      $mixBy = $mixBy >> 15;
-    }
-    $vs = [];
-    $vs[] = ($v10 << 15) | $v11;
-    for ($i = 1; $i < 8; $i++) {
+    for ($i = 0; $i < 8; $i++) {
       $binDigits = 16;
       if ($i === 3) {
-        $binDigits = 12; //the first 4 bytes are fixed;
+        $binDigits = 12; //the first 4 bits are fixed;
       }
       if ($i === 4) {
-        $binDigits = 14; //the first 2 bytes are fixed
+        $binDigits = 14; //the first 2 bits are fixed
       }
       $max = (1 << $binDigits) - 1;
-      $vs[$i] = mt_rand(0, $max);
-      if ($mixBy !== null && $mixBy > 0) {
-        $vs[$i] = $vs[$i] ^ ($mixBy & $max);
-        $mixBy = $mixBy >> $binDigits;
+      $vs[$i] = $useRandomness ? mt_rand(0, $max) : 0;
+      if ($mixBy !== null) {
+        $vs[$i] = $vs[$i] ^ $mixBy->extractEntropyByBits($binDigits);
       }
     }
 
