@@ -52,11 +52,32 @@ class Random
   public function extractEntropy(int $max, int $min = 0): int
   {
     Internal::assert($max <= PHP_INT_MAX && $min >= PHP_INT_MIN && $min <= $max);
+    $maxInt = (PHP_INT_MAX >> 1);
+    if (($max > $maxInt && ($min <= 0 || $max - $min > $maxInt)) ||
+      ($min < -$maxInt && ($max >= 0 || $max - $min > $maxInt)) || ($max - $min) > $maxInt) {
+      //calculate floor(($max - $min) / 16) considering overflows
+      $max16 = $max % 16;
+      $min16 = $min % 16;
+      $max1 = (($max - $max16) >> 4) - (($min - $min16) >> 4);
+      $rest = $max16 - $min16;
+      if ($rest >= 16) {
+        $max1++;
+        $rest -= 16;
+      }
+
+      $z1 = $this->extractEntropy($max1);
+      $max2 = 15;
+      if ($z1 == $max1) {
+        $max2 = $rest;
+      }
+      $z2 = $this->extractEntropy($max2);
+      return (($min + 8 * $z1) + 8 * $z1) + $z2;
+    }
     $range = $max - $min;
     Internal::assert($range <= PHP_INT_MAX);
-    $bits = $this->countBits($range - 1);
+    $bits = $this->countBits($range);
 
-    return $min + ($this->extractEntropyByBits($bits) % $range);
+    return $min + ($this->extractEntropyByBits($bits) % ($range + 1));
   }
 
   /**
@@ -72,7 +93,7 @@ class Random
     $value = 0;
     if ($bits >= $this->remainingBitsFirstChar) {
       //extract full positions
-      $fullExtractLength = 1 + intdiv($bits - $this->remainingBitsFirstChar, 4);
+      $fullExtractLength = 1 + (($bits - $this->remainingBitsFirstChar) >> 2);
       $value = hexdec(substr($this->hexString, 0, $fullExtractLength));
       $bits -= $this->remainingBitsFirstChar + ($fullExtractLength - 1) * 4;
       $this->remainingBitsFirstChar = 4;
@@ -108,7 +129,7 @@ class Random
    * @param $n
    * @return int
    */
-  private function countBits(int $n): int
+  private static function countBits(int $n): int
   {
     $count = 0;
     while ($n > 0) {

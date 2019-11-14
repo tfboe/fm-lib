@@ -83,18 +83,32 @@ class RandomTest extends UnitTestCase
   {
     $hex = "0abce081f";
     $random = new Random($hex);
-    $res1 = $random->extractEntropy(800);
+    $res1 = $random->extractEntropy(799);
     $random2 = new Random($hex);
-    $res2 = $random2->extractEntropy(1024);
+    $res2 = $random2->extractEntropy(1023);
     self::assertEquals($res1, $res2 % 800);
     $random3 = new Random($hex);
-    $res3 = $random3->extractEntropy(524, -500);
+    $res3 = $random3->extractEntropy(523, -500);
     self::assertEquals($res2 - 500, $res3);
     $r1 = $random->extractEntropy(1000000000);
     $r2 = $random2->extractEntropy(1000000000);
     $r3 = $random3->extractEntropy(1000000000);
     self::assertEquals($r1, $r2);
     self::assertEquals($r2, $r3);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Helpers\Random::extractEntropy
+   * @covers \Tfboe\FmLib\Helpers\Random::countBits
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
+   */
+  public function testFullRandomInteger()
+  {
+    $random = new Random("08791234abcdef778899aeef87224effffffeeee123234641aaa");
+    self::assertIsInt($random->extractEntropy(PHP_INT_MAX, PHP_INT_MIN));
+    self::assertIsInt($random->extractEntropy(PHP_INT_MAX - 1, PHP_INT_MIN + 1));
   }
 //</editor-fold desc="Public Methods">
 }
