@@ -20,25 +20,40 @@ class RandomTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Helpers\Random::stringToRandom
-   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
-   */
-  public function testStringToRandom()
-  {
-    $message = "message";
-    $i1 = Random::stringToRandom($message);
-    self::assertEquals($i1, Random::stringToRandom($message));
-    self::assertNotEquals($i1, Random::stringToRandom("Message"));
-  }
-
-  /**
    * @covers \Tfboe\FmLib\Helpers\Random::__construct
    */
   public function testConstruct()
   {
+    /** @noinspection SpellCheckingInspection */
     $hex = "0abce081f";
     $random = new Random($hex);
     self::assertInstanceOf(Random::class, $random);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Helpers\Random::extractEntropy
+   * @covers \Tfboe\FmLib\Helpers\Random::countBits
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
+   */
+  public function testEntropy()
+  {
+    /** @noinspection SpellCheckingInspection */
+    $hex = "0abce081f";
+    $random = new Random($hex);
+    $res1 = $random->extractEntropy(799);
+    $random2 = new Random($hex);
+    $res2 = $random2->extractEntropy(1023);
+    self::assertEquals($res1, $res2 % 800);
+    $random3 = new Random($hex);
+    $res3 = $random3->extractEntropy(523, -500);
+    self::assertEquals($res2 - 500, $res3);
+    $r1 = $random->extractEntropy(1000000000);
+    $r2 = $random2->extractEntropy(1000000000);
+    $r3 = $random3->extractEntropy(1000000000);
+    self::assertEquals($r1, $r2);
+    self::assertEquals($r2, $r3);
   }
 
   /**
@@ -48,6 +63,7 @@ class RandomTest extends UnitTestCase
    */
   public function testExtractEntropyByBits()
   {
+    /** @noinspection SpellCheckingInspection */
     $hex = "0abce081f";
     $random = new Random($hex);
     $res1 = $random->extractEntropyByBits(10);
@@ -66,6 +82,7 @@ class RandomTest extends UnitTestCase
     self::assertEquals(0, $random->extractEntropyByBits(100));
     self::assertEquals(0, $random2->extractEntropyByBits(100));
 
+    /** @noinspection SpellCheckingInspection */
     $random3 = new Random("123456789abcdef0");
 
     //if we have bad luck the following may be wrong (probability 1/1024)
@@ -79,39 +96,28 @@ class RandomTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Helpers\Random::__construct
    * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
    */
-  public function testEntropy()
-  {
-    $hex = "0abce081f";
-    $random = new Random($hex);
-    $res1 = $random->extractEntropy(799);
-    $random2 = new Random($hex);
-    $res2 = $random2->extractEntropy(1023);
-    self::assertEquals($res1, $res2 % 800);
-    $random3 = new Random($hex);
-    $res3 = $random3->extractEntropy(523, -500);
-    self::assertEquals($res2 - 500, $res3);
-    $r1 = $random->extractEntropy(1000000000);
-    $r2 = $random2->extractEntropy(1000000000);
-    $r3 = $random3->extractEntropy(1000000000);
-    self::assertEquals($r1, $r2);
-    self::assertEquals($r2, $r3);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Helpers\Random::extractEntropy
-   * @covers \Tfboe\FmLib\Helpers\Random::countBits
-   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
-   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
-   * @uses   \Tfboe\FmLib\Helpers\Random::extractEntropyByBits
-   */
   public function testFullRandomInteger()
   {
+    /** @noinspection SpellCheckingInspection */
     $random = new Random("08791234abcdef778899aeef87224effffffeeee123234641aaa");
     self::assertIsInt($random->extractEntropy(PHP_INT_MAX, PHP_INT_MIN));
     self::assertIsInt($random->extractEntropy(PHP_INT_MAX - 1, PHP_INT_MIN + 1));
+    /** @noinspection SpellCheckingInspection */
     $random = new Random("FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
     self::assertEquals(PHP_INT_MAX, $random->extractEntropy(PHP_INT_MAX, PHP_INT_MIN));
     self::assertEquals(PHP_INT_MAX - 13, $random->extractEntropy(PHP_INT_MAX - 1, PHP_INT_MIN + 1));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Helpers\Random::stringToRandom
+   * @uses   \Tfboe\FmLib\Helpers\Random::__construct
+   */
+  public function testStringToRandom()
+  {
+    $message = "message";
+    $i1 = Random::stringToRandom($message);
+    self::assertEquals($i1, Random::stringToRandom($message));
+    self::assertNotEquals($i1, Random::stringToRandom("Message"));
   }
 //</editor-fold desc="Public Methods">
 }

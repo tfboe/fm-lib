@@ -46,10 +46,12 @@ class IdGenerator extends AbstractIdGenerator
   /**
    * creates a new id
    * @param Random|null $mixBy
+   * @param bool $useRandomness
    * @return string the new id
    */
   public static function createIdFrom(?Random $mixBy = null, bool $useRandomness = true)
   {
+    $vs = [];
     for ($i = 0; $i < 8; $i++) {
       $binDigits = 16;
       if ($i === 3) {

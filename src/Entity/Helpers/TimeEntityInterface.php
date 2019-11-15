@@ -16,20 +16,9 @@ use DateTime;
  * Interface TimeEntityInterface
  * @package Tfboe\FmLib\Entity\Helpers
  */
-interface TimeEntityInterface
+interface TimeEntityInterface extends TimeEntityGetterInterface
 {
 //<editor-fold desc="Public Methods">
-  /**
-   * @return DateTime|null
-   */
-  public function getEndTime(): ?DateTime;
-
-  /**
-   * @return DateTime|null
-   */
-  public function getStartTime(): ?DateTime;
-
-
   /**
    * @param DateTime|null $endTime
    * @return $this|TimeEntity

@@ -113,7 +113,7 @@ class TimeEntityTest extends UnitTestCase
    */
   private function mock(): MockObject
   {
-    return $this->getMockForTrait(TimeEntity::class, [], "MockedTrait");
+    return $this->getMockForTrait(TimeEntity::class);
   }
 //</editor-fold desc="Private Methods">
 }

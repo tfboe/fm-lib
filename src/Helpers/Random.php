@@ -75,7 +75,7 @@ class Random
     }
     $range = $max - $min;
     Internal::assert($range <= PHP_INT_MAX);
-    $bits = $this->countBits($range);
+    $bits = static::countBits($range);
 
     return $min + ($this->extractEntropyByBits($bits) % ($range + 1));
   }

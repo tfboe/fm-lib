@@ -23,7 +23,7 @@ use Tfboe\FmLib\Entity\RankingSystemInterface;
  * @package Tfboe\FmLib\Entity\Helpers
  */
 interface TournamentHierarchyInterface extends BaseEntityInterface, GameModeInterface, TeamModeInterface,
-  OrganizingModeInterface, ScoreModeInterface, TableInterface, TimeEntityInterface, UUIDEntityInterface
+  OrganizingModeInterface, ScoreModeInterface, TableInterface, StartAndFinishableInterface, UUIDEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**

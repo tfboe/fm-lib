@@ -32,7 +32,7 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   use OrganizingMode;
   use ScoreMode;
   use Table;
-  use TimeEntity;
+  use StartAndFinishable;
   use UUIDEntity;
 
 //<editor-fold desc="Fields">

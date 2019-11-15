@@ -21,6 +21,8 @@ use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
+use Tfboe\FmLib\Entity\Helpers\StartAndFinishableInterface;
+use Tfboe\FmLib\Entity\Helpers\StartFinishStatus;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
@@ -193,6 +195,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
    */
   public function testGetEarliestInfluenceGameLevel()
   {
@@ -232,7 +243,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game->setGameNumber(1);
     $game->setMatch($match);
     $gameEndTime = new DateTime("2017-06-01 00:00:00");
-    $game->setEndTime($gameEndTime);
+    $this->setEndTime($game, $gameEndTime);
     self::assertEquals($gameEndTime, $service->getEarliestInfluence($ranking, $tournament));
 
     /** @var GameInterface $game2 */
@@ -240,7 +251,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game2->setGameNumber(2);
     $game2->setMatch($match);
     $game2EndTime = new DateTime("2017-05-01 00:00:00");
-    $game2->setEndTime($game2EndTime);
+    $this->setEndTime($game2, $game2EndTime);
     self::assertEquals($game2EndTime, $service->getEarliestInfluence($ranking, $tournament));
 
     /** @var GameInterface $game3 */
@@ -248,7 +259,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game3->setGameNumber(3);
     $game3->setMatch($match);
     $game3EndTime = new DateTime("2017-07-01 00:00:00");
-    $game3->setEndTime($game3EndTime);
+    $this->setEndTime($game3, $game3EndTime);
     self::assertEquals($game2EndTime, $service->getEarliestInfluence($ranking, $tournament));
   }
 
@@ -271,6 +282,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
    * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
    */
   public function testGetEarliestInfluenceGameLevelWithDifferentImpactLevels()
@@ -306,7 +326,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game->setGameNumber(1);
     $game->setMatch($match);
     $endTime1 = new DateTime("2017-12-01 00:00:00");
-    $game->setEndTime($endTime1);
+    $this->setEndTime($game, $endTime1);
     $game->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime1, $service->getEarliestInfluence($ranking, $tournament));
 
@@ -315,7 +335,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game2->setGameNumber(2);
     $game2->setMatch($match);
     $endTime2 = new DateTime("2017-11-01 00:00:00");
-    $game2->setEndTime($endTime2);
+    $this->setEndTime($game2, $endTime2);
     self::assertEquals($endTime1, $service->getEarliestInfluence($ranking, $tournament));
 
     $match->getRankingSystems()->set($ranking->getId(), $ranking);
@@ -330,7 +350,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game3->setGameNumber(1);
     $game3->setMatch($match2);
     $endTime3 = new DateTime("2017-10-01 00:00:00");
-    $game3->setEndTime($endTime3);
+    $this->setEndTime($game3, $endTime3);
     self::assertEquals($endTime2, $service->getEarliestInfluence($ranking, $tournament));
 
     $phase->getRankingSystems()->set($ranking->getId(), $ranking);
@@ -349,7 +369,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game4->setGameNumber(1);
     $game4->setMatch($match3);
     $endTime4 = new DateTime("2017-09-01 00:00:00");
-    $game4->setEndTime($endTime4);
+    $this->setEndTime($game4, $endTime4);
     self::assertEquals($endTime3, $service->getEarliestInfluence($ranking, $tournament));
 
     $competition->getRankingSystems()->set($ranking->getId(), $ranking);
@@ -371,7 +391,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game5->setGameNumber(1);
     $game5->setMatch($match4);
     $endTime5 = new DateTime("2017-01-01 00:00:00");
-    $game5->setEndTime($endTime5);
+    $this->setEndTime($game5, $endTime5);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
     /** @var Game $game6 */
@@ -379,7 +399,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game6->setGameNumber(2);
     $game6->setMatch($match4);
     $endTime6 = new DateTime("2017-10-01 00:00:00");
-    $game6->setEndTime($endTime6);
+    $this->setEndTime($game6, $endTime6);
     $game6->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime4, $service->getEarliestInfluence($ranking, $tournament));
 
@@ -388,7 +408,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $game7->setGameNumber(3);
     $game7->setMatch($match4);
     $endTime7 = new DateTime("2017-08-01 00:00:00");
-    $game7->setEndTime($endTime7);
+    $this->setEndTime($game7, $endTime7);
     $game7->getRankingSystems()->set($ranking->getId(), $ranking);
     self::assertEquals($endTime7, $service->getEarliestInfluence($ranking, $tournament));
   }
@@ -404,6 +424,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
    */
   public function testGetEarliestInfluenceTournamentLevel()
   {
@@ -424,7 +453,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $tournament = new Tournament();
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
     $endTime = new DateTime("2017-03-01 00:00:00");
-    $tournament->setEndTime($endTime);
+    $this->setEndTime($tournament, $endTime);
     self::assertEquals($endTime, $service->getEarliestInfluence($ranking, $tournament));
   }
 
@@ -831,6 +860,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
    */
   public function testUpdateRankingForTournamentOldEarliestIsNull()
   {
@@ -838,7 +876,7 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new DateTime("2017-01-01 00:00:00");
-    $tournament->setEndTime($endedAt);
+    $this->setEndTime($tournament, $endedAt);
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
     $timeService = $this->createMock(TimeServiceInterface::class);
     $timeService->expects(self::atLeastOnce())->method('clearTimes')->id('clearTimes');
@@ -856,8 +894,6 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemService $service */
     $service->updateRankingForTournament($ranking, $tournament, null);
   }
-
-  //TODO split this up in multiple unit tests!!!
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
@@ -890,6 +926,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $service->updateRankingForTournament($ranking, $tournament, null);
   }
 
+  //TODO split this up in multiple unit tests!!!
+
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingForTournament
    * @throws PreconditionFailedException
@@ -903,6 +941,15 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
    */
   public function testUpdateRankingForTournamentTournamentIsEarlier()
   {
@@ -910,7 +957,7 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemInterface $ranking */
     $tournament = new Tournament();
     $endedAt = new DateTime("2017-01-01");
-    $tournament->setEndTime($endedAt);
+    $this->setEndTime($tournament, $endedAt);
     $tournament->getRankingSystems()->set($ranking->getId(), $ranking);
     $timeService = $this->createMock(TimeServiceInterface::class);
     $timeService->expects(self::atLeastOnce())->method('clearTimes')->id('clearTimes');
@@ -1352,6 +1399,19 @@ class RankingSystemServiceTest extends UnitTestCase
       ->with($ranking)->willReturn($queryBuilder);
 
     return $service;
+  }
+
+  /** @noinspection PhpDocMissingThrowsInspection */
+  /**
+   * @param StartAndFinishableInterface $entity
+   * @param DateTime $time
+   */
+  private function setEndTime(StartAndFinishableInterface $entity, DateTime $time)
+  {
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $entity->setStatus(StartFinishStatus::STARTED, $time);
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $entity->setStatus(StartFinishStatus::FINISHED, $time);
   }
 //</editor-fold desc="Private Methods">
 }
