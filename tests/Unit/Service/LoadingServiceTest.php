@@ -41,7 +41,7 @@ class LoadingServiceTest extends UnitTestCase
     $entityManager = $this->getMockForAbstractClass(EntityManagerInterface::class);
     $service = new LoadingService($entityManager);
     self::assertInstanceOf(LoadingService::class, $service);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityManager, self::getProperty(get_class($service), 'em')->getValue($service));
   }
 

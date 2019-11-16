@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
  * Trait Table
@@ -38,7 +37,6 @@ trait Table
   /**
    * @param int|null $table
    * @return $this|Table
-   * @throws ValueNotValid
    */
   public function setTable(?int $table)
   {

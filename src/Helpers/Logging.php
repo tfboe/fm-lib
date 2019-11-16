@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Helpers;
 
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
  * Class Logging
@@ -29,15 +28,14 @@ abstract class Logging
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
-  /** @noinspection PhpDocMissingThrowsInspection */ //InvalidArgumentException, Exception
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * Logs the given message in the given logger
    * @param string $message the message to log
    * @param string $logger the logger to use
    * @param int $type the type of the message
-   * @throws ValueNotValid invalid logger
    */
-  public static function log(string $message, string $logger = Logs::GENERAL, int $type = Logger::INFO)
+  public static function log(string $message, string $logger = Logs::GENERAL, int $type = Logger::INFO): void
   {
     if (self::$testing && $logger !== Logs::TESTING) {
       //do nothing
@@ -48,9 +46,11 @@ abstract class Logging
       self::$loggers[$logger] = new Logger($logger);
       // InvalidArgumentException => stream is a string
       // Exception => path is static and it is ensured that it is valid
-      /** @noinspection PhpUnhandledExceptionInspection */
+
+      $path = (self::$storagePathFunction)() . '/logs/' . $logger . '.log';
+      /** @noinspection PhpUnhandledExceptionInspection */ //$path is always a string
       self::$loggers[$logger]->pushHandler(
-        new StreamHandler((self::$storagePathFunction)() . '/logs/' . $logger . '.log'));
+        new StreamHandler($path));
     }
     self::$loggers[$logger]->log($type, $message);
   }

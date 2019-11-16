@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Interface TableInterface
  * @package Tfboe\FmLib\Entity\CategoryTraits
@@ -27,7 +24,6 @@ interface TableInterface
   /**
    * @param int|null $table
    * @return $this|Table
-   * @throws ValueNotValid
    */
   public function setTable(?int $table);
 //</editor-fold desc="Public Methods">

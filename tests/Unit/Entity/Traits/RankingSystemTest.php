@@ -41,7 +41,7 @@ class RankingSystemTest extends UnitTestCase
   public function testAutomaticInstanceGeneration()
   {
     $entity = $this->instance();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setGenerationInterval(AutomaticInstanceGeneration::MONTHLY);
     self::assertEquals(AutomaticInstanceGeneration::MONTHLY, $entity->getGenerationInterval());
   }
@@ -80,7 +80,7 @@ class RankingSystemTest extends UnitTestCase
   {
     $entity = $this->instance();
     $level = Level::COMPETITION;
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setDefaultForLevel($level);
     self::assertEquals($level, $entity->getDefaultForLevel());
   }

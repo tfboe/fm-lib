@@ -41,6 +41,7 @@ class TimeEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TimeEntity::getEndTime
    * @throws ReflectionException
+   * @throws Exception
    */
   public function testGetEndTimeNotLocalized()
   {
@@ -49,10 +50,10 @@ class TimeEntityTest extends UnitTestCase
     $property = $parentClass->getProperty('endTime');
     $property->setAccessible(true);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'endTime')->setValue($entity,
       new DateTime("2017-01-01 05:00:00", new DateTimeZone("UTC")));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'endTimezone')->setValue($entity, "+02:00");
 
     $time = $entity->getEndTime();

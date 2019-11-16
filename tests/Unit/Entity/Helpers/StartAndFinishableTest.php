@@ -53,7 +53,7 @@ class StartAndFinishableTest extends UnitTestCase
     self::assertEquals($end, $entity->getEndTime());
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
@@ -70,17 +70,16 @@ class StartAndFinishableTest extends UnitTestCase
   public function testStatusFromFinishedToNotStarted()
   {
     $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, new DateTime(), false, false);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, new DateTime(), false, false);
     $this->expectException(Error::class);
     $this->expectExceptionMessage('Invalid status change!');
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, new DateTime(), false, false);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
@@ -98,11 +97,10 @@ class StartAndFinishableTest extends UnitTestCase
     $entity = $this->mock();
     $this->expectException(Error::class);
     $this->expectExceptionMessage('Invalid status change!');
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, new DateTime(), false, false);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::getStatus
@@ -125,34 +123,34 @@ class StartAndFinishableTest extends UnitTestCase
     self::assertEquals(StartFinishStatus::NOT_STARTED, $entity->getStatus());
     self::assertFalse($entity->isStarted());
     self::assertFalse($entity->isFinished());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, new DateTime(), false, false);
     self::assertEquals(StartFinishStatus::STARTED, $entity->getStatus());
     self::assertTrue($entity->isStarted());
     self::assertFalse($entity->isFinished());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, new DateTime(), false, false);
     self::assertEquals(StartFinishStatus::FINISHED, $entity->getStatus());
     self::assertTrue($entity->isStarted());
     self::assertTrue($entity->isFinished());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, new DateTime(), false, false);
     self::assertEquals(StartFinishStatus::FINISHED, $entity->getStatus());
     self::assertTrue($entity->isStarted());
     self::assertTrue($entity->isFinished());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, new DateTime(), false, false);
     self::assertEquals(StartFinishStatus::STARTED, $entity->getStatus());
     self::assertTrue($entity->isStarted());
     self::assertFalse($entity->isFinished());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, new DateTime(), false, false);
     self::assertEquals(StartFinishStatus::NOT_STARTED, $entity->getStatus());
     self::assertFalse($entity->isStarted());
     self::assertFalse($entity->isFinished());
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
    * @throws ReflectionException
@@ -182,64 +180,64 @@ class StartAndFinishableTest extends UnitTestCase
     self::assertNull($entity->getEndTime());
 
     $date1 = new DateTime("2019-01-01");
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date1);
     self::assertEquals($date1, $entity->getStartTime());
 
     $date2 = new DateTime("2019-02-01");
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, $date2);
     self::assertNull($entity->getStartTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date1, false);
     self::assertNull($entity->getStartTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, $date2);
     self::assertNull($entity->getStartTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date1);
     self::assertEquals($date1, $entity->getStartTime());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, $date2, false);
     self::assertEquals($date1, $entity->getStartTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date2);
     self::assertEquals($date2, $entity->getStartTime());
 
     $date3 = new DateTime("2019-03-01");
     self::assertNull($entity->getEndTime());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, $date3);
     self::assertEquals($date2, $entity->getStartTime());
     self::assertEquals($date3, $entity->getEndTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date1);
     self::assertEquals($date2, $entity->getStartTime());
     self::assertNull($entity->getEndTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, $date3, true, false);
     self::assertEquals($date2, $entity->getStartTime());
     self::assertNull($entity->getEndTime());
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $date1);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, $date3);
     self::assertEquals($date2, $entity->getStartTime());
     self::assertEquals($date3, $entity->getEndTime());
 
     //test skipping
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::NOT_STARTED, $date1);
     self::assertNull($entity->getStartTime());
     self::assertNull($entity->getEndTime());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, $date3);
     self::assertEquals($date3, $entity->getStartTime());
     self::assertEquals($date3, $entity->getEndTime());

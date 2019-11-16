@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Interface GameModeInterface
  * @package Tfboe\FmLib\Entity\CategoryTraits
@@ -27,7 +24,6 @@ interface GameModeInterface
   /**
    * @param int|null $gameMode
    * @return $this|GameMode
-   * @throws ValueNotValid
    */
   public function setGameMode(?int $gameMode);
 //</editor-fold desc="Public Methods">

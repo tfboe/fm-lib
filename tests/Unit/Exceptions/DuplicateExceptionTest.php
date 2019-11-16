@@ -14,7 +14,7 @@ use Tfboe\FmLib\Exceptions\DuplicateException;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
- * Class ValueNotValidTest
+ * Class DuplicateExceptionTest
  * @package Tfboe\FmLib\Tests\Unit\Exceptions
  */
 class DuplicateExceptionTest extends UnitTestCase

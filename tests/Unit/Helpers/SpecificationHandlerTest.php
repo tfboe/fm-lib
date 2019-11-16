@@ -38,7 +38,7 @@ class SpecificationHandlerTest extends UnitTestCase
   public function testDatetimetzTransformer()
   {
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $closure = self::getMethod(get_class($handler), 'datetimetzTransformer')
       ->invokeArgs($handler, [TestEnum::class]);
     $string = "2017-01-01 00:00:00 Europe/Vienna";
@@ -59,7 +59,7 @@ class SpecificationHandlerTest extends UnitTestCase
   public function testEnumTransformer()
   {
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $closure = self::getMethod(get_class($handler), 'enumTransformer')->invokeArgs($handler, [TestEnum::class]);
     self::assertEquals(1, $closure('INT_KEY'));
     self::assertEquals('value', $closure('KEY'));
@@ -90,7 +90,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $object = $this->getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
     $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'setFromSpecification');
     $method->invokeArgs($handler, [$object, $specification, []]);
   }
@@ -109,7 +109,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $object = $this->getMockForAbstractClass(BaseEntity::class, [], '', true, true, true, ['setProp']);
     $object->expects(static::once())->method('setProp')->with($value)->willReturnSelf();
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'setFromSpecification');
     $method->invokeArgs($handler, [$object, $specification, ['attr' => $value]]);
   }
@@ -124,7 +124,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $value = 'test-value';
     $object = $this->createStub(BaseEntityInterface::class);
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'setFromSpecification');
     $executed = false;
     $specification = ['attr' => ['setter' => function ($entity, $v) use ($object, $value, &$executed) {
@@ -151,7 +151,7 @@ class SpecificationHandlerTest extends UnitTestCase
 
     $handler = $this->handler(["getReference" => $user]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -173,7 +173,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $specification = ['transformer' => $transformer];
 
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -193,7 +193,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $specification = ['type' => 'datetime'];
 
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -212,7 +212,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $specification = ['type' => 'default'];
 
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -232,7 +232,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $specification = ['type' => 'datetime'];
 
     $handler = $this->handler();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -252,7 +252,7 @@ class SpecificationHandlerTest extends UnitTestCase
     $specification = ['nullValue' => 5];
     $value = null;
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'transformValue');
     $method->invokeArgs($handler, [&$value, $specification]);
 
@@ -283,7 +283,7 @@ class SpecificationHandlerTest extends UnitTestCase
         return $x + 1;
       }]
     ];
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(get_class($handler), 'validateBySpecification');
     $method->invokeArgs($handler, [$request, $specification]);
   }

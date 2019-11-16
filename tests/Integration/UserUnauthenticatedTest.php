@@ -90,7 +90,7 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $password = $this->newPassword();
     /** @var UserInterface $user */
     $user = entity(User::class)->create(['originalPassword' => $password]);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $property = self::getProperty(User::class, 'id');
     $property->setValue($user, "\x84invalid");
     $this->json('POST', '/login', [
@@ -126,7 +126,7 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     $password = $this->newPassword();
     /** @var UserInterface $user */
     $user = entity(User::class)->create(['originalPassword' => $password]);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $property = self::getProperty(User::class, 'id');
     $property->setValue($user, "\x84invalid");
     $this->json('POST', '/login', [

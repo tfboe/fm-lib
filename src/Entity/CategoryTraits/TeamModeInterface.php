@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Interface TeamModeInterface
  * @package Tfboe\FmLib\Entity\CategoryTraits
@@ -27,7 +24,6 @@ interface TeamModeInterface
   /**
    * @param int|null $teamMode
    * @return $this|TeamMode
-   * @throws ValueNotValid
    */
   public function setTeamMode(?int $teamMode);
 //</editor-fold desc="Public Methods">

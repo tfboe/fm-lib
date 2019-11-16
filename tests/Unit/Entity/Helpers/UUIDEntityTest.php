@@ -30,7 +30,7 @@ class UUIDEntityTest extends UnitTestCase
   public function testGetEntityId()
   {
     $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
     self::assertEquals('test-id', $entity->getEntityId());
   }
@@ -42,7 +42,7 @@ class UUIDEntityTest extends UnitTestCase
   public function testGetId()
   {
     $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
     self::assertEquals('test-id', $entity->getId());
   }
@@ -54,7 +54,7 @@ class UUIDEntityTest extends UnitTestCase
   public function testHasId()
   {
     $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
     self::assertEquals(true, $entity->hasId());
   }
@@ -84,7 +84,7 @@ class UUIDEntityTest extends UnitTestCase
   public function testToString()
   {
     $entity = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($entity), 'id')->setValue($entity, 'test-id');
     self::assertEquals("UUIDEntity:test-id", strval($entity));
   }

@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
+use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TeamMembershipInterface;
@@ -27,10 +28,11 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setCompetition
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getCompetition
-   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testCompetition()
   {
@@ -55,8 +57,9 @@ class TeamTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::init
-   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::getMemberships
+   * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
   public function testInit()
   {
@@ -69,6 +72,7 @@ class TeamTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getMemberships
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testPlayers()
@@ -84,6 +88,7 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setRank
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getRank
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testRank()
@@ -96,6 +101,7 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
+   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testStartNumber()
@@ -108,13 +114,14 @@ class TeamTest extends UnitTestCase
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * @return TeamInterface|MockObject
+   * @throws ReflectionException
    */
   private function team(): MockObject
   {
-    /** @noinspection PhpUnhandledExceptionInspection */ //will never throw
+    //will never throw
     return $this->getStubbedEntity("Team", ["getId" => "id"]);
   }
 //</editor-fold desc="Private Methods">

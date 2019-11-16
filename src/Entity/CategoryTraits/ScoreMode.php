@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Trait ScoreMode
  * @package Tfboe\FmLib\Entity\CategoryTraits
@@ -38,7 +35,6 @@ trait ScoreMode
   /**
    * @param int|null $scoreMode
    * @return $this|ScoreMode
-   * @throws ValueNotValid
    */
   public function setScoreMode(?int $scoreMode)
   {

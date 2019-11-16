@@ -13,6 +13,7 @@ use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
 use ReflectionProperty;
+use Tfboe\FmLib\Exceptions\Internal;
 
 /**
  * Trait ReflectionMethods
@@ -21,7 +22,6 @@ use ReflectionProperty;
 trait ReflectionMethods
 {
 //<editor-fold desc="Protected Methods">
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * Calls the given protected method on the given object with the given arguments
    * @param mixed $object the object to call on
@@ -32,7 +32,7 @@ trait ReflectionMethods
   protected static function callProtectedMethod($object, string $method, array $args = [])
   {
     // ReflectionException => get_class is a valid class
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     return self::getMethod(get_class($object), $method)->invokeArgs($object, $args);
   }
 
@@ -41,12 +41,15 @@ trait ReflectionMethods
    * @param string $class the class name
    * @param string $name the method name
    * @return ReflectionMethod the accessible method object
-   * @throws ReflectionException the given class does not exist
    */
   protected static function getMethod(string $class, string $name): ReflectionMethod
   {
-    $class = new ReflectionClass($class);
-    $method = $class->getMethod($name);
+    try {
+      $class = new ReflectionClass($class);
+      $method = $class->getMethod($name);
+    } catch (ReflectionException $e) {
+      return Internal::error("The class $class does not exist or has no method $name");
+    }
     $method->setAccessible(true);
     return $method;
   }
@@ -56,15 +59,22 @@ trait ReflectionMethods
    * @param string $class the class name
    * @param string $name the method name
    * @return ReflectionProperty the accessible property object
-   * @throws ReflectionException the given class does not exist
    */
   protected static function getProperty(string $class, string $name): ReflectionProperty
   {
-    $class = new ReflectionClass($class);
+    try {
+      $class = new ReflectionClass($class);
+    } catch (ReflectionException $e) {
+      return Internal::error("The class $class does not exist!");
+    }
     /** @noinspection PhpStatementHasEmptyBodyInspection */
     while (!$class->hasProperty($name) && ($class = $class->getParentClass()) !== null) {
     }
-    $property = $class->getProperty($name);
+    try {
+      $property = $class->getProperty($name);
+    } catch (ReflectionException $e) {
+      return Internal::error("The property $name does not exist in the class $class");
+    }
     $property->setAccessible(true);
     return $property;
   }

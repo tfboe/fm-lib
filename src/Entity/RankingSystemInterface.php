@@ -16,7 +16,6 @@ use Tfboe\FmLib\Entity\Helpers\NameEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\SubClassDataInterface;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 
 /**
@@ -59,13 +58,11 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
 
   /**
    * @param int|null $defaultForLevel
-   * @throws ValueNotValid
    */
   public function setDefaultForLevel(?int $defaultForLevel);
 
   /**
    * @param int $generationInterval
-   * @throws ValueNotValid
    */
   public function setGenerationInterval(int $generationInterval);
 

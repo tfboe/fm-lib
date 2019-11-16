@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Providers;
 
+use Doctrine\DBAL\DBALException;
 use Doctrine\DBAL\Types\Type;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
@@ -70,11 +71,11 @@ class FmLibServiceProvider extends ServiceProvider
     }, 'The :attribute must be an integer.');
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //\Doctrine\DBAL\DBALException
   /**
    * Register the application services.
    *
    * @return void
+   * @throws DBALException
    */
   public function register()
   {
@@ -89,7 +90,7 @@ class FmLibServiceProvider extends ServiceProvider
       }
     }
 
-    /** @noinspection PhpUnhandledExceptionInspection */ // \Doctrine\DBAL\DBALException datetime is a valid type
+    // \Doctrine\DBAL\DBALException datetime is a valid type
     Type::overrideType('datetime', UTCDateTimeType::class);
 
     $this->app->register(DoctrineServiceProvider::class);

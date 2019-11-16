@@ -28,7 +28,7 @@ class NumericalIdTest extends UnitTestCase
   public function testEntityId()
   {
     $player = $this->player();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $idProperty = self::getProperty(get_class($player), 'id');
     $idProperty->setValue($player, 1);
     self::assertEquals(1, $player->getEntityId());
@@ -41,7 +41,7 @@ class NumericalIdTest extends UnitTestCase
   public function testId()
   {
     $player = $this->player();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $idProperty = self::getProperty(get_class($player), 'id');
     $idProperty->setValue($player, 0);
     self::assertEquals(0, $player->getId());

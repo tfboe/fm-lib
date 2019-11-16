@@ -10,8 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Helpers;
 
 
-use Tfboe\FmLib\Exceptions\PropertyNotExistingException;
-
 /**
  * Interface SubClassDataInterface
  * @package Tfboe\FmLib\Entity\Helpers
@@ -37,7 +35,6 @@ interface SubClassDataInterface
    * Gets a property or throws an error if the property does not exist.
    * @param string $name the name of the property
    * @return mixed the value of the property
-   * @throws PropertyNotExistingException
    */
   public function getProperty($name);
 
@@ -67,7 +64,6 @@ interface SubClassDataInterface
    * @param string $name the name of the property to set
    * @param mixed $value the new value for the property
    * @return $this|SubClassData
-   * @throws PropertyNotExistingException
    */
   public function setProperty(string $name, $value);
 

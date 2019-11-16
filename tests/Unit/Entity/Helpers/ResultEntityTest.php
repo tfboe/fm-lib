@@ -9,11 +9,11 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -40,13 +40,12 @@ class ResultEntityTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResult
    * @throws ReflectionException
-   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testResult()
   {
     $mock = $this->mock();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $mock->setResult(Result::DRAW);
     self::assertEquals(Result::DRAW, $mock->getResult());
   }
@@ -98,17 +97,17 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
    * @throws ReflectionException
-   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testResultNotValidException()
   {
     $mock = $this->mock();
-    $this->expectException(ValueNotValid::class);
+    $this->expectException(Error::class);
     $this->expectExceptionMessage(
-      'The following value is not valid: 100 in Tfboe\FmLib\Entity\Helpers\Result. Possible values: 0, 1, 2, 3, 4.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+      'Expected a valid value of Enum Tfboe\FmLib\Entity\Helpers\Result but got 100');
+
     $mock->setResult(100);
   }
 //</editor-fold desc="Public Methods">

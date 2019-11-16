@@ -52,7 +52,6 @@ abstract class UnitTestCase extends TestCase
 
 //<editor-fold desc="Protected Final Methods">
 
-  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * Gets a mock class (with full implementation). The given arguments are used for the arguments for the constructor.
    * If too less arguments are given mocks are created for the rest of the constructor arguments.
@@ -65,7 +64,7 @@ abstract class UnitTestCase extends TestCase
   protected final function getMockWithMockedArguments(string $className, array $arguments = [],
                                                       array $mockedMethods = []): MockObject
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
@@ -85,7 +84,7 @@ abstract class UnitTestCase extends TestCase
    */
   protected final function getObjectWithMockedArguments($className, array $arguments = [])
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $reflection = new ReflectionClass($className);
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;

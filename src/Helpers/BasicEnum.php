@@ -10,7 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Helpers;
 
 use ReflectionClass;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
+use Tfboe\FmLib\Exceptions\Internal;
 
 /**
  * Class BasicEnum
@@ -34,12 +34,11 @@ abstract class BasicEnum
    * Ensures that the given value is valid by throwing an exception if it is not valid
    * @param mixed $value the value to check for validity
    * @param bool $strict if yes type checks are performed
-   * @throws ValueNotValid if the value is not valid
    */
   public static function ensureValidValue($value, bool $strict = true): void
   {
     if (!self::isValidValue($value, $strict)) {
-      throw new ValueNotValid($value, get_called_class());
+      Internal::error("Expected a valid value of Enum " . get_called_class() . " but got " . $value);
     }
   }
 
@@ -47,7 +46,6 @@ abstract class BasicEnum
    * Gets the name of the given value, throwing an exception if the value is not valid
    * @param mixed $value the value to get the name for
    * @return string the name of the value
-   * @throws ValueNotValid if the value is not valid
    */
   public static function getName($value): string
   {
@@ -56,7 +54,7 @@ abstract class BasicEnum
       return $names[$value];
     }
 
-    throw new ValueNotValid($value, get_called_class());
+    return Internal::error("Expected a valid value of Enum " . get_called_class() . " but got " . $value);
   }
 
   /**
@@ -73,7 +71,6 @@ abstract class BasicEnum
    * @param string $name the name for which to get the value
    * @param bool $strict if yes retrieval is done case sensitive and otherwise case insensitive
    * @return mixed the corresponding value
-   * @throws ValueNotValid if the name is not valid
    */
   public static function getValue(string $name, bool $strict = false)
   {
@@ -90,7 +87,7 @@ abstract class BasicEnum
       }
     }
 
-    throw new ValueNotValid($name, get_called_class(), "getValues");
+    return Internal::error("Expected a valid name of Enum " . get_called_class() . " but got " . $name);
   }
 
   /**
@@ -154,7 +151,7 @@ abstract class BasicEnum
     return self::$constCacheArrayCaseMapping[$calledClass];
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
+  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * Gets a dictionary of all constants in this enum
    * @param string|null $calledClass
@@ -169,8 +166,7 @@ abstract class BasicEnum
       $calledClass = get_called_class();
     }
     if (!array_key_exists($calledClass, self::$constCacheArray)) {
-      // ReflectionException => whe know that calledClass is a valid class since it is the result of
-      //                        get_called_class
+      //calledClass does always exist since calledClass equals get_called_class()
       /** @noinspection PhpUnhandledExceptionInspection */
       $reflect = new ReflectionClass($calledClass);
       $array = $reflect->getConstants();

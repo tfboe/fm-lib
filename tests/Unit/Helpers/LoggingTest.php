@@ -51,9 +51,9 @@ class LoggingTest extends UnitTestCase
     ;
 
     Logging::$storagePathFunction = 'Tfboe\FmLib\Tests\Unit\Helpers\storage_path_function';
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     Logging::log("invalid", "INVALID LOG");
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     Logging::log("testMessage", Logs::TESTING);
     $path = sys_get_temp_dir() . '/logs/' . Logs::TESTING . '.log';
     self::assertTrue(is_writable($path));

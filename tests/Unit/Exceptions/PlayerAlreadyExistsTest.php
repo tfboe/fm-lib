@@ -16,7 +16,7 @@ use Tfboe\FmLib\Tests\Entity\Player;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
- * Class ValueNotValidTest
+ * Class PlayerAlreadyExistsTest
  * @package Tfboe\FmLib\Tests\Unit\Exceptions
  */
 class PlayerAlreadyExistsTest extends UnitTestCase
@@ -48,8 +48,8 @@ class PlayerAlreadyExistsTest extends UnitTestCase
     $player->setFirstName('first');
     $player->setLastName('last');
     $player->setBirthday(new DateTime('1990-02-02'));
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
+
     $idProperty = self::getProperty(Player::class, 'id');
     $idProperty->setValue($player, 0);
 

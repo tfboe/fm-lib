@@ -46,6 +46,8 @@ class TermsService implements TermsServiceInterface
   public function getLatestTerms(): TermsInterface
   {
     $builder = $this->em->createQueryBuilder();
+
+    //Cannot return more than one result since setMaxResults(1) is used
     /** @noinspection PhpUnhandledExceptionInspection */
     $terms = $builder->select('e')
       ->from(TermsInterface::class, 'e')

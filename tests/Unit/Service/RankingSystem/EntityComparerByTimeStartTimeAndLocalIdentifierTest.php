@@ -133,7 +133,6 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     self::assertEquals($expectedResult, $result);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
@@ -141,8 +140,9 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
    * @param DateTime $time1 the start time of the first entity
    * @param DateTime $time2 the start time of the second entity
    * @param int $expectedResult the expected result of the method
-   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
+   * @throws Exception
    * @uses         \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
+   * @uses         \Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService::getTime
    */
   public function testCompareEntityTimesWithStartTimes(DateTime $time1, DateTime $time2, int $expectedResult)
   {
@@ -151,12 +151,11 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     $entity1 = $this->createTreeStructureEntity('e1', ['getEndTime' => $commonEndTime, 'getStartTime' => $time1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getEndTime' => $commonEndTime, 'getStartTime' => $time2]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $result = self::getMethod(get_class($service), 'compareEntityTimes')->invokeArgs($service, [$entity1, $entity2]);
     self::assertEquals($expectedResult, $result);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * @dataProvider timePairProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
@@ -173,12 +172,11 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     $entity1 = $this->createTreeStructureEntity('e1', ['getEndTime' => $time1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getEndTime' => $time2]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $result = self::getMethod(get_class($service), 'compareEntityTimes')->invokeArgs($service, [$entity1, $entity2]);
     self::assertEquals($expectedResult, $result);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * @dataProvider localIdentifierProviderWithoutZero
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
@@ -198,13 +196,12 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     $entity1 = $this->createTreeStructureEntity('e1', ['getLocalIdentifier' => "4", 'getParent' => $parent1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getLocalIdentifier' => "2", 'getParent' => $parent2]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $result = self::getMethod(get_class($service), 'compareLocalIdentifiersWithinTournament')
       ->invokeArgs($service, [$entity1, $entity2]);
     self::assertEquals($expectedResult, $result);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * @dataProvider localIdentifierProvider
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
@@ -220,13 +217,12 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     $entity1 = $this->createTreeStructureEntity('e1', ['getLocalIdentifier' => $localIdentifier1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getLocalIdentifier' => $localIdentifier2]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $result = self::getMethod(get_class($service), 'compareLocalIdentifiersWithinTournament')
       ->invokeArgs($service, [$entity1, $entity2]);
     self::assertEquals($expectedResult, $result);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //ReflectionException
   /**
    * @dataProvider localIdentifierProviderWithoutZero
    * @covers       \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier
@@ -248,7 +244,7 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
     $entity1 = $this->createTreeStructureEntity('e1', ['getLocalIdentifier' => "3", 'getParent' => $parent1]);
     $entity2 = $this->createTreeStructureEntity('e2', ['getLocalIdentifier' => "5", 'getParent' => $parent2]);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $result = self::getMethod(get_class($service), 'compareLocalIdentifiersWithinTournament')
       ->invokeArgs($service, [$entity1, $entity2]);
     self::assertEquals($expectedResult, $result);

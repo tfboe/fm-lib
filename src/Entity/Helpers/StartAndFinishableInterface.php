@@ -9,9 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
-
 use DateTime;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
  * Interface TimeEntityGetterInterface
@@ -40,7 +38,6 @@ interface StartAndFinishableInterface extends TimeEntityGetterInterface
    * @param DateTime $now
    * @param bool $setStartTime
    * @param bool $setEndTime
-   * @throws ValueNotValid
    */
   public function setStatus(int $status, DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void;
 //</editor-fold desc="Public Methods">

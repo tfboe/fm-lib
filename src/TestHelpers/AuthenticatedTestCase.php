@@ -85,7 +85,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     $userInfo = $this->createUser();
     $this->user = $userInfo['user'];
     $this->userPassword = $userInfo['password'];
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $this->token = (string)Auth::attempt(['email' => $this->user->getEmail(), 'password' => $userInfo['password']]);
     $this->refreshApplication();
     /** @noinspection PhpUndefinedMethodInspection */
@@ -106,7 +106,7 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
     /** @noinspection PhpUndefinedMethodInspection */
     $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;',
       EntityManager::getClassMetadata(UserInterface::class)->getTableName());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $connection->query($sql);
   }
 //</editor-fold desc="Private Methods">

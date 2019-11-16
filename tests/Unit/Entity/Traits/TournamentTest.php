@@ -102,7 +102,7 @@ class TournamentTest extends UnitTestCase
   public function testGetLocalIdentifier()
   {
     $tournament = $this->tournament();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($tournament), 'id')->setValue($tournament, 'user-id');
     self::assertEquals($tournament->getId(), $tournament->getLocalIdentifier());
   }

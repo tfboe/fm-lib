@@ -14,7 +14,7 @@ use Tfboe\FmLib\Exceptions\ReferenceException;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
- * Class ValueNotValidTest
+ * Class ReferenceExceptionTest
  * @package Tfboe\FmLib\Tests\Unit\Exceptions
  */
 class ReferenceExceptionTest extends UnitTestCase

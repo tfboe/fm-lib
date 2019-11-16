@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\Categories\ScoreMode;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -26,17 +26,16 @@ class ScoreModeTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\ScoreMode::getScoreMode
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\ScoreMode::setScoreMode
    * @throws ReflectionException
-   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testProperty()
   {
     $mock = $this->mock();
     self::assertNull($mock->getScoreMode());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $mock->setScoreMode(ScoreMode::BEST_OF_FIVE);
     self::assertEquals(ScoreMode::BEST_OF_FIVE, $mock->getScoreMode());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $mock->setScoreMode(null);
     self::assertNull($mock->getScoreMode());
   }
@@ -44,17 +43,17 @@ class ScoreModeTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\ScoreMode::setScoreMode
    * @throws ReflectionException
-   * @throws ValueNotValid
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testPropertyException()
   {
     $mock = $this->mock();
-    $this->expectException(ValueNotValid::class);
+    $this->expectException(Error::class);
     $this->expectExceptionMessage(
-      'The following value is not valid: 100 in Tfboe\FmLib\Entity\Categories\ScoreMode. Possible values: 0, 1, 2.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+      'Expected a valid value of Enum Tfboe\FmLib\Entity\Categories\ScoreMode but got 100');
+
     $mock->setScoreMode(100);
   }
 //</editor-fold desc="Public Methods">

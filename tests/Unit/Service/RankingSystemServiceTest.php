@@ -157,9 +157,9 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var EntityManagerInterface $entityManager */
     $system = new RankingSystemService($dsls, $entityManager);
     self::assertInstanceOf(RankingSystemService::class, $system);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityManager, self::getProperty(get_class($system), 'entityManager')->getValue($system));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($dsls, self::getProperty(get_class($system), 'dsls')->getValue($system));
   }
 

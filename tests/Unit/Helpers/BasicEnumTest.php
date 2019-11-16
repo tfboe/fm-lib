@@ -9,7 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Helpers;
 
-use Tfboe\FmLib\Exceptions\ValueNotValid;
+use PHPUnit\Framework\Error\Error;
 use Tfboe\FmLib\Helpers\BasicEnum;
 use Tfboe\FmLib\TestHelpers\TestEnum;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -23,19 +23,20 @@ class BasicEnumTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testEnsureValidValueException()
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     TestEnum::ensureValidValue(TestEnum::INT_KEY);
-    $this->expectException(ValueNotValid::class);
+    $this->expectException(Error::class);
     $this->expectExceptionMessage(
-      'The following value is not valid: "1" in Tfboe\FmLib\TestHelpers\TestEnum. Possible values: "value", 1.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+      'Expected a valid value of Enum Tfboe\FmLib\TestHelpers\TestEnum but got 1');
+
     TestEnum::ensureValidValue('1');
   }
 
@@ -46,25 +47,26 @@ class BasicEnumTest extends UnitTestCase
    */
   public function testGetName()
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals("KEY", TestEnum::getName(TestEnum::KEY));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals("INT_KEY", TestEnum::getName(TestEnum::INT_KEY));
   }
 
   /**
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getName
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getNamesArray
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testGetNameException()
   {
-    $this->expectException(ValueNotValid::class);
-    $this->expectExceptionMessage('The following value is not valid: "int_key" in Tfboe\FmLib\TestHelpers\TestEnum.' .
-      ' Possible values: "value", 1.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+    $this->expectException(Error::class);
+    $this->expectExceptionMessage(
+      'Expected a valid value of Enum Tfboe\FmLib\TestHelpers\TestEnum but got int_key');
+
     TestEnum::getName('int_key');
   }
 
@@ -85,26 +87,27 @@ class BasicEnumTest extends UnitTestCase
    */
   public function testGetValue()
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals("value", TestEnum::getValue('KEY'));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals(1, TestEnum::getValue('int_key'));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals(1, TestEnum::getValue('INT_KEY', True));
   }
 
   /**
    * @covers \Tfboe\FmLib\Helpers\BasicEnum::getValue
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testGetValueException()
   {
-    $this->expectException(ValueNotValid::class);
-    $this->expectExceptionMessage('The following value is not valid: "int_key" in Tfboe\FmLib\TestHelpers\TestEnum.' .
-      ' Possible values: "value", 1.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+    $this->expectException(Error::class);
+    $this->expectExceptionMessage(
+      'Expected a valid name of Enum Tfboe\FmLib\TestHelpers\TestEnum but got int_key');
+
     TestEnum::getValue('int_key', True);
   }
 
@@ -154,9 +157,9 @@ class BasicEnumTest extends UnitTestCase
    */
   protected function clearStaticVariables()
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(BasicEnum::class, 'constCacheArray')->setValue(NULL);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(BasicEnum::class, 'constCacheArrayCaseMapping')->setValue(NULL);
   }
 //</editor-fold desc="Protected Methods">

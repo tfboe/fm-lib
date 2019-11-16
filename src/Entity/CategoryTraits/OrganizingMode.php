@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\CategoryTraits;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Trait OrganizingMode
  * @package Tfboe\FmLib\Entity\CategoryTraits
@@ -38,7 +35,6 @@ trait OrganizingMode
   /**
    * @param int|null $organizingMode
    * @return $this|OrganizingMode
-   * @throws ValueNotValid
    */
   public function setOrganizingMode(?int $organizingMode)
   {

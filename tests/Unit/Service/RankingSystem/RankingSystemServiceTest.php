@@ -73,13 +73,13 @@ class RankingSystemServiceTest extends UnitTestCase
     $system = $this->getMockForAbstractClass(RankingSystemService::class,
       [$entityManager, $timeService, $entityComparer, $objectCreator]);
     self::assertInstanceOf(RankingSystemService::class, $system);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityManager, self::getProperty(get_class($system), 'entityManager')->getValue($system));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($timeService, self::getProperty(get_class($system), 'timeService')->getValue($system));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityComparer, self::getProperty(get_class($system), 'entityComparer')->getValue($system));
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($objectCreator, self::getProperty(get_class($system), 'objectCreatorService')
       ->getValue($system));
   }
@@ -104,6 +104,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testDontUseDeletedChange()
   {
@@ -116,7 +117,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager->expects(self::once())->method('flush');
     $entityManager->expects(self::once())->method('remove')->with($change);
     $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, [], [$entity]);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -140,6 +141,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testDoubleOldChange()
   {
@@ -155,7 +157,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager->expects(self::once())->method('flush');
     $entityManager->expects(self::exactly(2))->method('remove')->withConsecutive([$change2], [$change1]);
     $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, ['deleteOldChanges']);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -496,7 +498,7 @@ class RankingSystemServiceTest extends UnitTestCase
       ->with($ranking, new DateTime("2017-01-01"))->willReturn($queryBuilder);
 
     /** @var RankingSystemService $service */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityList, static::getMethod(get_class($service), 'getEntities')
       ->invokeArgs($service, [$ranking, new DateTime("2017-01-01"), new DateTime("2018-01-01")]));
   }
@@ -609,6 +611,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testGetOrCreateGetDeletedChange()
   {
@@ -626,7 +629,7 @@ class RankingSystemServiceTest extends UnitTestCase
         self::assertEquals($foundChange->getId(), $change->getId());
         return [];
       });
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -711,6 +714,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingCreateMonthlyLists()
   {
@@ -767,10 +772,8 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
+
     $service->updateRankingFrom($ranking, new DateTime('2018-02-28'));
   }
 
@@ -1000,6 +1003,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingFrom()
   {
@@ -1114,7 +1118,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -1134,6 +1138,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingFromCalledTwice()
   {
@@ -1142,12 +1147,12 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemInterface $ranking */
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
 
     $this->expectException(PreconditionFailedException::class);
 
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -1168,6 +1173,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingFromNoCurrent()
   {
@@ -1214,10 +1220,8 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
+
     $service->updateRankingFrom($ranking, new DateTime('2018-02-28'));
   }
 
@@ -1237,6 +1241,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingFromNoEntities()
   {
@@ -1261,7 +1266,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 
@@ -1281,6 +1286,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    */
   public function testUpdateRankingFromNoReusable()
   {
@@ -1291,7 +1297,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
 //</editor-fold desc="Public Methods">
@@ -1401,16 +1407,16 @@ class RankingSystemServiceTest extends UnitTestCase
     return $service;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * @param StartAndFinishableInterface $entity
    * @param DateTime $time
    */
   private function setEndTime(StartAndFinishableInterface $entity, DateTime $time)
   {
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::STARTED, $time);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $entity->setStatus(StartFinishStatus::FINISHED, $time);
   }
 //</editor-fold desc="Private Methods">

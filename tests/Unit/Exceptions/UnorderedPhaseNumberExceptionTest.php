@@ -13,7 +13,7 @@ use Tfboe\FmLib\Exceptions\UnorderedPhaseNumberException;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
- * Class ValueNotValidTest
+ * Class UnorderedPhaseNumberExceptionTest
  * @package Tfboe\FmLib\Tests\Unit\Exceptions
  */
 class UnorderedPhaseNumberExceptionTest extends UnitTestCase

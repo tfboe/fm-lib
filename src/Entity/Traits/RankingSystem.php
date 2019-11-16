@@ -19,7 +19,6 @@ use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Helpers\DateTime;
 use Tfboe\FmLib\Helpers\Level;
 
@@ -132,7 +131,6 @@ trait RankingSystem
 
   /**
    * @param int|null $defaultForLevel
-   * @throws ValueNotValid
    */
   public function setDefaultForLevel(?int $defaultForLevel)
   {
@@ -144,7 +142,6 @@ trait RankingSystem
 
   /**
    * @param int $generationInterval
-   * @throws ValueNotValid
    */
   public function setGenerationInterval(int $generationInterval)
   {

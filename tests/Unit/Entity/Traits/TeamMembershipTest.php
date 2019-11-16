@@ -13,7 +13,6 @@ use DateTime;
 use DateTimeZone;
 use Doctrine\Common\Collections\ArrayCollection;
 use Exception;
-use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
@@ -99,7 +98,6 @@ class TeamMembershipTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getTeam
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setTeam
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
    */
   public function testTeam()

@@ -25,6 +25,7 @@ use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
+use Tfboe\FmLib\Exceptions\Internal;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 
@@ -234,7 +235,6 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $result;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * Gets or creates a tournament system change entry for the given entity, ranking and player.
    * @param TournamentHierarchyEntity $entity the tournament hierarchy entity to search for
@@ -262,7 +262,7 @@ abstract class RankingSystemService implements RankingSystemInterface
         [array_merge(array_keys($this->getAdditionalFields()), $this->getAdditionalChangeFields())]);
       foreach ($this->getAdditionalFields() as $field => $value) {
         // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
-        /** @noinspection PhpUnhandledExceptionInspection */
+
         $change->setProperty($field, 0);
       }
       $change->setHierarchyEntity($entity);
@@ -274,7 +274,6 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $this->changes[$key1][$key2];
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
   /**
    * @param RankingSystemListInterface $list the list in which to search for the entry or in which to add it
    * @param PlayerInterface $player the player to search for
@@ -470,13 +469,12 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $result;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+  /** @noinspection PhpDocMissingThrowsInspection */ //everything is parsable
   /**
    * @return DateTime
    */
   private function getMaxDate(): DateTime
   {
-    /** @noinspection PhpUnhandledExceptionInspection P100Y is a valid spec */
     return (new DateTime())->add(new DateInterval('P100Y'));
   }
 
@@ -513,7 +511,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $entities;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //new DateTime() does not throw an exception
+  /** @noinspection PhpDocMissingThrowsInspection */ //all DateTimes and DateIntervals are parsable
   /**
    * @param DateTime $time the time of the last list
    * @param int $generationLevel the list generation level
@@ -545,7 +543,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    */
   private function markOldChangesAsDeleted(EntityRankingSystemInterface $ranking, array $entities)
   {
-    assert(count($this->oldChanges) == 0);
+    Internal::assert(count($this->oldChanges) == 0);
     $this->changes = [];
     $queryBuilder = $this->entityManager->createQueryBuilder();
     /** @var RankingSystemChangeInterface[] $changes */
@@ -562,7 +560,7 @@ abstract class RankingSystemService implements RankingSystemInterface
       $pId = $change->getPlayer()->getId();
       if (array_key_exists($eId, $this->oldChanges) && array_key_exists($pId, $this->oldChanges[$eId])) {
         //duplicate entry
-        assert($this->oldChanges[$eId][$pId]->getRankingSystem()->getId() ===
+        Internal::assert($this->oldChanges[$eId][$pId]->getRankingSystem()->getId() ===
           $change->getRankingSystem()->getId());
         $this->entityManager->remove($change);
       } else {
@@ -571,7 +569,6 @@ abstract class RankingSystemService implements RankingSystemInterface
     }
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //PropertyNotExistingException
 
   /**
    * Recomputes the given ranking list by using base as base list and applying the changes for the given entities
@@ -617,7 +614,7 @@ abstract class RankingSystemService implements RankingSystemInterface
         //apply further changes
         foreach ($this->getAdditionalFields() as $field => $value) {
           // PropertyNotExistingException => entry and field have exactly the static properties from getAdditionalFields
-          /** @noinspection PhpUnhandledExceptionInspection */
+
           $entry->setProperty($field, $entry->getProperty($field) + $change->getProperty($field));
         }
         if ($time > $list->getLastEntryTime()) {
@@ -629,7 +626,6 @@ abstract class RankingSystemService implements RankingSystemInterface
     $this->flushAndForgetEntities($entities, $c);
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * @param RankingSystemListEntryInterface $entry
    */
@@ -639,7 +635,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     $entry->setNumberRankedEntities(0);
     foreach ($this->getAdditionalFields() as $field => $value) {
       // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
-      /** @noinspection PhpUnhandledExceptionInspection */
+
       $entry->setProperty($field, $value);
     }
   }

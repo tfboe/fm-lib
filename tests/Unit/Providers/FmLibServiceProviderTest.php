@@ -10,6 +10,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Providers;
 
+use Doctrine\DBAL\DBALException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Validator;
@@ -56,9 +57,10 @@ class FmLibServiceProviderTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Providers\FmLibServiceProvider::register
-   * @uses   \Tfboe\FmLib\Providers\ServiceProvider::register
+   * @throws DBALException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Providers\ServiceProvider::register
    */
   public function testRegister()
   {

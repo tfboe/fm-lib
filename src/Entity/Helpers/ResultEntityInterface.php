@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Interface ResultEntityInterface
  * @package Tfboe\FmLib\Entity\Helpers
@@ -48,7 +45,6 @@ interface ResultEntityInterface
   /**
    * @param int $result
    * @return $this|ResultEntity
-   * @throws ValueNotValid
    */
   public function setResult(int $result);
 

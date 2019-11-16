@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Entity\Helpers;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Exceptions\Internal;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 
 /**
  * Trait StartAndFinishable
@@ -70,7 +69,6 @@ trait StartAndFinishable
    * @param DateTime|null $now
    * @param bool $setStartTime
    * @param bool $setEndTime
-   * @throws ValueNotValid
    */
   public final function setStatus(int $status, ?DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void
   {
@@ -127,7 +125,6 @@ trait StartAndFinishable
   /**
    * Ensures that the given status is valid
    * @param int $status
-   * @throws ValueNotValid
    */
   protected function ensureValidValue(int $status): void
   {

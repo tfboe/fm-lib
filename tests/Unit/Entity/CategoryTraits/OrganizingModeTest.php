@@ -9,10 +9,10 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
+use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\Categories\OrganizingMode;
-use Tfboe\FmLib\Exceptions\ValueNotValid;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -26,17 +26,16 @@ class OrganizingModeTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\OrganizingMode::getOrganizingMode
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\OrganizingMode::setOrganizingMode
    * @throws ReflectionException
-   * @throws ValueNotValid
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testProperty()
   {
     $mock = $this->mock();
     self::assertNull($mock->getOrganizingMode());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $mock->setOrganizingMode(OrganizingMode::ELIMINATION);
     self::assertEquals(OrganizingMode::ELIMINATION, $mock->getOrganizingMode());
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $mock->setOrganizingMode(null);
     self::assertNull($mock->getOrganizingMode());
   }
@@ -44,17 +43,16 @@ class OrganizingModeTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\OrganizingMode::setOrganizingMode
    * @throws ReflectionException
-   * @throws ValueNotValid
-   * @uses   \Tfboe\FmLib\Exceptions\ValueNotValid::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
   public function testPropertyException()
   {
     $mock = $this->mock();
-    $this->expectException(ValueNotValid::class);
+    $this->expectException(Error::class);
     $this->expectExceptionMessage(
-      'The following value is not valid: 100 in Tfboe\FmLib\Entity\Categories\OrganizingMode. Possible values: 0, 1.');
-    /** @noinspection PhpUnhandledExceptionInspection */
+      'Expected a valid value of Enum Tfboe\FmLib\Entity\Categories\OrganizingMode but got 100');
     $mock->setOrganizingMode(100);
   }
 //</editor-fold desc="Public Methods">

@@ -90,7 +90,7 @@ class RankingSystemListTest extends UnitTestCase
   public function testRankingSystem()
   {
     $instance = $this->instance();
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::getProperty(get_class($instance), 'id')->setValue($instance, 'list-id');
     $rankingSystem = new RankingSystem([]);
 

@@ -38,7 +38,7 @@ class BaseControllerTest extends UnitTestCase
       $entityManager
     ]);
     self::assertInstanceOf(BaseController::class, $controller);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     self::assertEquals($entityManager, self::getProperty(get_class($controller), 'entityManager')
       ->getValue($controller));
   }
@@ -72,7 +72,7 @@ class BaseControllerTest extends UnitTestCase
     $entityManager = $this->createMock(EntityManagerInterface::class);
     $entityManager->expects(static::once())->method('find')->with(User::class, 'user-id')->willReturn($user);
     $controller = $this->getMockForAbstractClass(BaseController::class, [$entityManager]);
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(UserController::class, 'transformValue');
     $method->invokeArgs($controller, [&$value, $specification]);
 
@@ -97,7 +97,7 @@ class BaseControllerTest extends UnitTestCase
       'noValidation' => ['default' => 5],
       'withValidation' => ['validation' => 'required|string|min:2']
     ];
-    /** @noinspection PhpUnhandledExceptionInspection */
+
     $method = self::getMethod(UserController::class, 'validateBySpecification');
     $method->invokeArgs($controller, [$request, $specification]);
   }

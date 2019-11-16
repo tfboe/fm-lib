@@ -9,9 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
-
-use Tfboe\FmLib\Exceptions\ValueNotValid;
-
 /**
  * Trait ResultEntity
  * @package Tfboe\FmLib\Entity\Helpers
@@ -90,7 +87,6 @@ trait ResultEntity
   /**
    * @param int $result
    * @return $this|ResultEntity
-   * @throws ValueNotValid
    */
   public function setResult(int $result)
   {
