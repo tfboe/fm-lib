@@ -76,18 +76,29 @@ trait SpecificationHandler
         $matches = [];
         preg_match('/[^.]*$/', $key, $matches);
         $arrKey = $matches[0];
-        if (array_key_exists('property', $values)) {
-          $property = $values['property'];
+
+        $setterExists = true;
+        if (array_key_exists('setter', $values)) {
+          $setter = $values['setter'];
         } else {
-          $property = $arrKey;
+          if (array_key_exists('property', $values)) {
+            $property = $values['property'];
+          } else {
+            $property = $arrKey;
+          }
+          $setterName = 'set' . ucfirst($property);
+          $setterExists = $object->methodExists($setterName);
+          $setter = function ($entity, $value) use ($setterName) {
+            $entity->$setterName($value);
+          };
         }
-        $setter = 'set' . ucfirst($property);
+        
         if (array_key_exists($arrKey, $inputArray)) {
           $value = $inputArray[$arrKey];
           $this->transformValue($value, $values);
-          $object->$setter($value);
-        } else if (array_key_exists('default', $values) && $object->methodExists($setter)) {
-          $object->$setter($values['default']);
+          $setter($object, $value);
+        } else if (array_key_exists('default', $values) && $setterExists) {
+          $setter($object, $values['default']);
         }
       }
     }

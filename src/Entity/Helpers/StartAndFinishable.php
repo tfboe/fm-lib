@@ -20,10 +20,7 @@ use Tfboe\FmLib\Exceptions\ValueNotValid;
  */
 trait StartAndFinishable
 {
-  use TimeEntity {
-    setStartTime as private;
-    setEndTime as private;
-  }
+  use TimeEntity;
 
 //<editor-fold desc="Fields">
   /**
@@ -59,13 +56,23 @@ trait StartAndFinishable
   }
 
   /**
+   * @param StartAndFinishableInterface $entity
+   */
+  public final function cloneFrom(StartAndFinishableInterface $entity): void
+  {
+    $this->status = $entity->getStatus();
+    $this->setStartTime($entity->getStartTime());
+    $this->setEndTime($entity->getEndTime());
+  }
+
+  /**
    * @param int $status
-   * @param DateTime $now
+   * @param DateTime|null $now
    * @param bool $setStartTime
    * @param bool $setEndTime
    * @throws ValueNotValid
    */
-  public final function setStatus(int $status, DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void
+  public final function setStatus(int $status, ?DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void
   {
     if ($status === $this->status) {
       //nothing to do

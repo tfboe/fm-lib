@@ -14,6 +14,7 @@ use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\StartAndFinishable;
+use Tfboe\FmLib\Entity\Helpers\StartAndFinishableInterface;
 use Tfboe\FmLib\Entity\Helpers\StartFinishStatus;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -24,6 +25,34 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 class StartAndFinishableTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
+  /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::cloneFrom
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getEndTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getStartTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::setEndTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::setStartTime
+   * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::getStatus
+   */
+  public function testCloneFrom()
+  {
+    $entity = $this->mock();
+    self::assertEquals(StartFinishStatus::NOT_STARTED, $entity->getStatus());
+    self::assertNull($entity->getStartTime());
+    self::assertNull($entity->getEndTime());
+
+    $start = new DateTime("2019-01-01");
+    $end = new DateTime("2019-02-01");
+    $status = StartFinishStatus::FINISHED;
+    $clone = $this->createStub(StartAndFinishableInterface::class,
+      ['getStatus' => $status, 'getStartTime' => $start, 'getEndTime' => $end]);
+
+    $entity->cloneFrom($clone);
+    self::assertEquals($status, $entity->getStatus());
+    self::assertEquals($start, $entity->getStartTime());
+    self::assertEquals($end, $entity->getEndTime());
+  }
+
   /** @noinspection PhpDocMissingThrowsInspection */
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
@@ -124,7 +153,6 @@ class StartAndFinishableTest extends UnitTestCase
   }
 
   /** @noinspection PhpDocMissingThrowsInspection */
-
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
    * @throws ReflectionException

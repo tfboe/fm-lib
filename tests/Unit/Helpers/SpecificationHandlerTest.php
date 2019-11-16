@@ -15,6 +15,7 @@ use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
+use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Helpers\SpecificationHandler;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\TestHelpers\TestEnum;
@@ -99,6 +100,7 @@ class SpecificationHandlerTest extends UnitTestCase
    * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    */
   public function testSetFromSpecificationWithProperty()
   {
@@ -110,6 +112,28 @@ class SpecificationHandlerTest extends UnitTestCase
     /** @noinspection PhpUnhandledExceptionInspection */
     $method = self::getMethod(get_class($handler), 'setFromSpecification');
     $method->invokeArgs($handler, [$object, $specification, ['attr' => $value]]);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::transformValue
+   */
+  public function testSetFromSpecificationWithSetter()
+  {
+    $value = 'test-value';
+    $object = $this->createStub(BaseEntityInterface::class);
+    $handler = $this->handler();
+    /** @noinspection PhpUnhandledExceptionInspection */
+    $method = self::getMethod(get_class($handler), 'setFromSpecification');
+    $executed = false;
+    $specification = ['attr' => ['setter' => function ($entity, $v) use ($object, $value, &$executed) {
+      self::assertEquals($object, $entity);
+      self::assertEquals($value, $v);
+      $executed = true;
+    }]];
+    $method->invokeArgs($handler, [$object, $specification, ['attr' => $value]]);
+    self::assertTrue($executed);
   }
 
   /**

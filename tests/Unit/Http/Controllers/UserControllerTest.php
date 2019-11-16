@@ -212,6 +212,7 @@ class UserControllerTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::validateSpec
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    */
   public function testSuccessfulRegistration()
   {
