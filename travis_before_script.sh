@@ -47,6 +47,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp ../${directory}/phpunit-integration.xml .
     cp ../${directory}/.env.test .env
     composer config repositories.fm-lib path ../${directory}
+    composer config repositories.jwt-auth-guard vcs https://github.com/blacktemplar/jwt-auth-guard
     composer require ${LIB_NAME} $PREFER_LOWEST
     composer require phpunit/phpcov:^6.0
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
