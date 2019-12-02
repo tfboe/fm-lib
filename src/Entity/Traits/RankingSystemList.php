@@ -123,7 +123,7 @@ trait RankingSystemList
   /**
    * RankingSystemList init
    */
-  protected final function init()
+  final protected function init()
   {
     $this->lastEntryTime = new \DateTime("2000-01-01");
     $this->current = false;

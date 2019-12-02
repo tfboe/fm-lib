@@ -173,7 +173,7 @@ trait RankingSystem
    * RankingSystem init
    * @param string[] $keys the keys of the subclass properties
    */
-  protected final function init(array $keys)
+  final protected function init(array $keys)
   {
     $this->initSubClassData($keys);
     $this->generationInterval = AutomaticInstanceGeneration::OFF;

@@ -118,7 +118,7 @@ trait Team
   /**
    * Team init
    */
-  protected final function init()
+  final protected function init()
   {
     $this->memberships = new ArrayCollection();
     $this->name = "";

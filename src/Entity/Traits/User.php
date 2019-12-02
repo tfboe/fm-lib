@@ -148,7 +148,7 @@ trait User
   /**
    * User init
    */
-  protected final function init()
+  final protected function init()
   {
     $this->jwtVersion = 1;
     $this->confirmedTermsMinorVersion = 0;

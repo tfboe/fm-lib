@@ -19,7 +19,7 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 class AutomaticInstanceGeneration extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const MONTHLY = 1;
-  const OFF = 0;
+  public const MONTHLY = 1;
+  public const OFF = 0;
 //</editor-fold desc="Fields">
 }

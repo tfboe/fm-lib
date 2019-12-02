@@ -153,7 +153,7 @@ trait Game
   /**
    * Match constructor.
    */
-  protected final function init()
+  final protected function init()
   {
     $this->playersA = new ArrayCollection();
     $this->playersB = new ArrayCollection();

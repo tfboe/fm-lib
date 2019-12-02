@@ -123,7 +123,7 @@ trait Ranking
   /**
    * Ranking init
    */
-  protected final function init()
+  final protected function init()
   {
     $this->teams = new ArrayCollection();
     $this->name = "";

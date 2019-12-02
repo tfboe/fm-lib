@@ -57,7 +57,6 @@ abstract class LumenTestCase extends TestCase
       $getter = 'get' . ucfirst($property);
       if (array_key_exists($property, $data)) {
         $name = $data[$property];
-        /** @noinspection PhpUndefinedMethodInspection */
         self::assertEquals($enumClass::getValue($name), $object->$getter());
       } else {
         self::assertEquals($default, $object->$getter());

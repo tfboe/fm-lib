@@ -22,7 +22,7 @@ use Doctrine\DBAL\Types\DateTimeType;
 class UTCDateTimeType extends DateTimeType
 {
 //<editor-fold desc="Fields">
-  static private $utc;
+  private static $utc;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">

@@ -1310,9 +1310,8 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   private function createEmptyChange(): MockObject
   {
-    $change = $this->getMockForAbstractClass(RankingSystemChange::class, [['additional']], '', true, true, true,
+    return $this->getMockForAbstractClass(RankingSystemChange::class, [['additional']], '', true, true, true,
       ['getPlayer', 'getPointsChange']);
-    return $change;
   }
 
   /**
@@ -1322,9 +1321,8 @@ class RankingSystemServiceTest extends UnitTestCase
    */
   private function createEmptyEntry(): MockObject
   {
-    $entry = $this->getMockForAbstractClass(RankingSystemListEntry::class, [['additional']], '', true, true, true,
+    return $this->getMockForAbstractClass(RankingSystemListEntry::class, [['additional']], '', true, true, true,
       ['getPlayer', 'getPoints']);
-    return $entry;
   }
 
   /**

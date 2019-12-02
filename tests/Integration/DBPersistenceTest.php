@@ -46,14 +46,10 @@ class DBPersistenceTest extends DatabaseTestCase
     $endTime = new DateTime("2017-12-31 16:23:20 +03:00");
     $tournament->setStartTime($startTime);
     $tournament->setEndTime($endTime);
-    /** @noinspection PhpUndefinedMethodInspection */
     EntityManager::persist($tournament);
-    /** @noinspection PhpUndefinedMethodInspection */
     EntityManager::flush();
-    /** @noinspection PhpUndefinedMethodInspection */
     EntityManager::clear();
     /** @var Tournament $resultTournament */
-    /** @noinspection PhpUndefinedMethodInspection */
     $resultTournament = EntityManager::find(Tournament::class, $tournament->getId());
     $resultTournament->setCreatedAt($tournament->getCreatedAt());
     $resultTournament->setUpdatedAt($tournament->getUpdatedAt());

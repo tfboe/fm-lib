@@ -259,7 +259,6 @@ class UserUnauthenticatedTest extends DatabaseTestCase
     ])->seeJsonStructure(['id']);
     $result = json_decode($this->response->getContent(), true);
     /** @var UserInterface $user */
-    /** @noinspection PhpUndefinedMethodInspection */
     $user = EntityManager::find(User::class, $result['id']);
     self::assertEquals(5, $user->getConfirmedTermsMinorVersion());
     self::assertEquals(7, $user->getConfirmedTermsMajorVersion());

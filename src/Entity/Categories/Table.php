@@ -19,11 +19,11 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class Table extends BasicEnum
 {
   //<editor-fold desc="Fields">
-  const BONZINI = 5; // only used if real game table is unknown / forgotten in multi table tournament
-  const GARLANDO = 1;
-  const LEONHART = 2;
-  const MULTITABLE = 0;
-  const ROBERTO_SPORT = 4;
-  const TORNADO = 3;
+  public const BONZINI = 5; // only used if real game table is unknown / forgotten in multi table tournament
+  public const GARLANDO = 1;
+  public const LEONHART = 2;
+  public const MULTITABLE = 0;
+  public const ROBERTO_SPORT = 4;
+  public const TORNADO = 3;
 //</editor-fold desc="Fields">
 }

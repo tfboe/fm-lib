@@ -72,13 +72,13 @@ class EntityComparerByTimeStartTimeAndLocalIdentifier implements EntityComparerI
     $time2 = $this->timeService->getTime($entity2);
     if ($time1 < $time2) {
       return -1;
-    } else if ($time1 > $time2) {
+    } elseif ($time1 > $time2) {
       return 1;
     }
     if ($entity1->getStartTime() !== null && $entity2->getStartTime() !== null) {
       if ($entity1->getStartTime() < $entity2->getStartTime()) {
         return -1;
-      } else if ($entity1->getStartTime() > $entity2->getStartTime()) {
+      } elseif ($entity1->getStartTime() > $entity2->getStartTime()) {
         return 1;
       }
     }

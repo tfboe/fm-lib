@@ -163,7 +163,7 @@ trait Match
   /**
    * Match constructor.
    */
-  protected final function init()
+  final protected function init()
   {
     $this->rankingsA = new ArrayCollection();
     $this->rankingsB = new ArrayCollection();

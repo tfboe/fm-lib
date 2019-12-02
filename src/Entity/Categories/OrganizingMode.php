@@ -19,7 +19,7 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class OrganizingMode extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const ELIMINATION = 0;
-  const QUALIFICATION = 1;
+  public const ELIMINATION = 0;
+  public const QUALIFICATION = 1;
 //</editor-fold desc="Fields">
 }

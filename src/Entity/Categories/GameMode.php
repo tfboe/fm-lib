@@ -19,8 +19,8 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class GameMode extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const CLASSIC = 2;
-  const OFFICIAL = 0;
-  const SPEEDBALL = 1;
+  public const CLASSIC = 2;
+  public const OFFICIAL = 0;
+  public const SPEEDBALL = 1;
 //</editor-fold desc="Fields">
 }

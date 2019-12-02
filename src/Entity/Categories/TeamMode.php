@@ -19,8 +19,8 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class TeamMode extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const DOUBLE = 0;
-  const DYP = 2;
-  const SINGLE = 1;
+  public const DOUBLE = 0;
+  public const DYP = 2;
+  public const SINGLE = 1;
 //</editor-fold desc="Fields">
 }

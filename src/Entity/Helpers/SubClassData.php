@@ -36,7 +36,7 @@ trait SubClassData
    * @return mixed the value of the property
    * @throws PropertyNotExistingException
    */
-  public final function getProperty($name)
+  final public function getProperty($name)
   {
     if (!array_key_exists(strtolower($name), $this->subClassData)) {
       throw new PropertyNotExistingException(get_class($this), strtolower($name), "getProperty");
@@ -51,7 +51,7 @@ trait SubClassData
    * @return $this|SubClassData
    * @throws PropertyNotExistingException
    */
-  public final function setProperty(string $name, $value)
+  final public function setProperty(string $name, $value)
   {
     if (!array_key_exists(strtolower($name), $this->subClassData)) {
       throw new PropertyNotExistingException(get_class($this), strtolower($name), "setProperty");
@@ -75,9 +75,9 @@ trait SubClassData
   {
     if (substr($name, 0, 3) === "get") {
       return $this->getProperty(substr($name, 3));
-    } else if (substr($name, 0, 2) === "is") {
+    } elseif (substr($name, 0, 2) === "is") {
       return $this->getProperty(substr($name, 2));
-    } else if (substr($name, 0, 3) === "set" && count($arguments) == 1) {
+    } elseif (substr($name, 0, 3) === "set" && count($arguments) == 1) {
       return $this->setProperty(substr($name, 3), $arguments[0]);
     }
     throw new MethodNotExistingException(get_class($this), $name);
@@ -143,9 +143,9 @@ trait SubClassData
     //check if method corresponds to existing property
     if (substr($method, 0, 3) === "get") {
       return $this->hasProperty(substr($method, 3));
-    } else if (substr($method, 0, 2) === "is") {
+    } elseif (substr($method, 0, 2) === "is") {
       return $this->hasProperty(substr($method, 2));
-    } else if (substr($method, 0, 3) === "set") {
+    } elseif (substr($method, 0, 3) === "set") {
       return $this->hasProperty(substr($method, 3));
     }
 

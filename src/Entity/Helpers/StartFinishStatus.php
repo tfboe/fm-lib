@@ -13,8 +13,8 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class StartFinishStatus extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const FINISHED = 2;
-  const NOT_STARTED = 0;
-  const STARTED = 1;
+  public const FINISHED = 2;
+  public const NOT_STARTED = 0;
+  public const STARTED = 1;
 //</editor-fold desc="Fields">
 }

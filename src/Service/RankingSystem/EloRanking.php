@@ -28,13 +28,13 @@ use Tfboe\FmLib\Entity\Traits\RankingSystemListEntry;
 class EloRanking extends GameRankingSystemService implements EloRankingInterface
 {
 //<editor-fold desc="Fields">
-  const EXP_DIFF = 400;
-  const K = 20;
-  const MAX_DIFF_TO_OPPONENT_FOR_PROVISORY = 400;
-  const NO_NEG = true;
-  const NUM_PROVISORY_GAMES = 20;
-  const PROVISORY_PARTNER_FACTOR = 0.5;
-  const START = 1200.0;
+  public const EXP_DIFF = 400;
+  public const K = 20;
+  public const MAX_DIFF_TO_OPPONENT_FOR_PROVISORY = 400;
+  public const NO_NEG = true;
+  public const NUM_PROVISORY_GAMES = 20;
+  public const PROVISORY_PARTNER_FACTOR = 0.5;
+  public const START = 1200.0;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Protected Methods">
@@ -54,8 +54,6 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   {
     return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => self::START];
   }
-
-  /** @noinspection PhpMissingParentCallCommonInspection */
 
   /**
    * @inheritDoc
@@ -191,7 +189,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
           $change->setPointsChange(max(self::START, $entry->getProvisoryRanking() + $change->getProvisoryRanking())
             - $entry->getPoints());
         }
-      } else if (!$teamHasProvisory && !$opponentHasProvisory) {
+      } elseif (!$teamHasProvisory && !$opponentHasProvisory) {
         //real elo ranking
         $change->setProvisoryRanking(0.0);
         $change->setPointsChange(max(self::K * $expectationDiff, self::START - $entry->getPoints()));

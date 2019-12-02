@@ -17,10 +17,10 @@ namespace Tfboe\FmLib\Helpers;
 abstract class Level extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const COMPETITION = 3;
-  const GAME = 0;
-  const MATCH = 1;
-  const PHASE = 2;
-  const TOURNAMENT = 4;
+  public const COMPETITION = 3;
+  public const GAME = 0;
+  public const MATCH = 1;
+  public const PHASE = 2;
+  public const TOURNAMENT = 4;
 //</editor-fold desc="Fields">
 }

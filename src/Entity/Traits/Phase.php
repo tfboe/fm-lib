@@ -175,7 +175,7 @@ trait Phase
   /**
    * Competition constructor.
    */
-  protected final function init()
+  final protected function init()
   {
     $this->preQualifications = new ArrayCollection();
     $this->postQualifications = new ArrayCollection();

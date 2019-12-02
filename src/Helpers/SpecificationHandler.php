@@ -29,7 +29,7 @@ trait SpecificationHandler
   /**
    * @return string
    */
-  protected final function getDatetimetzFormat(): string
+  final protected function getDatetimetzFormat(): string
   {
     return $this->datetimetzFormat;
   }
@@ -92,12 +92,12 @@ trait SpecificationHandler
             $entity->$setterName($value);
           };
         }
-        
+
         if (array_key_exists($arrKey, $inputArray)) {
           $value = $inputArray[$arrKey];
           $this->transformValue($value, $values);
           $setter($object, $value);
-        } else if (array_key_exists('default', $values) && $setterExists) {
+        } elseif (array_key_exists('default', $values) && $setterExists) {
           $setter($object, $values['default']);
         }
       }
@@ -125,7 +125,7 @@ trait SpecificationHandler
       $value = $specification['transformer']($value);
     }
   }
-  /** @noinspection PhpDocRedundantThrowsInspection */ //bug???
+  //bug???
   /**
    * Validates the parameters of a request by the validate fields of the given specification
    * @param Request $request the request

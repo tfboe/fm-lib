@@ -48,8 +48,6 @@ class LoggingTest extends UnitTestCase
       return sys_get_temp_dir();
     }
 
-    ;
-
     Logging::$storagePathFunction = 'Tfboe\FmLib\Tests\Unit\Helpers\storage_path_function';
 
     Logging::log("invalid", "INVALID LOG");

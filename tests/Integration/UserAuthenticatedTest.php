@@ -28,10 +28,8 @@ class UserAuthenticatedTest extends AuthenticatedTestCase
   public function testInvalidateToken()
   {
     /** @var UserInterface $user */
-    /** @noinspection PhpUndefinedMethodInspection */
     $user = EntityManager::find(User::class, $this->user->getId());
     $user->setJwtVersion(2);
-    /** @noinspection PhpUndefinedMethodInspection */
     EntityManager::flush();
     $this->jsonAuth('GET', '/userId')->seeStatusCode(401);
     self::assertNull($this->response->headers->get('jwt-token'));

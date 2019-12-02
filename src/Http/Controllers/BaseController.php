@@ -46,7 +46,7 @@ abstract class BaseController extends Controller
   /**
    * @return EntityManagerInterface
    */
-  protected final function getEntityManager(): EntityManagerInterface
+  final protected function getEntityManager(): EntityManagerInterface
   {
     return $this->entityManager;
   }

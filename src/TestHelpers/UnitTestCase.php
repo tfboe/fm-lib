@@ -61,7 +61,7 @@ abstract class UnitTestCase extends TestCase
    * @return MockObject the mocked object
    * @throws ReflectionException
    */
-  protected final function getMockWithMockedArguments(string $className, array $arguments = [],
+  final protected function getMockWithMockedArguments(string $className, array $arguments = [],
                                                       array $mockedMethods = []): MockObject
   {
 
@@ -82,7 +82,7 @@ abstract class UnitTestCase extends TestCase
    * @return mixed an instance of the given class
    * @throws ReflectionException
    */
-  protected final function getObjectWithMockedArguments($className, array $arguments = [])
+  final protected function getObjectWithMockedArguments($className, array $arguments = [])
   {
 
     $reflection = new ReflectionClass($className);
@@ -229,7 +229,7 @@ abstract class UnitTestCase extends TestCase
       $interfaces = implode(", \\", $additionalInterfaces);
       $parentConstructor = $callParentConstructor ? "parent::__construct();" : "";
       $init = $hasInit ? "\$this->init();" : "";
-      $class = <<<PHP
+      $class = <<<CLASS
 namespace $dynNamespace;
 class $className ${base}implements $interfaces
 {
@@ -240,11 +240,10 @@ class $className ${base}implements $interfaces
     $init
   }
 }
-PHP;
+CLASS;
       eval($class);
     }
-    $o = $this->getMockForAbstractClass($dynClassName, [], '', true, true, true, $methodNames);
-    return $o;
+    return $this->getMockForAbstractClass($dynClassName, [], '', true, true, true, $methodNames);
   }
 
   /**

@@ -59,7 +59,7 @@ abstract class DatabaseTestCase extends LumenTestCase
    * @param string $className
    * @return string
    */
-  protected final function resolveEntity(string $className): string
+  final protected function resolveEntity(string $className): string
   {
     //resolve class name according to fm-lib config
     if (config()->has('fm-lib')) {
@@ -92,7 +92,6 @@ abstract class DatabaseTestCase extends LumenTestCase
   {
     $this->clearTables(array_map(
       function (string $class) {
-        /** @noinspection PhpUndefinedMethodInspection */
         return EntityManager::getClassMetadata($class)->getTableName();
       }, $classNames
     ));
@@ -105,7 +104,6 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function clearDatabase()
   {
     /** @var Connection $connection */
-    /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $this->clearTables(array_map(function (Table $t) {
       return $t->getName();
@@ -120,7 +118,6 @@ abstract class DatabaseTestCase extends LumenTestCase
   protected function clearTables(array $tables)
   {
     /** @var Connection $connection */
-    /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $connection->query(sprintf('SET FOREIGN_KEY_CHECKS = 0;'));
     foreach ($tables as $table) {
@@ -212,7 +209,6 @@ abstract class DatabaseTestCase extends LumenTestCase
       $this->workOnDatabaseSetUp();
     } else {
       $this->workOnDatabaseSetUp();
-      /** @noinspection PhpUndefinedMethodInspection */
       EntityManager::beginTransaction();
     }
 
@@ -221,7 +217,6 @@ abstract class DatabaseTestCase extends LumenTestCase
         $this->workOnDatabaseDestroy();
         $this->clearDatabase();
       } else {
-        /** @noinspection PhpUndefinedMethodInspection */
         EntityManager::rollback();
         $this->workOnDatabaseDestroy();
       }

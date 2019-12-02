@@ -62,6 +62,7 @@ class Handler extends ExceptionHandler
     if ($exception instanceof ValidationException) {
       return $exception->getResponse()->getStatusCode();
     }
+    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
     return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() :
       ($exception->getCode() > 0 ? $exception->getCode() : 500);
   }
@@ -104,6 +105,7 @@ class Handler extends ExceptionHandler
   protected function getJsonMessage(Exception $exception, $statusCode = null, $printTrace = false)
   {
 
+    /** @noinspection PhpPossiblePolymorphicInvocationInspection */
     $result = method_exists($exception, 'getJsonMessage') ? $exception->getJsonMessage() :
       ['message' => $exception->getMessage()];
 

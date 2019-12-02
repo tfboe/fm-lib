@@ -19,8 +19,8 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class ScoreMode extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const BEST_OF_FIVE = 2;
-  const BEST_OF_THREE = 1;
-  const ONE_SET = 0;
+  public const BEST_OF_FIVE = 2;
+  public const BEST_OF_THREE = 1;
+  public const ONE_SET = 0;
 //</editor-fold desc="Fields">
 }

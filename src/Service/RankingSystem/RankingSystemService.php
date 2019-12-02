@@ -138,9 +138,9 @@ abstract class RankingSystemService implements RankingSystemInterface
     foreach ($lists as $list) {
       if ($list->isCurrent()) {
         $current = $list;
-      } else if ($list->getLastEntryTime() >= $from) {
+      } elseif ($list->getLastEntryTime() >= $from) {
         $toUpdate[] = $list;
-      } else if ($lastReusable === null || $list->getLastEntryTime() > $lastReusable->getLastEntryTime()) {
+      } elseif ($lastReusable === null || $list->getLastEntryTime() > $lastReusable->getLastEntryTime()) {
         $lastReusable = $list;
       }
     }
@@ -186,7 +186,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param RankingSystemListEntryInterface[] $entries
    * @return float
    */
-  protected final function getAverage(array $entries): float
+  final protected function getAverage(array $entries): float
   {
     $sum = 0.0;
     foreach ($entries as $entry) {
@@ -207,7 +207,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
    * @return TournamentHierarchyEntity[]
    */
-  protected final function getEntities(EntityRankingSystemInterface $ranking, DateTime $from, DateTime $to): array
+  final protected function getEntities(EntityRankingSystemInterface $ranking, DateTime $from, DateTime $to): array
   {
     $query = $this->getEntitiesQueryBuilder($ranking, $from, $to);
     return $query->getQuery()->getResult();
@@ -216,7 +216,7 @@ abstract class RankingSystemService implements RankingSystemInterface
   /**
    * @return EntityManagerInterface
    */
-  protected final function getEntityManager(): EntityManagerInterface
+  final protected function getEntityManager(): EntityManagerInterface
   {
     return $this->entityManager;
   }
@@ -226,7 +226,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param RankingSystemListInterface $list
    * @return RankingSystemListEntryInterface[] $entries
    */
-  protected final function getEntriesOfPlayers(Collection $players, RankingSystemListInterface $list): array
+  final protected function getEntriesOfPlayers(Collection $players, RankingSystemListInterface $list): array
   {
     $result = [];
     foreach ($players as $player) {
@@ -242,7 +242,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param PlayerInterface $player the player to search for
    * @return RankingSystemChangeInterface|RankingSystemChange the found or newly created ranking system change
    */
-  protected final function getOrCreateChange(TournamentHierarchyEntity $entity,
+  final protected function getOrCreateChange(TournamentHierarchyEntity $entity,
                                              EntityRankingSystemInterface $ranking,
                                              PlayerInterface $player)
   {
@@ -279,7 +279,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param PlayerInterface $player the player to search for
    * @return RankingSystemListEntryInterface the found or the new entry
    */
-  protected final function getOrCreateRankingSystemListEntry(RankingSystemListInterface $list,
+  final protected function getOrCreateRankingSystemListEntry(RankingSystemListInterface $list,
                                                              PlayerInterface $player): RankingSystemListEntryInterface
   {
     $playerId = $player->getId();
@@ -310,7 +310,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * Gets additional fields for this ranking type mapped to its start value
    * @return string[] list of additional fields
    */
-  protected abstract function getAdditionalFields(): array;
+  abstract protected function getAdditionalFields(): array;
 
   /**
    * Gets all ranking changes for the given entity for the given list. Must return a change for each involved player.
@@ -319,7 +319,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param RankingSystemListInterface $list the list for which to compute the ranking changes
    * @return RankingSystemChangeInterface[] the changes
    */
-  protected abstract function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array;
+  abstract protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array;
 
   /**
    * Gets a query for getting the relevant entities for updating
@@ -329,14 +329,14 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
    * @return QueryBuilder
    */
-  protected abstract function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking,
+  abstract protected function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking,
                                                       DateTime $from, DateTime $to): QueryBuilder;
 
   /**
    * Gets the level of the ranking system service (see Level Enum)
    * @return int
    */
-  protected abstract function getLevel(): int;
+  abstract protected function getLevel(): int;
 
   /**
    * Gets the start points for a new player in the ranking
@@ -422,9 +422,11 @@ abstract class RankingSystemService implements RankingSystemInterface
     $this->entityManager->flush();
     for ($i = 0; $i < $current; $i++) {
       $eId = $entities[$i]->getId();
+      /** @noinspection PhpDeprecationInspection */
       $this->entityManager->detach($entities[$i]);
       if (array_key_exists($eId, $this->changes)) {
         foreach ($this->changes[$eId] as $pId => $change) {
+          /** @noinspection PhpDeprecationInspection */
           $this->entityManager->detach($change);
         }
         unset($this->changes[$eId]);
@@ -527,7 +529,7 @@ abstract class RankingSystemService implements RankingSystemInterface
         $month = 1;
         $year += 1;
       }
-    } else if ($generationLevel === AutomaticInstanceGeneration::OFF) {
+    } elseif ($generationLevel === AutomaticInstanceGeneration::OFF) {
       return $this->getMaxDate();
     } else {
       $year += 1;

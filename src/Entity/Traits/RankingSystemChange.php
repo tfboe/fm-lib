@@ -160,7 +160,7 @@ trait RankingSystemChange
    * RankingSystemChange init
    * @param string[] $keys list of additional fields
    */
-  protected final function init(array $keys)
+  final protected function init(array $keys)
   {
     $this->initSubClassData($keys);
   }

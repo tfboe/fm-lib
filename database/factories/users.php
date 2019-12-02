@@ -20,7 +20,6 @@ $factory->define(User::class, function (\Faker\Generator $faker, array $attribut
   } else {
     $password = $faker->password(8, 30);
   }
-  /** @noinspection PhpUndefinedMethodInspection */
   return [
     'password' => Hash::make($password),
     'email' => $faker->email,

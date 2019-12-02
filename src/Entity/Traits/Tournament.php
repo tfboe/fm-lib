@@ -94,7 +94,7 @@ trait Tournament
    * Will be implemented in TournamentHierarchyEntity
    * @return string
    */
-  public abstract function getId(): string;
+  abstract public function getId(): string;
 
   /**
    * @inheritDoc
@@ -137,7 +137,7 @@ trait Tournament
   /**
    * Tournament constructor.
    */
-  protected final function init()
+  final protected function init()
   {
     $this->tournamentListId = "";
     $this->competitions = new ArrayCollection();

@@ -18,10 +18,10 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class Result extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const DRAW = 2;
-  const NOT_YET_FINISHED = 4;
-  const NULLED = 3;
-  const TEAM_A_WINS = 0;
-  const TEAM_B_WINS = 1;
+  public const DRAW = 2;
+  public const NOT_YET_FINISHED = 4;
+  public const NULLED = 3;
+  public const TEAM_A_WINS = 0;
+  public const TEAM_B_WINS = 1;
 //</editor-fold desc="Fields">
 }

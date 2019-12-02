@@ -88,7 +88,6 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
 
     $this->token = (string)Auth::attempt(['email' => $this->user->getEmail(), 'password' => $userInfo['password']]);
     $this->refreshApplication();
-    /** @noinspection PhpUndefinedMethodInspection */
     $this->user = EntityManager::find(UserInterface::class, $this->user->getId());
   }
 //</editor-fold desc="Protected Methods">
@@ -100,10 +99,8 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   private function clearUsers()
   {
     /** @var Connection $connection */
-    /** @noinspection PhpUndefinedMethodInspection */
     $connection = EntityManager::getConnection();
     $this->clearClassTables($this->getClassesToClear());
-    /** @noinspection PhpUndefinedMethodInspection */
     $sql = sprintf('SET FOREIGN_KEY_CHECKS=0;TRUNCATE TABLE %s;SET FOREIGN_KEY_CHECKS=1;',
       EntityManager::getClassMetadata(UserInterface::class)->getTableName());
 

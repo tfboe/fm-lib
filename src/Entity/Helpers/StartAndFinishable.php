@@ -33,7 +33,7 @@ trait StartAndFinishable
   /**
    * @return int
    */
-  public final function getStatus(): int
+  final public function getStatus(): int
   {
     return $this->status;
   }
@@ -41,7 +41,7 @@ trait StartAndFinishable
   /**
    * @return bool
    */
-  public final function isFinished(): bool
+  final public function isFinished(): bool
   {
     return $this->statusIsFinished($this->status);
   }
@@ -49,7 +49,7 @@ trait StartAndFinishable
   /**
    * @return bool
    */
-  public final function isStarted(): bool
+  final public function isStarted(): bool
   {
     return $this->statusIsStarted($this->status);
   }
@@ -57,7 +57,7 @@ trait StartAndFinishable
   /**
    * @param StartAndFinishableInterface $entity
    */
-  public final function cloneFrom(StartAndFinishableInterface $entity): void
+  final public function cloneFrom(StartAndFinishableInterface $entity): void
   {
     $this->status = $entity->getStatus();
     $this->setStartTime($entity->getStartTime());
@@ -70,7 +70,7 @@ trait StartAndFinishable
    * @param bool $setStartTime
    * @param bool $setEndTime
    */
-  public final function setStatus(int $status, ?DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void
+  final public function setStatus(int $status, ?DateTime $now, bool $setStartTime = true, bool $setEndTime = true): void
   {
     if ($status === $this->status) {
       //nothing to do
@@ -88,7 +88,7 @@ trait StartAndFinishable
       if ($setStartTime && !$this->statusIsStarted($this->status)) {
         $this->setStartTime($now);
       }
-    } else if ($this->statusIsStarted($status)) {
+    } elseif ($this->statusIsStarted($status)) {
       if ($setEndTime) {
         $this->setEndTime(null);
       }

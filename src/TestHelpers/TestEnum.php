@@ -19,7 +19,7 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class TestEnum extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const INT_KEY = 1;
-  const KEY = "value";
+  public const INT_KEY = 1;
+  public const KEY = "value";
 //</editor-fold desc="Fields">
 }

@@ -28,7 +28,7 @@ abstract class TransformerFactory
     return function ($value) {
       if ($value === 'true') {
         return true;
-      } else if ($value === 'false') {
+      } elseif ($value === 'false') {
         return false;
       } else {
         return $value;

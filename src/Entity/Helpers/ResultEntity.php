@@ -115,7 +115,7 @@ trait ResultEntity
     return $this;
   }
 
-  private final function init()
+  final private function init()
   {
     $this->resultA = 0;
     $this->resultB = 0;

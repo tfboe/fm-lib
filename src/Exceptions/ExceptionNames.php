@@ -19,12 +19,12 @@ use Tfboe\FmLib\Helpers\BasicEnum;
 abstract class ExceptionNames extends BasicEnum
 {
 //<editor-fold desc="Fields">
-  const AUTHENTICATION_EXCEPTION = "AuthenticationException";
-  const DUPLICATE_EXCEPTION = "DuplicateException";
-  const INTERNAL_EXCEPTION = "InternalException";
-  const PLAYER_ALREADY_EXISTS_EXCEPTION = "PlayerAlreadyExistsException";
-  const REFERENCE_EXCEPTION = "ReferenceException";
-  const UNORDERED_PHASE_NUMBER_EXCEPTION = "UnorderedPhaseNumberException";
-  const VALIDATION_EXCEPTION = "ValidationException";
+  public const AUTHENTICATION_EXCEPTION = "AuthenticationException";
+  public const DUPLICATE_EXCEPTION = "DuplicateException";
+  public const INTERNAL_EXCEPTION = "InternalException";
+  public const PLAYER_ALREADY_EXISTS_EXCEPTION = "PlayerAlreadyExistsException";
+  public const REFERENCE_EXCEPTION = "ReferenceException";
+  public const UNORDERED_PHASE_NUMBER_EXCEPTION = "UnorderedPhaseNumberException";
+  public const VALIDATION_EXCEPTION = "ValidationException";
 //</editor-fold desc="Fields">
 }
