@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
 use Tfboe\FmLib\Helpers\Level;
@@ -30,7 +29,6 @@ class GameTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getChildren
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -46,7 +44,6 @@ class GameTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Game::setGameNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getGameNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getLocalIdentifier
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
@@ -62,7 +59,6 @@ class GameTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::init
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getPlayersB
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getPlayersA
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -80,7 +76,6 @@ class GameTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getLevel
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
@@ -94,7 +89,6 @@ class GameTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Game::setMatch
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getMatch
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getParent
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::setGameNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::getGameNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -131,7 +125,6 @@ class GameTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getPlayersA
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -149,7 +142,6 @@ class GameTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Game::getPlayersB
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Game::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -169,7 +161,6 @@ class GameTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return GameInterface|MockObject a new game
-   * @throws ReflectionException
    */
   private function game(): MockObject
   {

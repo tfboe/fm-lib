@@ -10,8 +10,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use DateTime;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -25,7 +25,7 @@ class TimestampableEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::setCreatedAt
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::getCreatedAt
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testCreatedAt()
@@ -39,7 +39,7 @@ class TimestampableEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::setUpdatedAt
    * @covers \Tfboe\FmLib\Entity\Helpers\TimestampableEntity::getUpdatedAt
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
    */
   public function testUpdateAt()
@@ -54,7 +54,6 @@ class TimestampableEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|TimestampableEntity
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

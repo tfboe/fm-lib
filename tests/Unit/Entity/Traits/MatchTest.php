@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
@@ -31,7 +30,6 @@ class MatchTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getGames
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getChildren
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    * @uses   \Tfboe\FmLib\Entity\GameInterface
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -53,7 +51,6 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::init
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getGames
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
@@ -74,7 +71,6 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getLevel
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -88,7 +84,6 @@ class MatchTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getLocalIdentifier
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -106,7 +101,6 @@ class MatchTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::setPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getParent
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -116,7 +110,7 @@ class MatchTest extends UnitTestCase
   public function testPhaseAndParent()
   {
     $match = $this->match();
-    $phase = $this->createStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
+    $phase = $this->getStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
     $match->setMatchNumber(1);
     /** @var PhaseInterface $phase */
     $match->setPhase($phase);
@@ -125,7 +119,7 @@ class MatchTest extends UnitTestCase
     self::assertEquals($match, $match->getPhase()->getMatches()[$match->getId()]);
     self::assertEquals($match->getPhase(), $match->getParent());
 
-    $phase2 = $this->createStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
+    $phase2 = $this->getStub(PhaseInterface::class, ["getMatches" => new ArrayCollection()]);
 
     /** @var PhaseInterface $phase2 */
     $match->setPhase($phase2);
@@ -138,7 +132,6 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::resultInit
@@ -156,7 +149,6 @@ class MatchTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -176,7 +168,6 @@ class MatchTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MatchInterface|MockObject a new match
-   * @throws ReflectionException
    */
   private function match(): MockObject
   {

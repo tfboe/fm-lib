@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use DateTime;
+use Exception;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\StartAndFinishable;
 use Tfboe\FmLib\Entity\Helpers\StartAndFinishableInterface;
 use Tfboe\FmLib\Entity\Helpers\StartFinishStatus;
@@ -27,7 +27,7 @@ class StartAndFinishableTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::cloneFrom
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getEndTime
    * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getStartTime
    * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::setEndTime
@@ -44,7 +44,7 @@ class StartAndFinishableTest extends UnitTestCase
     $start = new DateTime("2019-01-01");
     $end = new DateTime("2019-02-01");
     $status = StartFinishStatus::FINISHED;
-    $clone = $this->createStub(StartAndFinishableInterface::class,
+    $clone = $this->getStub(StartAndFinishableInterface::class,
       ['getStatus' => $status, 'getStartTime' => $start, 'getEndTime' => $end]);
 
     $entity->cloneFrom($clone);
@@ -58,7 +58,7 @@ class StartAndFinishableTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
@@ -85,7 +85,7 @@ class StartAndFinishableTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::ensureValidValue
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
@@ -111,7 +111,7 @@ class StartAndFinishableTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::isStarted
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsFinished
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::statusIsStarted
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getConstants
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::getValues
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum::isValidValue
@@ -153,7 +153,7 @@ class StartAndFinishableTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::setStatus
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::changeIsValid
    * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::ensureValidValue
    * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::getStatus
@@ -247,7 +247,6 @@ class StartAndFinishableTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|StartAndFinishable
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

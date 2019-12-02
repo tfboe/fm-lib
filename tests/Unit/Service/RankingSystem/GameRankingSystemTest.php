@@ -13,7 +13,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
-use ReflectionException;
+use Exception;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
@@ -32,8 +32,7 @@ class GameRankingSystemTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService::getEntitiesQueryBuilder
-   * @throws ReflectionException
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntityManager
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
@@ -62,7 +61,6 @@ class GameRankingSystemTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService::getLevel
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testLevel()

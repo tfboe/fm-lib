@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Http\Controllers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
-use ReflectionException;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\Http\Controllers\UserController;
 use Tfboe\FmLib\Tests\Entity\User;
@@ -29,7 +28,6 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -45,7 +43,6 @@ class BaseControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testGetEntityManager()
@@ -59,7 +56,6 @@ class BaseControllerTest extends UnitTestCase
   /**
    * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
-   * @throws ReflectionException
    * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
@@ -82,7 +78,6 @@ class BaseControllerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateSpec
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testValidateBySpecification()

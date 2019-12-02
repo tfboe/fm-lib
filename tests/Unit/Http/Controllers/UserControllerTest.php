@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Application;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\TermsInterface;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
@@ -41,7 +40,6 @@ class UserControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::__construct
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testConstruct()
@@ -57,7 +55,6 @@ class UserControllerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::preLogin
    * @throws AuthenticationException wrong credentials or errors during creating a token
    * @throws ValidationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::validateBySpecification
@@ -79,7 +76,7 @@ class UserControllerTest extends UnitTestCase
       self::assertTrue($request === $r);
     });
 
-    $app = $this->createStub(Application::class, []);
+    $app = $this->getStub(Application::class, []);
 
     Auth::shouldReceive('attempt')
       ->once()
@@ -94,16 +91,15 @@ class UserControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::getLatestTerms
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
    */
   public function testGetLatestTerms()
   {
     $controller = $this->controller();
-    $terms = $this->createStub(TermsInterface::class,
+    $terms = $this->getStub(TermsInterface::class,
       ['getText' => 'text', 'getMinorVersion' => 1, 'getMajorVersion' => 2]);
-    $termsService = $this->createStub(TermsServiceInterface::class, ['getLatestTerms' => $terms]);
+    $termsService = $this->getStub(TermsServiceInterface::class, ['getLatestTerms' => $terms]);
     $response = $controller->getLatestTerms($termsService);
     self::assertEquals(200, $response->getStatusCode());
     self::assertEquals(['text' => 'text', 'minorVersion' => 1, 'majorVersion' => 2], $response->getData(true));
@@ -116,7 +112,6 @@ class UserControllerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::preLogin
    * @throws AuthenticationException wrong credentials or errors during creating a token
    * @throws ValidationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::validateBySpecification
@@ -138,7 +133,7 @@ class UserControllerTest extends UnitTestCase
       self::assertTrue($request === $r);
     });
 
-    $app = $this->createStub(Application::class, []);
+    $app = $this->getStub(Application::class, []);
 
     Auth::shouldReceive('attempt')
       ->once()
@@ -159,7 +154,6 @@ class UserControllerTest extends UnitTestCase
    * @covers   \Tfboe\FmLib\Http\Controllers\UserController::preLogin
    * @throws AuthenticationException wrong credentials or errors during creating a token
    * @throws ValidationException
-   * @throws ReflectionException
    * @uses     \Tfboe\FmLib\Helpers\SpecificationHandler::validateBySpecification
    * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses     \Tfboe\FmLib\Http\Controllers\UserController::__construct
@@ -182,7 +176,7 @@ class UserControllerTest extends UnitTestCase
       self::assertTrue($request === $r);
     });
 
-    $app = $this->createStub(Application::class, []);
+    $app = $this->getStub(Application::class, []);
 
     Auth::shouldReceive('attempt')
       ->once()
@@ -202,7 +196,6 @@ class UserControllerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::getCredentialSpecification
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::getRegisterResponse
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::newUser
-   * @throws ReflectionException
    * @throws ValidationException
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::setFromSpecification
@@ -288,13 +281,12 @@ class UserControllerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::userId
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testUserId()
   {
-    $auth = $this->createStub(Authenticatable::class, ["getAuthIdentifier" => "uid"]);
+    $auth = $this->getStub(Authenticatable::class, ["getAuthIdentifier" => "uid"]);
     Auth::shouldReceive('user')
       ->once()
       ->andReturn($auth);
@@ -311,7 +303,6 @@ class UserControllerTest extends UnitTestCase
    * @param ObjectCreatorServiceInterface|null $objectCreatorService
    * @param array $stubbedMethods
    * @return UserController|MockObject
-   * @throws ReflectionException
    */
   private function controller(?EntityManagerInterface $entityManager = null,
                               ?ObjectCreatorServiceInterface $objectCreatorService = null,

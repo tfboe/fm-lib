@@ -104,7 +104,7 @@ class TeamMembershipTest extends UnitTestCase
   {
     $membership = $this->membership();
     /** @var TeamInterface $team */
-    $team = $this->createStub(TeamInterface::class, ['getMemberships' => new ArrayCollection()]);
+    $team = $this->getStub(TeamInterface::class, ['getMemberships' => new ArrayCollection()]);
     self::getProperty(get_class($membership), 'id')->setValue($membership, 'membership-id');
     /** @var CompetitionInterface $competition */
     $membership->setTeam($team);
@@ -113,7 +113,7 @@ class TeamMembershipTest extends UnitTestCase
     self::assertEquals($membership, $membership->getTeam()->getMemberships()[$membership->getId()]);
 
     /** @var TeamInterface $team2 */
-    $team2 = $this->createStub(TeamInterface::class, ['getMemberships' => new ArrayCollection()]);
+    $team2 = $this->getStub(TeamInterface::class, ['getMemberships' => new ArrayCollection()]);
 
     /** @var CompetitionInterface $competition2 */
     $membership->setTeam($team2);

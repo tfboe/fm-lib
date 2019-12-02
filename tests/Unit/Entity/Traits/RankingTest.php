@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\RankingInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
@@ -28,7 +27,6 @@ class RankingTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::init
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
@@ -44,7 +42,6 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setPhase
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getPhase
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -53,7 +50,7 @@ class RankingTest extends UnitTestCase
   public function testPhase()
   {
     $ranking = $this->ranking();
-    $phase = $this->createStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
+    $phase = $this->getStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
     $ranking->setUniqueRank(1);
     /** @var PhaseInterface $phase */
     $ranking->setPhase($phase);
@@ -61,7 +58,7 @@ class RankingTest extends UnitTestCase
     self::assertEquals(1, $ranking->getPhase()->getRankings()->count());
     self::assertEquals($ranking, $ranking->getPhase()->getRankings()[$ranking->getId()]);
 
-    $phase2 = $this->createStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
+    $phase2 = $this->getStub(PhaseInterface::class, ['getRankings' => new ArrayCollection()]);
 
     /** @var PhaseInterface $phase2 */
     $ranking->setPhase($phase2);
@@ -74,7 +71,6 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setRank
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getRank
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testRank()
@@ -86,14 +82,13 @@ class RankingTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getTeams
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testTeams()
   {
     $ranking = $this->ranking();
-    $team = $this->createStub(TeamInterface::class, ["getId" => "teamId"]);
+    $team = $this->getStub(TeamInterface::class, ["getId" => "teamId"]);
     $team->setStartNumber(1);
     $ranking->getTeams()->set($team->getId(), $team);
     self::assertEquals(1, $ranking->getTeams()->count());
@@ -103,7 +98,6 @@ class RankingTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::setUniqueRank
    * @covers \Tfboe\FmLib\Entity\Traits\Ranking::getUniqueRank
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking::init
    */
   public function testUniqueRank()
@@ -117,7 +111,6 @@ class RankingTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|Ranking a new ranking
-   * @throws ReflectionException
    */
   private function ranking(): MockObject
   {

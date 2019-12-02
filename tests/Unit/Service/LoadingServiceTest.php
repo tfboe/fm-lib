@@ -14,7 +14,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\PersistentCollection;
-use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
@@ -33,7 +32,6 @@ class LoadingServiceTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Service\LoadingService::__construct
-   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -49,7 +47,6 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadEntities
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesAlreadyLoaded()
@@ -59,8 +56,8 @@ class LoadingServiceTest extends UnitTestCase
     $tournament = $this->createMock(TournamentInterface::class);
     $tournament->method('getEntityId')->willReturn('t');
     $initializedCollection = new PersistentCollection(
-      $this->createStub(EntityManagerInterface::class),
-      $this->createStub(ClassMetadata::class),
+      $this->getStub(EntityManagerInterface::class),
+      $this->getStub(ClassMetadata::class),
       new ArrayCollection());
     $tournament->method('getCompetitions')->willReturn($initializedCollection);
     $service->loadEntities([$tournament], [TournamentInterface::class => [["competitions"]]]);
@@ -71,7 +68,6 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesDefaultPropertiesGame()
@@ -97,7 +93,6 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesMultipleLevels()
@@ -147,7 +142,6 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesNullProperty()
@@ -166,7 +160,6 @@ class LoadingServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\LoadingService::loadProperties
    * @covers \Tfboe\FmLib\Service\LoadingService::keyOfPropertyMap
    * @covers \Tfboe\FmLib\Service\LoadingService::collectToDo
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\LoadingService::__construct
    */
   public function testLoadEntitiesSimpleProperty()

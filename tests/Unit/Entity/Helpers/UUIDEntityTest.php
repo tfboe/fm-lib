@@ -11,7 +11,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -25,7 +24,6 @@ class UUIDEntityTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getEntityId
-   * @throws ReflectionException
    */
   public function testGetEntityId()
   {
@@ -37,7 +35,6 @@ class UUIDEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::getId
-   * @throws ReflectionException
    */
   public function testGetId()
   {
@@ -49,7 +46,6 @@ class UUIDEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::hasId
-   * @throws ReflectionException
    */
   public function testHasId()
   {
@@ -61,7 +57,6 @@ class UUIDEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\UUIDEntity::setId
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFor
    * @uses   \Tfboe\FmLib\Entity\Helpers\IdGenerator::createIdFrom
    * @uses   \Tfboe\FmLib\Helpers\Random::stringToRandom
@@ -79,7 +74,6 @@ class UUIDEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\User::__toString
-   * @throws ReflectionException
    */
   public function testToString()
   {
@@ -93,7 +87,6 @@ class UUIDEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|UUIDEntity
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

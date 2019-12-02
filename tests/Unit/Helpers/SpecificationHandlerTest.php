@@ -13,7 +13,6 @@ use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Helpers\SpecificationHandler;
@@ -51,7 +50,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::enumTransformer
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::enumTransformer
@@ -67,7 +65,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testGetDatetimetzFormat()
@@ -79,7 +76,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    */
@@ -97,7 +93,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
@@ -116,13 +111,12 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::transformValue
    */
   public function testSetFromSpecificationWithSetter()
   {
     $value = 'test-value';
-    $object = $this->createStub(BaseEntityInterface::class);
+    $object = $this->getStub(BaseEntityInterface::class);
     $handler = $this->handler();
 
     $method = self::getMethod(get_class($handler), 'setFromSpecification');
@@ -138,7 +132,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
@@ -160,7 +153,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByTransformer()
@@ -203,7 +195,6 @@ class SpecificationHandlerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testTransformValueByTypeDefault()
@@ -241,7 +232,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
@@ -261,7 +251,6 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    */
   public function testValidateBySpecification()
@@ -296,7 +285,6 @@ class SpecificationHandlerTest extends UnitTestCase
   /**
    * @param array $methods
    * @return MockObject|SpecificationHandler
-   * @throws ReflectionException
    */
   private function handler(array $methods = []): MockObject
   {

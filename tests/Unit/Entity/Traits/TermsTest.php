@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Traits\Terms;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -25,7 +24,6 @@ class TermsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::getMajorVersion
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::setMajorVersion
-   * @throws ReflectionException
    */
   public function testMajorVersion()
   {
@@ -37,7 +35,6 @@ class TermsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::getMinorVersion
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::setMinorVersion
-   * @throws ReflectionException
    */
   public function testMinorVersion()
   {
@@ -49,7 +46,6 @@ class TermsTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::getText
    * @covers \Tfboe\FmLib\Entity\Traits\Terms::setText
-   * @throws ReflectionException
    */
   public function testText()
   {
@@ -62,7 +58,6 @@ class TermsTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|Terms
-   * @throws ReflectionException
    */
   private function terms(): MockObject
   {

@@ -14,6 +14,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\MockObject\Stub;
 use PHPUnit\Framework\TestCase;
 use ReflectionClass;
 use ReflectionException;
@@ -44,7 +45,10 @@ abstract class UnitTestCase extends TestCase
     }
   }
 
-  public function tearDown()
+  /**
+   * @inheritDoc
+   */
+  public function tearDown(): void
   {
     parent::tearDown();
   }
@@ -113,7 +117,7 @@ abstract class UnitTestCase extends TestCase
    * @param array $methodResults a dictionary mapping method names to results of this methods
    * @return MockObject|mixed the configured stub
    */
-  protected function createStub(string $class, array $methodResults = []): MockObject
+  protected function getStub(string $class, array $methodResults = []): Stub
   {
     return $this->createConfiguredMock($class, $methodResults);
   }
@@ -127,7 +131,7 @@ abstract class UnitTestCase extends TestCase
    */
   protected function createStubWithId(string $class, $entityId = "entity-id", $getterMethod = 'getId')
   {
-    return $this->createStub($class, [$getterMethod => $entityId]);
+    return $this->getStub($class, [$getterMethod => $entityId]);
   }
 
   /**
@@ -136,17 +140,18 @@ abstract class UnitTestCase extends TestCase
    * @param array $results the result arrays the queries should return
    * @param string[] $expectedQueries the expected queries if set
    * @param string[] $otherMockedMethods list of other methods to mock
+   * @param bool $withSetLockMode
    * @return MockObject|EntityManager the mocked entity manager
-   * @throws ReflectionException
    */
   protected function getEntityManagerMockForQueries(array $results, array $expectedQueries = [],
-                                                    array $otherMockedMethods = []): MockObject
+                                                    array $otherMockedMethods = [],
+                                                    bool $withSetLockMode = false): MockObject
   {
     $entityManager = $this->getMockForAbstractClass(EntityManager::class, [], '',
       false, true, true, array_merge($otherMockedMethods, ['createQueryBuilder']));
     assert($expectedQueries == [] || count($results) === count($expectedQueries));
     $entityManager->expects(static::exactly(count($results)))->method('createQueryBuilder')->willReturnCallback(
-      function () use ($entityManager, &$results, &$expectedQueries) {
+      function () use ($entityManager, &$results, &$expectedQueries, $withSetLockMode) {
         $queryBuilder = $this->getMockForAbstractClass(QueryBuilder::class, [$entityManager],
           '', true, true, true, ['getQuery']);
         /** @var MockObject|AbstractQuery $query */
@@ -155,7 +160,7 @@ abstract class UnitTestCase extends TestCase
           ->disableOriginalClone()
           ->disableArgumentCloning()
           ->disallowMockingUnknownTypes()
-          ->setMethods(['setLockMode', 'getSQL', '_doExecute', 'getResult', 'getOneOrNullResult'])
+          ->onlyMethods(['getSQL', '_doExecute', 'getResult', 'getOneOrNullResult'])
           ->getMock();
         $query->expects(static::once())->method('getResult')->willReturn(array_shift($results));
         $query->expects(static::atMost(1))->method('getOneOrNullResult')->willReturnCallback(
@@ -169,7 +174,28 @@ abstract class UnitTestCase extends TestCase
             }
           }
         );
-        $query->method('setLockMode')->willReturn($query);
+        if ($withSetLockMode) {
+          $query = new class($query) {
+            private $query;
+
+            /**
+             *  constructor.
+             * @param AbstractQuery $query
+             */
+            public function __construct(AbstractQuery $query)
+            {
+              $this->query = $query;
+            }
+
+            /**
+             * @return AbstractQuery
+             */
+            public function setLockMode()
+            {
+              return $this->query;
+            }
+          };
+        }
         if ($expectedQueries !== []) {
           $queryBuilder->expects(static::once())->method('getQuery')->willReturnCallback(
             function () use ($queryBuilder, $query, &$expectedQueries) {
@@ -193,14 +219,15 @@ abstract class UnitTestCase extends TestCase
    * @param string|null $expectedQuery the expected query if set
    * @param string[] $otherMockedMethods list of other methods to mock
    * @param int $amount the number of times this query gets sent
+   * @param bool $withSetLockMode
    * @return MockObject|EntityManager the mocked entity manager
-   * @throws ReflectionException
    */
   protected function getEntityManagerMockForQuery(array $result, ?string $expectedQuery = null,
-                                                  array $otherMockedMethods = [], $amount = 1): MockObject
+                                                  array $otherMockedMethods = [], $amount = 1,
+                                                  bool $withSetLockMode = false): MockObject
   {
     return $this->getEntityManagerMockForQueries(array_fill(0, $amount, $result),
-      $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods);
+      $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods, $withSetLockMode);
   }
 
   /** @noinspection PhpTooManyParametersInspection */
@@ -213,7 +240,6 @@ abstract class UnitTestCase extends TestCase
    * @param bool $callParentConstructor
    * @param bool $hasInit
    * @return MockObject
-   * @throws ReflectionException
    */
   protected function getMockedEntity(string $className, array $methodNames = [], array $additionalInterfaces = [],
                                      ?string $baseClass = BaseEntity::class,
@@ -251,7 +277,6 @@ CLASS;
    * @param array $methods
    * @param array $additionalInterfaces
    * @return MockObject
-   * @throws ReflectionException
    */
   protected function getStubbedTournamentHierarchyEntity(string $className, array $methods = [],
                                                          array $additionalInterfaces = [])
@@ -270,7 +295,6 @@ CLASS;
    * @param bool $callAutoload
    * @param bool $cloneArguments
    * @return MockObject
-   * @throws ReflectionException
    */
   protected function getPartialMockForTrait($traitName, array $methods, array $arguments = [],
                                             $mockClassName = '', $callOriginalConstructor = true,
@@ -292,7 +316,6 @@ CLASS;
    * @param bool $callParentConstructor
    * @param bool $hasInit
    * @return MockObject
-   * @throws ReflectionException
    */
   protected function getStubbedEntity(string $className, array $methods = [], array $additionalInterfaces = [],
                                       ?string $baseClass = BaseEntity::class,

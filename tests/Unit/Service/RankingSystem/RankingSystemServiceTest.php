@@ -16,6 +16,7 @@ use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
@@ -62,7 +63,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
-   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -89,9 +89,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
@@ -109,7 +108,7 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testDontUseDeletedChange()
   {
     [$entity, $ranking, $player] = $this->createEntities();
-    $change = $this->createStub(RankingSystemChange::class,
+    $change = $this->getStub(RankingSystemChange::class,
       ['getRankingSystem' => $ranking, 'getPlayer' => $player, 'getHierarchyEntity' => $entity, 'getId' => "c1"]);
 
     $entityManager = $this->getEntityManagerMockForQuery([$change], null, ['persist', 'flush', 'detach', 'remove',
@@ -125,9 +124,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
@@ -146,9 +144,9 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testDoubleOldChange()
   {
     [$entity, $ranking, $player] = $this->createEntities();
-    $change1 = $this->createStub(RankingSystemChange::class,
+    $change1 = $this->getStub(RankingSystemChange::class,
       ['getRankingSystem' => $ranking, 'getPlayer' => $player, 'getHierarchyEntity' => $entity, 'getId' => "c1"]);
-    $change2 = $this->createStub(RankingSystemChange::class,
+    $change2 = $this->getStub(RankingSystemChange::class,
       ['getRankingSystem' => $ranking, 'getPlayer' => $player, 'getHierarchyEntity' => $entity, 'getId' => "c2"]);
     self::assertNotEquals($change1->getId(), $change2->getId());
 
@@ -163,7 +161,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAverage
-   * @throws ReflectionException
    */
   public function testGetAverage()
   {
@@ -181,7 +178,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
@@ -268,7 +265,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
@@ -418,7 +415,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestEntityInfluence
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity
@@ -461,7 +458,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAverage
-   * @throws ReflectionException
    */
   public function testGetEmptyAverage()
   {
@@ -473,7 +469,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetEntities()
@@ -505,7 +501,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntityManager
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    */
   public function testGetEntityManager()
@@ -520,7 +515,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntriesOfPlayers
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    */
   public function testGetEntriesOfPlayers()
@@ -534,10 +528,10 @@ class RankingSystemServiceTest extends UnitTestCase
     $entry3 = $this->createMock(RankingSystemListEntry::class);
 
     $entries = new ArrayCollection([1 => $entry1, 2 => $entry2, 3 => $entry3]);
-    $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
+    $list = $this->getStub(RankingSystemList::class, ['getEntries' => $entries]);
 
-    $player1 = $this->createStub(Player::class, ['getId' => 1]);
-    $player3 = $this->createStub(Player::class, ['getId' => 3]);
+    $player1 = $this->getStub(Player::class, ['getId' => 1]);
+    $player3 = $this->getStub(Player::class, ['getId' => 3]);
 
     $returnedEntries = static::callProtectedMethod($service, 'getEntriesOfPlayers',
       [new ArrayCollection([$player1, $player3]), $list]);
@@ -546,7 +540,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
@@ -574,7 +567,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateChange
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getAdditionalChangeFields()
@@ -596,9 +588,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
@@ -616,7 +607,7 @@ class RankingSystemServiceTest extends UnitTestCase
   public function testGetOrCreateGetDeletedChange()
   {
     [$entity, $ranking, $player] = $this->createEntities();
-    $change = $this->createStub(RankingSystemChange::class,
+    $change = $this->getStub(RankingSystemChange::class,
       ['getRankingSystem' => $ranking, 'getPlayer' => $player, 'getHierarchyEntity' => $entity, 'getId' => "c1"]);
 
     $entityManager = $this->getEntityManagerMockForQuery([$change], null, ['persist', 'flush', 'detach', 'remove',
@@ -636,7 +627,6 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
@@ -645,8 +635,8 @@ class RankingSystemServiceTest extends UnitTestCase
   {
     $player = $this->createStubWithId(Player::class, 1, 'getId');
     $entries = new ArrayCollection([]);
-    $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
-    $entry = $this->createStub(RankingSystemListEntry::class,
+    $list = $this->getStub(RankingSystemList::class, ['getEntries' => $entries]);
+    $entry = $this->getStub(RankingSystemListEntry::class,
       ['getPlayer' => $player, 'getRankingSystemList' => $list]);
     $entries->set(1, $entry);
 
@@ -660,7 +650,6 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
    * @covers   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
    * @covers   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::resetListEntry
-   * @throws ReflectionException
    * @uses     \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry
    * @uses     \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses     \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
@@ -670,7 +659,7 @@ class RankingSystemServiceTest extends UnitTestCase
   {
     $player = $this->createStubWithId(Player::class, 1, 'getId');
     $entries = new ArrayCollection([]);
-    $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
+    $list = $this->getStub(RankingSystemList::class, ['getEntries' => $entries]);
 
     /** @var RankingSystemListEntryInterface $createdEntry */
     $createdEntry = null;
@@ -1130,9 +1119,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -1233,9 +1221,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -1278,9 +1265,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
-   * @throws ReflectionException
-   * @throws ReflectionException
    * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
@@ -1306,7 +1292,6 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * Creates an empty RankingSystemChange
    * @return MockObject|RankingSystemChangeInterface
-   * @throws ReflectionException
    */
   private function createEmptyChange(): MockObject
   {
@@ -1317,7 +1302,6 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * Creates an empty RankingSystemListEntry
    * @return MockObject|RankingSystemListEntryInterface
-   * @throws ReflectionException
    */
   private function createEmptyEntry(): MockObject
   {
@@ -1340,11 +1324,10 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * Prepares a ranking system service for creating a change
    * @return array, the service entity and its corresponding entity manager
-   * @throws ReflectionException
    */
   private function prepareCreateChange()
   {
-    $entityManager = $this->createStub(EntityManager::class, []);
+    $entityManager = $this->getStub(EntityManager::class, []);
     /** @var RankingSystemService $service */
     $service = $this->getMockForAbstractClass(RankingSystemService::class, [
       $entityManager, $this->createMock(TimeServiceInterface::class),
@@ -1364,7 +1347,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @param array $mockedMethods
    * @param array $entities
    * @return MockObject|RankingSystemService
-   * @throws ReflectionException
+   * @throws Exception
    */
   private function prepareUpdateRankingFrom(MockObject $ranking, ?EntityManagerInterface $entityManager = null,
                                             $listsArray = null, $numListsToUpdate = 1, $mockedMethods = [],

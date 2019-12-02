@@ -12,8 +12,8 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\MatchInterface;
@@ -54,7 +54,7 @@ class PlayerServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\PlayerService::mergePlayers
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Service\PlayerService::__construct
    */
   public function testMergeBothPlayersInSameTournament()
@@ -63,22 +63,22 @@ class PlayerServiceTest extends UnitTestCase
     $player1 = $this->createStubWithId(PlayerInterface::class, "p1");
     /** @var PlayerInterface $player2 */
     $player2 = $this->createStubWithId(PlayerInterface::class, "p2");
-    $team1 = $this->createStub(TeamInterface::class, [
-      'getMemberships' => new ArrayCollection([$this->createStub(TeamMembershipInterface::class, [
+    $team1 = $this->getStub(TeamInterface::class, [
+      'getMemberships' => new ArrayCollection([$this->getStub(TeamMembershipInterface::class, [
         'getPlayer' => $player1
       ])])
     ]);
-    $team2 = $this->createStub(TeamInterface::class, [
-      'getMemberships' => new ArrayCollection([$this->createStub(TeamMembershipInterface::class, [
+    $team2 = $this->getStub(TeamInterface::class, [
+      'getMemberships' => new ArrayCollection([$this->getStub(TeamMembershipInterface::class, [
         'getPlayer' => $player2
       ])])
     ]);
 
-    $competition = $this->createStub(CompetitionInterface::class, [
+    $competition = $this->getStub(CompetitionInterface::class, [
       'getTeams' => new ArrayCollection([$team1, $team2])
     ]);
 
-    $tournament = $this->createStub(TournamentInterface::class, [
+    $tournament = $this->getStub(TournamentInterface::class, [
       'getCompetitions' => new ArrayCollection([$competition]),
       'getName' => 'Tournament',
       'getId' => 't',
@@ -91,9 +91,9 @@ class PlayerServiceTest extends UnitTestCase
       "INNER JOIN te.memberships m WHERE m.player = (:id)");
 
     /** @var LoadingServiceInterface $loadingService */
-    $loadingService = $this->createStub(LoadingServiceInterface::class);
+    $loadingService = $this->getStub(LoadingServiceInterface::class);
     /** @var RankingSystemServiceInterface $rankingSystemService */
-    $rankingSystemService = $this->createStub(RankingSystemServiceInterface::class);
+    $rankingSystemService = $this->getStub(RankingSystemServiceInterface::class);
     /** @var PlayerServiceInterface $service */
     $service = new PlayerService($em,
       $loadingService,
@@ -114,9 +114,9 @@ class PlayerServiceTest extends UnitTestCase
     $player2 = $this->createStubWithId(PlayerInterface::class, "p1");
 
     $service = new PlayerService(
-      $this->createStub(EntityManagerInterface::class),
-      $this->createStub(LoadingServiceInterface::class),
-      $this->createStub(RankingSystemServiceInterface::class)
+      $this->getStub(EntityManagerInterface::class),
+      $this->getStub(LoadingServiceInterface::class),
+      $this->getStub(RankingSystemServiceInterface::class)
     );
 
     self::assertEquals('Players are identical!', $service->mergePlayers($player1, $player2));
@@ -124,42 +124,41 @@ class PlayerServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\PlayerService::mergePlayers
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\PlayerService::__construct
    */
   public function testMergePlayer()
   {
-    $tournament = $this->createStub(TournamentInterface::class);
+    $tournament = $this->getStub(TournamentInterface::class);
     $player1 = $this->createStubWithId(PlayerInterface::class, "p1");
     $player2 = $this->createStubWithId(PlayerInterface::class, "p2");
     $otherPlayer = $this->createStubWithId(PlayerInterface::class, "oP");
-    $team1Membership = $this->createStub(TeamMembershipInterface::class, ['getPlayer' => $player2]);
+    $team1Membership = $this->getStub(TeamMembershipInterface::class, ['getPlayer' => $player2]);
     $team1Membership->method('setPlayer')->with($player1);
-    $team1 = $this->createStub(TeamInterface::class, [
+    $team1 = $this->getStub(TeamInterface::class, [
       'getMemberships' => new ArrayCollection([$team1Membership])
     ]);
-    $otherTeam = $this->createStub(TeamInterface::class, [
-      'getMemberships' => new ArrayCollection([$this->createStub(TeamMembershipInterface::class, [
+    $otherTeam = $this->getStub(TeamInterface::class, [
+      'getMemberships' => new ArrayCollection([$this->getStub(TeamMembershipInterface::class, [
         'getPlayer' => $otherPlayer
       ])])
     ]);
 
     $game1PlayersB = new ArrayCollection([$player2->getId() => $player2]);
-    $game1 = $this->createStub(GameInterface::class, [
+    $game1 = $this->getStub(GameInterface::class, [
       'getPlayersA' => new ArrayCollection([$otherPlayer->getId() => $otherPlayer]),
       'getPlayersB' => $game1PlayersB
     ]);
 
     $game2PlayersA = new ArrayCollection([$player2->getId() => $player2]);
-    $game2 = $this->createStub(GameInterface::class, [
+    $game2 = $this->getStub(GameInterface::class, [
       'getPlayersA' => $game2PlayersA,
       'getPlayersB' => new ArrayCollection([$otherPlayer->getId() => $otherPlayer])
     ]);
 
-    $competition = $this->createStub(CompetitionInterface::class, [
+    $competition = $this->getStub(CompetitionInterface::class, [
       'getTeams' => new ArrayCollection([$team1, $otherTeam]),
-      'getPhases' => new ArrayCollection([$this->createStub(PhaseInterface::class, [
-        'getMatches' => new ArrayCollection([$this->createStub(MatchInterface::class, [
+      'getPhases' => new ArrayCollection([$this->getStub(PhaseInterface::class, [
+        'getMatches' => new ArrayCollection([$this->getStub(MatchInterface::class, [
           'getGames' => new ArrayCollection([$game1, $game2])
         ])])
       ])])

@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Entity\Traits\LastRecalculation;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -25,7 +24,6 @@ class LastRecalculationTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\LastRecalculation::getVersion
    * @covers \Tfboe\FmLib\Entity\Traits\LastRecalculation::setVersion
-   * @throws ReflectionException
    */
   public function testVersion()
   {
@@ -38,7 +36,6 @@ class LastRecalculationTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|LastRecalculation
-   * @throws ReflectionException
    */
   private function lastRecalculation(): MockObject
   {

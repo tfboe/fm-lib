@@ -57,7 +57,7 @@ namespace Tfboe\FmLib\Tests\Unit\Service {
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
       parent::setUp();
 

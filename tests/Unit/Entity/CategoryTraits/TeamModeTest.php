@@ -11,7 +11,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\CategoryTraits;
 
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Categories\TeamMode;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -26,7 +25,6 @@ class TeamModeTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\TeamMode::getTeamMode
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\TeamMode::setTeamMode
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testProperty()
@@ -43,7 +41,6 @@ class TeamModeTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\CategoryTraits\TeamMode::setTeamMode
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Exceptions\Internal::error
@@ -62,7 +59,6 @@ class TeamModeTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|\Tfboe\FmLib\Entity\CategoryTraits\TeamMode
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

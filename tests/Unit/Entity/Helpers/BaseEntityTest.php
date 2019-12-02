@@ -9,7 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -22,7 +21,6 @@ class BaseEntityTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
-   * @throws ReflectionException
    */
   public function testMethodExists()
   {

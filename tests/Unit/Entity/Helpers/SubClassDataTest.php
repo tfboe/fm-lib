@@ -11,7 +11,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Exceptions\MethodNotExistingException;
 use Tfboe\FmLib\Exceptions\PropertyNotExistingException;
@@ -26,7 +25,6 @@ class SubClassDataTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::addPropertyIfNotExistent
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
@@ -49,7 +47,6 @@ class SubClassDataTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
@@ -69,7 +66,6 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::cloneSubClassDataFrom
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    */
@@ -90,7 +86,6 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
-   * @throws ReflectionException
    */
   public function testInitSubClassDataAndHasProperty()
   {
@@ -122,7 +117,6 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::methodExists
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::addPropertyIfNotExistent
@@ -147,7 +141,6 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getKeys
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::initSubClassData
    */
   public function testKeys()
@@ -160,7 +153,6 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\MethodNotExistingException::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
@@ -176,7 +168,6 @@ class SubClassDataTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\MethodNotExistingException::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
@@ -193,7 +184,6 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\PropertyNotExistingException::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
@@ -211,7 +201,6 @@ class SubClassDataTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::__call
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::setProperty
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\PropertyNotExistingException::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
    */
@@ -230,7 +219,6 @@ class SubClassDataTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|SubClassData
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

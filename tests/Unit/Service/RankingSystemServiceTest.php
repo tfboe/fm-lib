@@ -11,10 +11,10 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
@@ -39,7 +39,7 @@ class RankingSystemServiceTest extends UnitTestCase
 //<editor-fold desc="Public Methods">
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::adaptOpenSyncFromValues
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
@@ -60,7 +60,6 @@ class RankingSystemServiceTest extends UnitTestCase
         return $mock;
       });
     /** @var DynamicServiceLoadingService $serviceLoader */
-    /** @noinspection PhpParamsInspection */
     $service = new RankingSystemService($serviceLoader,
       $this->getMockForAbstractClass(EntityManagerInterface::class));
 
@@ -99,7 +98,6 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystemService::applyRankingSystems
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
    * @throws BindingResolutionException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
@@ -138,7 +136,6 @@ class RankingSystemServiceTest extends UnitTestCase
       ->willReturn($mock);
 
     /** @var DynamicServiceLoadingService $serviceLoader */
-    /** @noinspection PhpParamsInspection */
     $service = new RankingSystemService($serviceLoader,
       $this->getMockForAbstractClass(EntityManagerInterface::class));
     $service->applyRankingSystems($tournament, $oldInfluences);
@@ -146,8 +143,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::__construct
-   * @throws ReflectionException
-   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -166,7 +161,7 @@ class RankingSystemServiceTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystems
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
@@ -194,7 +189,6 @@ class RankingSystemServiceTest extends UnitTestCase
         return $mock;
       });
     /** @var DynamicServiceLoadingService $serviceLoader */
-    /** @noinspection PhpParamsInspection */
     $service = new RankingSystemService($serviceLoader,
       $this->getMockForAbstractClass(EntityManagerInterface::class));
     $tournament = new Tournament();
@@ -241,7 +235,6 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::getRankingSystemsEarliestInfluences
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getChildren
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament::getCompetitions
@@ -277,9 +270,7 @@ class RankingSystemServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystemService::recalculateRankingSystems
-   * @throws ReflectionException
-   * @throws ReflectionException
-   * @throws ReflectionException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Helpers\Logging::log
    * @uses   \Tfboe\FmLib\Service\RankingSystemService::__construct
    */
@@ -300,7 +291,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $rest = 'RankingSystemInterface s WHERE s.openSyncFrom IS NOT NULL';
     $entityManager = $this->getEntityManagerMockForQuery([$rs1, $rs2],
       $first . $second . $slash . $third . $slash . 'Entity' . $slash . $rest, ['flush', 'clear', 'transactional',
-        'find']);
+        'find'], 1, true);
     $entityManager->method('transactional')->willReturnCallback(function ($f) use ($entityManager) {
       return $f($entityManager);
     });

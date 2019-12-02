@@ -11,7 +11,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -25,7 +24,6 @@ class NameEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    * @covers \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
-   * @throws ReflectionException
    */
   public function testName()
   {
@@ -38,7 +36,6 @@ class NameEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|NameEntity
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

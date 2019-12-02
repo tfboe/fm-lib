@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TeamMembershipInterface;
@@ -28,7 +27,6 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setCompetition
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getCompetition
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
@@ -37,7 +35,7 @@ class TeamTest extends UnitTestCase
   public function testCompetition()
   {
     $team = $this->team();
-    $competition = $this->createStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
+    $competition = $this->getStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
     $team->setStartNumber(1);
     /** @var CompetitionInterface $competition */
     $team->setCompetition($competition);
@@ -45,7 +43,7 @@ class TeamTest extends UnitTestCase
     self::assertEquals(1, $team->getCompetition()->getTeams()->count());
     self::assertEquals($team, $team->getCompetition()->getTeams()[$team->getId()]);
 
-    $competition2 = $this->createStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
+    $competition2 = $this->getStub(CompetitionInterface::class, ['getTeams' => new ArrayCollection()]);
 
     /** @var CompetitionInterface $competition2 */
     $team->setCompetition($competition2);
@@ -57,7 +55,6 @@ class TeamTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::init
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::getMemberships
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::getName
    */
@@ -72,14 +69,13 @@ class TeamTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getMemberships
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testPlayers()
   {
     $team = $this->team();
     /** @var TeamMembershipInterface $membership */
-    $membership = $this->createStubWithId(TeamMembershipInterface::class, 1, 'getId');
+    $membership = $this->createStubWithId(TeamMembershipInterface::class, "id", 'getId');
     $team->getMemberships()->set($membership->getId(), $membership);
     self::assertEquals(1, $team->getMemberships()->count());
     self::assertEquals($membership, $team->getMemberships()[$membership->getId()]);
@@ -88,7 +84,6 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setRank
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getRank
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testRank()
@@ -101,7 +96,6 @@ class TeamTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Team::setStartNumber
    * @covers \Tfboe\FmLib\Entity\Traits\Team::getStartNumber
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Team::init
    */
   public function testStartNumber()
@@ -117,7 +111,6 @@ class TeamTest extends UnitTestCase
 
   /**
    * @return TeamInterface|MockObject
-   * @throws ReflectionException
    */
   private function team(): MockObject
   {

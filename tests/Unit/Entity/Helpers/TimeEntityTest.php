@@ -84,7 +84,6 @@ class TimeEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\TimeEntity
-   * @throws ReflectionException
    */
   public function testInitialState()
   {
@@ -110,7 +109,6 @@ class TimeEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|TimeEntity
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

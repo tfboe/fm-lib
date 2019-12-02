@@ -11,7 +11,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\ResultEntity;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -26,7 +25,6 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setPlayed
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::isPlayed
-   * @throws ReflectionException
    */
   public function testPlayed()
   {
@@ -39,7 +37,6 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResult
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    */
   public function testResult()
@@ -53,7 +50,6 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResultA
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResultA
-   * @throws ReflectionException
    */
   public function testResultA()
   {
@@ -66,7 +62,6 @@ class ResultEntityTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResultB
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::getResultB
-   * @throws ReflectionException
    */
   public function testResultB()
   {
@@ -78,7 +73,6 @@ class ResultEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::init
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResult
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResultA
    * @uses   \Tfboe\FmLib\Entity\Traits\Match::getResultB
@@ -96,7 +90,6 @@ class ResultEntityTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\ResultEntity::setResult
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Exceptions\Internal::error
@@ -115,7 +108,6 @@ class ResultEntityTest extends UnitTestCase
 //<editor-fold desc="Private Methods">
   /**
    * @return MockObject|ResultEntity
-   * @throws ReflectionException
    */
   private function mock(): MockObject
   {

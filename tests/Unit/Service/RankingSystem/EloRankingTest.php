@@ -170,9 +170,9 @@ class EloRankingTest extends UnitTestCase
    */
   public function testGetChanges(bool $isPlayed, int $gameResult, array $playerInfos)
   {
-    $repository = $this->createStub(ObjectRepository::class, ['findBy' => []]);
+    $repository = $this->getStub(ObjectRepository::class, ['findBy' => []]);
     /** @var EntityManagerInterface $entityManager */
-    $entityManager = $this->createStub(EntityManagerInterface::class, ['getRepository' => $repository]);
+    $entityManager = $this->getStub(EntityManagerInterface::class, ['getRepository' => $repository]);
     $service = $this->service($entityManager, $this->getObjectCreator());
     /** @var EloRanking $player1 */
 
@@ -182,7 +182,7 @@ class EloRankingTest extends UnitTestCase
     $playersBArray = [];
     $numPlayerInfos = count($playerInfos);
     for ($i = 0; $i < $numPlayerInfos; $i++) {
-      $players[$i] = $this->createStub(Player::class, ['getId' => $i]);
+      $players[$i] = $this->getStub(Player::class, ['getId' => $i]);
       if ($i < $numPlayerInfos / 2) {
         $playersAArray[] = $players[$i];
       } else {
@@ -192,7 +192,7 @@ class EloRankingTest extends UnitTestCase
 
     $playersA = new ArrayCollection($playersAArray);
     $playersB = new ArrayCollection($playersBArray);
-    $game = $this->createStub(Game::class, [
+    $game = $this->getStub(Game::class, [
       'getPlayersA' => $playersA,
       'getPlayersB' => $playersB,
     ]);
@@ -202,7 +202,7 @@ class EloRankingTest extends UnitTestCase
       $entriesArray[$i] = $this->getRankingSystemListEntry($service, $players[$i]);
     }
     $entries = new ArrayCollection($entriesArray);
-    $list = $this->createStub(RankingSystemList::class, ['getEntries' => $entries]);
+    $list = $this->getStub(RankingSystemList::class, ['getEntries' => $entries]);
     /** @var RankingSystemListInterface $list */
     foreach ($entries as $entry) {
       /** @var RankingSystemListEntryInterface $entry */
@@ -262,12 +262,12 @@ class EloRankingTest extends UnitTestCase
     for ($i = 0, $c = count($changes); $i < $c; $i++) {
       $change = $changes[$i];
       self::assertEquals($entity, $change->getHierarchyEntity());
-      self::assertEquals($playerInfos[$i]["pointChange"], $change->getPointsChange(), '', 0.01);
+      self::assertEqualsWithDelta($playerInfos[$i]["pointChange"], $change->getPointsChange(), 0.01);
       self::assertEquals($playerInfos[$i]["ratedGamesChange"], $change->getRatedGames());
       self::assertEquals($playerInfos[$i]["playedChange"], $change->getPlayedGames());
-      self::assertEquals(
+      self::assertEqualsWithDelta(
         array_key_exists('provisoryChange', $playerInfos[$i]) ? $playerInfos[$i]['provisoryChange'] : 0,
-        $change->getProvisoryRanking(), '', 0.01);
+        $change->getProvisoryRanking(), 0.01);
       self::assertEquals($playerInfos[$i]["teamElo"], $change->getTeamElo());
       self::assertEquals($playerInfos[$i]["opponentElo"], $change->getOpponentElo());
     }
@@ -301,7 +301,6 @@ class EloRankingTest extends UnitTestCase
     if ($objectCreatorService === null) {
       $objectCreatorService = $this->createMock(ObjectCreatorServiceInterface::class);
     }
-    /** @noinspection PhpParamsInspection */
     return new EloRanking(
       $entityManager, $this->createMock(TimeServiceInterface::class),
       $this->createMock(EntityComparerInterface::class), $objectCreatorService

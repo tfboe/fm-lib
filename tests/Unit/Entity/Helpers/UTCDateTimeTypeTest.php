@@ -13,7 +13,6 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Helpers;
 use DateTime;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\ConversionException;
-use ReflectionException;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
@@ -29,7 +28,6 @@ class UTCDateTimeTypeTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Helpers\UTCDateTimeType::getUtc
    * @throws ConversionException
    * @throws ConversionException
-   * @throws ReflectionException
    */
   public function testConvertToDatabaseValue()
   {

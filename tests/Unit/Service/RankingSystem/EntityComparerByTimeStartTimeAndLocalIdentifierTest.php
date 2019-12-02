@@ -295,7 +295,7 @@ class EntityComparerByTimeStartTimeAndLocalIdentifierTest extends UnitTestCase
    */
   private function createTreeStructureEntity(string $entityId, array $otherMethods = []): MockObject
   {
-    return $this->createStub(TournamentHierarchyInterface::class, array_merge($otherMethods, ['getId' => $entityId]));
+    return $this->getStub(TournamentHierarchyInterface::class, array_merge($otherMethods, ['getId' => $entityId]));
   }
 //</editor-fold desc="Private Methods">
 }

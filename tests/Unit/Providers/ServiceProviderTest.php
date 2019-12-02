@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Providers;
 
 use Illuminate\Contracts\Foundation\Application;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Providers\ServiceProvider;
 use Tfboe\FmLib\TestHelpers\UnitTestCase;
 
@@ -27,8 +26,6 @@ class ServiceProviderTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Providers\ServiceProvider::register
-   * @throws ReflectionException
-   * @throws ReflectionException
    */
   public function testRegister()
   {
@@ -52,7 +49,6 @@ class ServiceProviderTest extends UnitTestCase
   /**
    * @param null|Application|MockObject $app
    * @return MockObject|ServiceProvider
-   * @throws ReflectionException
    */
   private function provider($app = null): MockObject
   {

@@ -72,7 +72,7 @@ class FmLibServiceProviderTest extends UnitTestCase
       if ($x === EloRankingInterface::class) {
         $app2 = $this->createMock(Container::class);
         $app2->method('make')->willReturnCallback(function ($c) {
-          return $this->createStub($c);
+          return $this->getStub($c);
         });
         $inst = $y($app2);
         self::assertInstanceOf(EloRankingInterface::class, $inst);

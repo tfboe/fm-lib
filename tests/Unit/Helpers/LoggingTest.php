@@ -55,8 +55,9 @@ class LoggingTest extends UnitTestCase
     Logging::log("testMessage", Logs::TESTING);
     $path = sys_get_temp_dir() . '/logs/' . Logs::TESTING . '.log';
     self::assertTrue(is_writable($path));
-    self::assertRegExp('/^\\[[2-9][0-9]{3}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}\\] testing\\.INFO: ' .
-      'testMessage \\[\\] \\[\\]\\n$/', file_get_contents($path));
+    self::assertRegExp(
+      '/^\\[[2-9][0-9]{3}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]*\\+[0-9]{2}:[0-9]{2}\\] testing\\.INFO: '
+      . 'testMessage \\[\\] \\[\\]\\n$/', file_get_contents($path));
     Logging::$storagePathFunction = 'storage_path';
   }
 //</editor-fold desc="Public Methods">

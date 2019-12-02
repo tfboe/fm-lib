@@ -36,7 +36,7 @@ if [ "$INTEGRATION" = '1' ]; then
     directory=${PWD##*/}
     cd ..
     rm -rf fm-lib-test
-    composer create-project laravel/lumen:^5.0 fm-lib-test
+    composer create-project laravel/lumen:^6.0 fm-lib-test
 
     cd fm-lib-test/
     cp -r ../${directory}/tests/Helpers/ tests
@@ -48,7 +48,7 @@ if [ "$INTEGRATION" = '1' ]; then
     cp ../${directory}/.env.test .env
     composer config repositories.fm-lib path ../${directory}
     composer require ${LIB_NAME} $PREFER_LOWEST
-    composer require phpunit/phpcov:^5.0
+    composer require phpunit/phpcov:^6.0
     sed -i -e 's/\/\/ $app->withFacades();/$app->withFacades();/g' bootstrap/app.php
     sed -i -e 's/\/\/ $app->register(App\\Providers\\AppServiceProvider::class);'\
 '/$app->register(Tfboe\\FmLib\\Providers\\FmLibServiceProvider::class);/g' bootstrap/app.php

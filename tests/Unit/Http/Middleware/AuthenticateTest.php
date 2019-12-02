@@ -13,7 +13,6 @@ namespace Tfboe\FmLib\Tests\Unit\Http\Middleware;
 use Illuminate\Contracts\Auth\Factory;
 use Illuminate\Http\Request;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\UserInterface;
 use Tfboe\FmLib\Exceptions\AuthenticationException;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
@@ -33,7 +32,6 @@ class AuthenticateTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
-   * @throws ReflectionException
    */
   public function testConstruct()
   {
@@ -44,7 +42,6 @@ class AuthenticateTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::handle
    * @throws AuthenticationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
    */
@@ -62,7 +59,6 @@ class AuthenticateTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::handle
    * @throws AuthenticationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
    */
@@ -80,7 +76,6 @@ class AuthenticateTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::handle
    * @throws AuthenticationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
    */
@@ -98,7 +93,6 @@ class AuthenticateTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::handle
    * @throws AuthenticationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
    */
   public function testHandleSuccess()
@@ -123,7 +117,6 @@ class AuthenticateTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Middleware\Authenticate::handle
    * @throws AuthenticationException
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Exceptions\AuthenticationException::__construct
    * @uses   \Tfboe\FmLib\Http\Middleware\Authenticate::__construct
    */
@@ -144,7 +137,6 @@ class AuthenticateTest extends UnitTestCase
    * @param Factory|null $auth
    * @param array $stubbedMethods
    * @return Authenticate|MockObject
-   * @throws ReflectionException
    */
   private function authenticate(?Factory $auth = null,
                                 array $stubbedMethods = []): MockObject

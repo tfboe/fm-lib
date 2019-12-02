@@ -174,7 +174,7 @@ class IdGeneratorTest extends UnitTestCase
   {
     $e1 = $this->getMockBuilder(UUIDEntityInterface::class)
       ->setMockClassName("CreateIdWithExistingIdA")
-      ->setMethods(['getId', 'hasId', 'setId'])
+      ->onlyMethods(['getId', 'hasId'])
       ->getMock();
     $e1->method("getId")->willReturn("1");
     $e1->method("hasId")->willReturn(true);
@@ -183,7 +183,7 @@ class IdGeneratorTest extends UnitTestCase
 
     $e2 = $this->getMockBuilder(UUIDEntityInterface::class)
       ->setMockClassName("CreateIdWithExistingIdA")
-      ->setMethods(['getId', 'hasId', 'setId'])
+      ->onlyMethods(['getId', 'hasId'])
       ->getMock();
     $e2->method("hasId")->willReturn(false);
 
@@ -203,7 +203,7 @@ class IdGeneratorTest extends UnitTestCase
   {
     $generator = new IdGenerator();
     $entityManager = $this->createMock(EntityManager::class);
-    $entity = $this->createStub(BaseEntity::class);
+    $entity = $this->getStub(BaseEntity::class);
     /** @var EntityManager $entityManager */
     self::assertRegExp('/^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$/', $generator->generate($entityManager, $entity));
   }

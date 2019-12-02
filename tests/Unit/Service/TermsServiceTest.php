@@ -12,7 +12,6 @@ namespace Tfboe\FmLib\Tests\Unit\Service;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
-use ReflectionException;
 use Tfboe\FmLib\Entity\TermsInterface;
 use Tfboe\FmLib\Service\TermsService;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -31,18 +30,17 @@ class TermsServiceTest extends UnitTestCase
    */
   public function testConstructor()
   {
-    $service = $this->service($this->createStub(EntityManagerInterface::class));
+    $service = $this->service($this->getStub(EntityManagerInterface::class));
     self::assertInstanceOf(TermsService::class, $service);
   }
 
   /**
    * @covers \Tfboe\FmLib\Service\TermsService::getLatestTerms
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\TermsService::__construct
    */
   public function testGetLatestTerms()
   {
-    $terms = $this->createStub(TermsInterface::class);
+    $terms = $this->getStub(TermsInterface::class);
     $em = $this->getEntityManagerMockForQuery([$terms], /** @lang DQL */
       'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
     $service = $this->service($em);
@@ -51,7 +49,6 @@ class TermsServiceTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Service\TermsService::getLatestTerms
-   * @throws ReflectionException
    * @uses   \Tfboe\FmLib\Service\TermsService::__construct
    * @uses   \Tfboe\FmLib\Exceptions\Internal::error
    */
