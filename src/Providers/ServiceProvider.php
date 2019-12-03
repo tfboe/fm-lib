@@ -29,12 +29,13 @@ abstract class ServiceProvider extends \Illuminate\Support\ServiceProvider
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
-  /** @noinspection PhpMissingParentCallCommonInspection */
+
   /**
    * @inheritDoc
    */
   public function register()
   {
+    parent::register();
     foreach ($this->singletons as $key => $singleton) {
       if (is_int($key)) {
         if (substr($singleton, strlen($singleton) - strlen("Interface")) === "Interface") {

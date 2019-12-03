@@ -131,8 +131,6 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
     }
   }
 
-  /** @noinspection PhpTooManyParametersInspection */ //TODO refactor this method
-
   /**
    * @param array $changes
    * @param RankingSystemListEntryInterface[]|RankingSystemListEntry[] $entries
@@ -143,6 +141,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param float $opponentAverage
    * @param bool $teamHasProvisory
    * @param bool $opponentHasProvisory
+   * @noinspection PhpTooManyParametersInspection TODO: refactor?
    */
   private function computeChanges(array &$changes, array $entries, float $result, float $expectationDiff,
                                   GameInterface $game, float $teamAverage, float $opponentAverage,

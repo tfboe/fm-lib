@@ -28,12 +28,13 @@ abstract class Logging
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * Logs the given message in the given logger
    * @param string $message the message to log
    * @param string $logger the logger to use
    * @param int $type the type of the message
+   * @noinspection PhpDocMissingThrowsInspection
    */
   public static function log(string $message, string $logger = Logs::GENERAL, int $type = Logger::INFO): void
   {

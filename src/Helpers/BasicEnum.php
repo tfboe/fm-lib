@@ -151,11 +151,12 @@ abstract class BasicEnum
     return self::$constCacheArrayCaseMapping[$calledClass];
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * Gets a dictionary of all constants in this enum
    * @param string|null $calledClass
    * @return mixed[]
+   * @noinspection PhpDocMissingThrowsInspection
    */
   private static function getConstants($calledClass = null): array
   {

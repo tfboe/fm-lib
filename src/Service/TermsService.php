@@ -39,9 +39,10 @@ class TermsService implements TermsServiceInterface
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
-  /** @noinspection PhpDocMissingThrowsInspection */
+
   /**
    * @return TermsInterface
+   * @noinspection PhpDocMissingThrowsInspection
    */
   public function getLatestTerms(): TermsInterface
   {

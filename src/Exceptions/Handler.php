@@ -27,7 +27,7 @@ class Handler extends ExceptionHandler
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
-  /** @noinspection PhpMissingParentCallCommonInspection */
+
   /**
    * Render an exception into an HTTP response.
    *
@@ -36,6 +36,7 @@ class Handler extends ExceptionHandler
    * @param bool $printTrace if true a trace will be appended to the exception message
    * @return JsonResponse
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+   * @noinspection PhpMissingParentCallCommonInspection
    */
   public function render($request, Exception $exception, $printTrace = false)
   {

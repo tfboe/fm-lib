@@ -230,8 +230,6 @@ abstract class UnitTestCase extends TestCase
       $expectedQuery === null ? [] : array_fill(0, $amount, $expectedQuery), $otherMockedMethods, $withSetLockMode);
   }
 
-  /** @noinspection PhpTooManyParametersInspection */
-
   /**
    * @param string $className
    * @param array $methodNames
@@ -240,6 +238,7 @@ abstract class UnitTestCase extends TestCase
    * @param bool $callParentConstructor
    * @param bool $hasInit
    * @return MockObject
+   * @noinspection PhpTooManyParametersInspection
    */
   protected function getMockedEntity(string $className, array $methodNames = [], array $additionalInterfaces = [],
                                      ?string $baseClass = BaseEntity::class,
@@ -284,7 +283,6 @@ CLASS;
     return $this->getStubbedEntity($className, $methods, $additionalInterfaces, TournamentHierarchyEntity::class, true);
   }
 
-  /** @noinspection PhpTooManyParametersInspection */
   /**
    * @param $traitName
    * @param array $methods
@@ -295,6 +293,7 @@ CLASS;
    * @param bool $callAutoload
    * @param bool $cloneArguments
    * @return MockObject
+   * @noinspection PhpTooManyParametersInspection
    */
   protected function getPartialMockForTrait($traitName, array $methods, array $arguments = [],
                                             $mockClassName = '', $callOriginalConstructor = true,
@@ -307,7 +306,6 @@ CLASS;
     return $o;
   }
 
-  /** @noinspection PhpTooManyParametersInspection */
   /**
    * @param string $className
    * @param array $methods
@@ -316,6 +314,7 @@ CLASS;
    * @param bool $callParentConstructor
    * @param bool $hasInit
    * @return MockObject
+   * @noinspection PhpTooManyParametersInspection
    */
   protected function getStubbedEntity(string $className, array $methods = [], array $additionalInterfaces = [],
                                       ?string $baseClass = BaseEntity::class,

@@ -471,9 +471,11 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $result;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //everything is parsable
+   //everything is parsable
+
   /**
    * @return DateTime
+   * @noinspection PhpDocMissingThrowsInspection
    */
   private function getMaxDate(): DateTime
   {
@@ -513,11 +515,13 @@ abstract class RankingSystemService implements RankingSystemInterface
     return $entities;
   }
 
-  /** @noinspection PhpDocMissingThrowsInspection */ //all DateTimes and DateIntervals are parsable
+  //all DateTimes and DateIntervals are parsable
+
   /**
    * @param DateTime $time the time of the last list
    * @param int $generationLevel the list generation level
    * @return DateTime the time of the next list generation
+   * @noinspection PhpDocMissingThrowsInspection
    */
   private function getNextGenerationTime(DateTime $time, int $generationLevel): DateTime
   {
