@@ -94,7 +94,7 @@ class Random
     if ($bits >= $this->remainingBitsFirstChar) {
       //extract full positions
       $fullExtractLength = 1 + (($bits - $this->remainingBitsFirstChar) >> 2);
-      $value = hexdec(substr($this->hexString, 0, $fullExtractLength));
+      $value = intval(hexdec(substr($this->hexString, 0, $fullExtractLength)));
       $bits -= $this->remainingBitsFirstChar + ($fullExtractLength - 1) * 4;
       $this->remainingBitsFirstChar = 4;
       $this->hexString = substr($this->hexString, $fullExtractLength);

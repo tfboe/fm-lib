@@ -27,6 +27,11 @@ use Tfboe\FmLib\Helpers\Level;
  */
 trait Phase
 {
+  /**
+   * @return string
+   */
+  abstract public function getId(): string;
+
   use NameEntity;
 
 //<editor-fold desc="Fields">

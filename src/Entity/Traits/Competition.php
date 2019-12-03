@@ -60,6 +60,11 @@ trait Competition
   }
 
   /**
+   * @return string
+   */
+  abstract public function getId(): string;
+
+  /**
    * @inheritDoc
    */
   public function getLevel(): int

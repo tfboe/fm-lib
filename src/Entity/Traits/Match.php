@@ -26,6 +26,11 @@ use Tfboe\FmLib\Helpers\Level;
  */
 trait Match
 {
+  /**
+   * @return string
+   */
+  abstract public function getId(): string;
+
   use ResultEntity {
     init as resultInit;
   }

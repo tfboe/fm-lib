@@ -423,10 +423,12 @@ abstract class RankingSystemService implements RankingSystemInterface
     for ($i = 0; $i < $current; $i++) {
       $eId = $entities[$i]->getId();
       /** @noinspection PhpDeprecationInspection */
+      /** @scrutinizer ignore-deprecated */
       $this->entityManager->detach($entities[$i]);
       if (array_key_exists($eId, $this->changes)) {
         foreach ($this->changes[$eId] as $pId => $change) {
           /** @noinspection PhpDeprecationInspection */
+          /** @scrutinizer ignore-deprecated */
           $this->entityManager->detach($change);
         }
         unset($this->changes[$eId]);

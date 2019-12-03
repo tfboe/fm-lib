@@ -26,18 +26,15 @@ use Tfboe\FmLib\Helpers\Level;
  */
 trait Game
 {
+//<editor-fold desc="Fields">
   use ResultEntity {
     init as resultInit;
   }
-
-//<editor-fold desc="Fields">
-
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\MatchInterface", inversedBy="games")
    * @var MatchInterface
    */
   private $match;
-
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersA",
@@ -46,7 +43,6 @@ trait Game
    * @var Collection|PlayerInterface[]
    */
   private $playersA;
-
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\PlayerInterface", indexBy="id")
    * @ORM\JoinTable(name="relation__game_playersB",
@@ -55,7 +51,6 @@ trait Game
    * @var Collection|PlayerInterface[]
    */
   private $playersB;
-
   /**
    * @ORM\Column(type="integer")
    * @var int
@@ -79,6 +74,11 @@ trait Game
   {
     return $this->gameNumber;
   }
+
+  /**
+   * @return string
+   */
+  abstract public function getId(): string;
 
   /**
    * @inheritDoc
