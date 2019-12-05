@@ -104,6 +104,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testDontUseDeletedChange()
   {
@@ -140,6 +141,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testDoubleOldChange()
   {
@@ -603,6 +605,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testGetOrCreateGetDeletedChange()
   {
@@ -702,9 +705,10 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingCreateMonthlyLists()
   {
@@ -779,7 +783,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEarliestInfluence
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsEarlier()
   {
@@ -819,7 +823,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsNotNullAndTournamentNotRanked()
   {
@@ -899,7 +903,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getRankingSystems
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimestampableEntity
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testUpdateRankingForTournamentOldEarliestIsNullAndTournamentNotRanked()
   {
@@ -993,6 +997,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingFrom()
   {
@@ -1127,6 +1132,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingFromCalledTwice()
   {
@@ -1162,6 +1168,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingFromNoCurrent()
   {
@@ -1229,6 +1236,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingFromNoEntities()
   {
@@ -1273,6 +1281,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    */
   public function testUpdateRankingFromNoReusable()
   {

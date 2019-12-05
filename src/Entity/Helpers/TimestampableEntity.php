@@ -3,8 +3,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
-use Tfboe\FmLib\Helpers\DateTime;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 /**
  * Trait TimestampableEntity
@@ -14,14 +15,14 @@ trait TimestampableEntity
 {
 //<editor-fold desc="Fields">
   /**
-   * @var \DateTime
+   * @var DateTime
    * @\Gedmo\Mapping\Annotation\Timestampable(on="create")
    * @ORM\Column(type="datetime")
    */
   private $createdAt;
 
   /**
-   * @var \DateTime
+   * @var DateTime
    * @\Gedmo\Mapping\Annotation\Timestampable(on="update")
    * @ORM\Column(type="datetime")
    */
@@ -31,40 +32,40 @@ trait TimestampableEntity
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getCreatedAt(): \DateTime
+  public function getCreatedAt(): DateTime
   {
     return $this->createdAt;
   }
 
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getUpdatedAt(): \DateTime
+  public function getUpdatedAt(): DateTime
   {
     return $this->updatedAt;
   }
 
   /**
-   * @param \DateTime $createdAt
+   * @param DateTime $createdAt
    * @return $this|TimestampableEntity
    */
-  public function setCreatedAt(\DateTime $createdAt)
+  public function setCreatedAt(DateTime $createdAt)
   {
-    if (!DateTime::eq($this->createdAt, $createdAt)) {
+    if (!DateTimeHelper::eq($this->createdAt, $createdAt)) {
       $this->createdAt = $createdAt;
     }
     return $this;
   }
 
   /**
-   * @param \DateTime $updatedAt
+   * @param DateTime $updatedAt
    * @return $this|TimestampableEntity
    */
-  public function setUpdatedAt(\DateTime $updatedAt)
+  public function setUpdatedAt(DateTime $updatedAt)
   {
-    if (!DateTime::eq($this->updatedAt, $updatedAt)) {
+    if (!DateTimeHelper::eq($this->updatedAt, $updatedAt)) {
       $this->updatedAt = $updatedAt;
     }
     return $this;

@@ -10,13 +10,14 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Traits;
 
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
-use Tfboe\FmLib\Helpers\DateTime;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 
 /**
@@ -40,7 +41,7 @@ trait RankingSystemList
   private $current;
   /**
    * @ORM\Column(type="datetime")
-   * @var \DateTime
+   * @var DateTime
    */
   private $lastEntryTime;
 
@@ -65,9 +66,9 @@ trait RankingSystemList
   }
 
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getLastEntryTime(): \DateTime
+  public function getLastEntryTime(): DateTime
   {
     return $this->lastEntryTime;
   }
@@ -97,11 +98,11 @@ trait RankingSystemList
   }
 
   /**
-   * @param \DateTime $lastEntryTime
+   * @param DateTime $lastEntryTime
    */
-  public function setLastEntryTime(\DateTime $lastEntryTime)
+  public function setLastEntryTime(DateTime $lastEntryTime)
   {
-    if (!DateTime::eq($this->lastEntryTime, $lastEntryTime)) {
+    if (!DateTimeHelper::eq($this->lastEntryTime, $lastEntryTime)) {
       $this->lastEntryTime = $lastEntryTime;
     }
   }
@@ -125,7 +126,7 @@ trait RankingSystemList
    */
   final protected function init()
   {
-    $this->lastEntryTime = new \DateTime("2000-01-01");
+    $this->lastEntryTime = new DateTime("2000-01-01");
     $this->current = false;
     $this->entries = new ArrayCollection();
   }

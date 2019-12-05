@@ -23,7 +23,7 @@ class PlayerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Traits\Player::setBirthday
    * @covers \Tfboe\FmLib\Entity\Traits\Player::getBirthday
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testBirthday()
   {

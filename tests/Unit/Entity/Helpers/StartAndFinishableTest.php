@@ -167,7 +167,7 @@ class StartAndFinishableTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity::getStartTime
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity::setEndTime
    * @uses   \Tfboe\FmLib\Entity\Helpers\TimeEntity::setStartTime
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testTimeUpdates()
   {

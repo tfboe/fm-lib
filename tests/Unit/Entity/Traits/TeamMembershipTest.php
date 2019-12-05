@@ -32,7 +32,7 @@ class TeamMembershipTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getEnd
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setEnd
    * @throws Exception
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testEnd()
   {
@@ -72,7 +72,7 @@ class TeamMembershipTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::getStart
    * @covers \Tfboe\FmLib\Entity\Traits\TeamMembership::setStart
    * @throws Exception
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testStart()
   {

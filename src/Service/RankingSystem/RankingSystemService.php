@@ -10,7 +10,6 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 
-use DateInterval;
 use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,6 +26,7 @@ use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Entity\Traits\RankingSystemChange;
 use Tfboe\FmLib\Exceptions\Internal;
 use Tfboe\FmLib\Exceptions\PreconditionFailedException;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 
 
@@ -477,11 +477,10 @@ abstract class RankingSystemService implements RankingSystemInterface
 
   /**
    * @return DateTime
-   * @noinspection PhpDocMissingThrowsInspection
    */
   private function getMaxDate(): DateTime
   {
-    return (new DateTime())->add(new DateInterval('P100Y'));
+    return DateTimeHelper::future();
   }
 
   /**

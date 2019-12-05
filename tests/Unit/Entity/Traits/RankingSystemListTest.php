@@ -54,7 +54,7 @@ class RankingSystemListTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
    * @covers \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
-   * @uses   \Tfboe\FmLib\Helpers\DateTime::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testLastEntry()
   {

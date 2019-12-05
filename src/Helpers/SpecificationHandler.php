@@ -6,7 +6,7 @@ namespace Tfboe\FmLib\Helpers;
 
 
 use Closure;
-use DateTime as CoreDateTime;
+use DateTime;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
@@ -67,9 +67,11 @@ trait SpecificationHandler
    * @param BaseEntityInterface $object the object to fill
    * @param array $specification the specification how to fill the object
    * @param array $inputArray the input array
+   * @param bool $useDefaults if false defaults are never used
    * @return mixed the object
    */
-  protected function setFromSpecification(BaseEntityInterface $object, array $specification, array $inputArray)
+  protected function setFromSpecification(BaseEntityInterface $object, array $specification, array $inputArray,
+                                          bool $useDefaults = true)
   {
     foreach ($specification as $key => $values) {
       if (!array_key_exists('ignore', $values) || $values['ignore'] != true) {
@@ -97,7 +99,7 @@ trait SpecificationHandler
           $value = $inputArray[$arrKey];
           $this->transformValue($value, $values);
           $setter($object, $value);
-        } elseif (array_key_exists('default', $values) && $setterExists) {
+        } elseif ($useDefaults && array_key_exists('default', $values) && $setterExists) {
           $setter($object, $values['default']);
         }
       }
@@ -168,7 +170,7 @@ trait SpecificationHandler
   {
     if (strtolower($type) === 'date' || strtolower($type) === 'datetime') {
       try {
-        return new CoreDateTime($value);
+        return new DateTime($value);
       } catch (Exception $e) {
         //we return the value itself if it is not parsable by DateTime
       }

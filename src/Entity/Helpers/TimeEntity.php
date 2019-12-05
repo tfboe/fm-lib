@@ -9,8 +9,9 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
+use DateTime;
 use DateTimeZone;
-use Tfboe\FmLib\Helpers\DateTime;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 /**
  * Trait TimeEntity
@@ -21,13 +22,13 @@ trait TimeEntity
 //<editor-fold desc="Fields">
   /**
    * @ORM\Column(type="datetime", nullable=true)
-   * @var \DateTime|null
+   * @var DateTime|null
    */
   private $startTime = null;
 
   /**
    * @ORM\Column(type="datetime", nullable=true)
-   * @var \DateTime|null
+   * @var DateTime|null
    */
   private $endTime = null;
 
@@ -56,9 +57,9 @@ trait TimeEntity
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getEndTime(): ?\DateTime
+  public function getEndTime(): ?DateTime
   {
     if ($this->endTime !== null && !$this->endLocalized) {
       $this->endTime->setTimezone(new DateTimeZone($this->endTimezone));
@@ -68,9 +69,9 @@ trait TimeEntity
   }
 
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getStartTime(): ?\DateTime
+  public function getStartTime(): ?DateTime
   {
     if ($this->startTime !== null && !$this->startLocalized) {
       $this->startTime->setTimezone(new DateTimeZone($this->startTimezone));
@@ -81,12 +82,12 @@ trait TimeEntity
 
 
   /**
-   * @param \DateTime|null $endTime
+   * @param DateTime|null $endTime
    * @return $this|TimeEntity
    */
-  public function setEndTime(?\DateTime $endTime)
+  public function setEndTime(?DateTime $endTime)
   {
-    if ($this->endTime === null || !DateTime::eq($endTime, $this->getEndTime())) {
+    if ($this->endTime === null || !DateTimeHelper::eq($endTime, $this->getEndTime())) {
       $this->endTime = $endTime;
       $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
       $this->endLocalized = true;
@@ -95,12 +96,12 @@ trait TimeEntity
   }
 
   /**
-   * @param \DateTime|null $startTime
+   * @param DateTime|null $startTime
    * @return $this|TimeEntity
    */
-  public function setStartTime(?\DateTime $startTime)
+  public function setStartTime(?DateTime $startTime)
   {
-    if ($this->startTime === null || !DateTime::eq($startTime, $this->getStartTime())) {
+    if ($this->startTime === null || !DateTimeHelper::eq($startTime, $this->getStartTime())) {
       $this->startTime = $startTime;
       $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
       $this->startLocalized = true;

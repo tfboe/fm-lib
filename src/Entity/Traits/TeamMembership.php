@@ -14,6 +14,7 @@ use DateTime;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 /**
  * Trait TeamMembership
@@ -88,7 +89,7 @@ trait TeamMembership
    */
   public function setEnd(?DateTime $end): void
   {
-    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->end, $end)) {
+    if (!DateTimeHelper::eq($this->end, $end)) {
       $this->end = $end;
     }
   }
@@ -106,7 +107,7 @@ trait TeamMembership
    */
   public function setStart(?DateTime $start): void
   {
-    if (!\Tfboe\FmLib\Helpers\DateTime::eq($this->start, $start)) {
+    if (!DateTimeHelper::eq($this->start, $start)) {
       $this->start = $start;
     }
   }

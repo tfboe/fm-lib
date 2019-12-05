@@ -10,9 +10,10 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Entity\Traits;
 
 
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
-use Tfboe\FmLib\Helpers\DateTime;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 
 /**
@@ -39,16 +40,16 @@ trait Player
 
   /**
    * @ORM\Column(type="date", nullable=true)
-   * @var \DateTime
+   * @var DateTime
    */
   private $birthday;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return \DateTime
+   * @return DateTime
    */
-  public function getBirthday(): \DateTime
+  public function getBirthday(): DateTime
   {
     return $this->birthday;
   }
@@ -70,11 +71,11 @@ trait Player
   }
 
   /**
-   * @param \DateTime $birthday
+   * @param DateTime $birthday
    */
-  public function setBirthday(\DateTime $birthday)
+  public function setBirthday(DateTime $birthday)
   {
-    if (!DateTime::eq($this->birthday, $birthday)) {
+    if (!DateTimeHelper::eq($this->birthday, $birthday)) {
       $this->birthday = $birthday;
     }
   }

@@ -9,6 +9,7 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Traits;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -19,7 +20,7 @@ use Tfboe\FmLib\Entity\Helpers\TimestampableEntity;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
-use Tfboe\FmLib\Helpers\DateTime;
+use Tfboe\FmLib\Helpers\DateTimeHelper;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
@@ -65,7 +66,7 @@ trait RankingSystem
   private $hierarchyEntries;
   /**
    * @ORM\Column(type="datetime", nullable=true)
-   * @var \DateTime|null
+   * @var DateTime|null
    */
   private $openSyncFrom;
 
@@ -114,9 +115,9 @@ trait RankingSystem
   }
 
   /**
-   * @return \DateTime|null
+   * @return DateTime|null
    */
-  public function getOpenSyncFrom(): ?\DateTime
+  public function getOpenSyncFrom(): ?DateTime
   {
     return $this->openSyncFrom;
   }
@@ -150,11 +151,11 @@ trait RankingSystem
   }
 
   /**
-   * @param \DateTime|null $openSyncFrom
+   * @param DateTime|null $openSyncFrom
    */
-  public function setOpenSyncFrom(?\DateTime $openSyncFrom)
+  public function setOpenSyncFrom(?DateTime $openSyncFrom)
   {
-    if (!DateTime::eq($this->openSyncFrom, $openSyncFrom)) {
+    if (!DateTimeHelper::eq($this->openSyncFrom, $openSyncFrom)) {
       $this->openSyncFrom = $openSyncFrom;
     }
   }
