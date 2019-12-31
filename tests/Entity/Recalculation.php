@@ -11,7 +11,7 @@ namespace Tfboe\FmLib\Tests\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
-use Tfboe\FmLib\Entity\LastRecalculationInterface;
+use Tfboe\FmLib\Entity\RecalculationInterface;
 
 /**
  * Class Game
@@ -19,7 +19,7 @@ use Tfboe\FmLib\Entity\LastRecalculationInterface;
  * @ORM\Entity
  * @ORM\Table(name="lastRecalculation")
  */
-class LastRecalculation extends BaseEntity implements LastRecalculationInterface
+class Recalculation extends BaseEntity implements RecalculationInterface
 {
-  use \Tfboe\FmLib\Entity\Traits\LastRecalculation;
+  use \Tfboe\FmLib\Entity\Traits\Recalculation;
 }

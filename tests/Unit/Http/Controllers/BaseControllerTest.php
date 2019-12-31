@@ -12,9 +12,12 @@ namespace Tfboe\FmLib\Tests\Unit\Http\Controllers;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
+use PHPUnit\Framework\MockObject\MockObject;
+use Tfboe\FmLib\Entity\Helpers\BaseEntity;
 use Tfboe\FmLib\Http\Controllers\BaseController;
 use Tfboe\FmLib\Http\Controllers\UserController;
 use Tfboe\FmLib\Tests\Entity\User;
+use Tfboe\FmLib\TestHelpers\TestEnum;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
@@ -53,27 +56,27 @@ class BaseControllerTest extends UnitTestCase
     self::assertEquals($entityManager, $em);
   }
 
-  /**
-   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
-   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByReference()
-  {
-    $user = "resultUser";
-    $specification = ['reference' => User::class];
-    $value = 'user-id';
-
-    $entityManager = $this->createMock(EntityManagerInterface::class);
-    $entityManager->expects(static::once())->method('find')->with(User::class, 'user-id')->willReturn($user);
-    $controller = $this->getMockForAbstractClass(BaseController::class, [$entityManager]);
-
-    $method = self::getMethod(UserController::class, 'transformValue');
-    $method->invokeArgs($controller, [&$value, $specification]);
-
-    self::assertTrue($value === $user);
-  }
+//  /**
+//   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @covers   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
+//   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+//   * @uses     \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   */
+//  public function testTransformValueByReference()
+//  {
+//    $user = "resultUser";
+//    $specification = ['reference' => User::class];
+//    $value = 'user-id';
+//
+//    $entityManager = $this->createMock(EntityManagerInterface::class);
+//    $entityManager->expects(static::once())->method('find')->with(User::class, 'user-id')->willReturn($user);
+//    $controller = $this->getMockForAbstractClass(BaseController::class, [$entityManager]);
+//
+//    $method = self::getMethod(UserController::class, 'transformValue');
+//    $method->invokeArgs($controller, [&$value, $specification]);
+//
+//    self::assertTrue($value === $user);
+//  }
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification

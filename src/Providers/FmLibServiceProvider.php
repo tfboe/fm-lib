@@ -15,21 +15,29 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Contracts\Debug\ExceptionHandler;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\ServiceProvider;
 use Irazasyed\JwtAuthGuard\JwtAuthGuardServiceProvider;
 use LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tfboe\FmLib\Entity\Helpers\UTCDateTimeType;
 use Tfboe\FmLib\Exceptions\Handler;
 use Tfboe\FmLib\Http\Middleware\Authenticate;
+use Tfboe\FmLib\Service\AsyncExecuterService;
+use Tfboe\FmLib\Service\AsyncExecuterServiceInterface;
+use Tfboe\FmLib\Service\DynamicServiceLoadingService;
 use Tfboe\FmLib\Service\AsyncExecutorServiceInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
+use Tfboe\FmLib\Service\LoadingService;
 use Tfboe\FmLib\Service\LoadingServiceInterface;
+use Tfboe\FmLib\Service\ObjectCreatorService;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
+use Tfboe\FmLib\Service\PlayerService;
 use Tfboe\FmLib\Service\PlayerServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EloRanking;
 use Tfboe\FmLib\Service\RankingSystem\EloRankingInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerByTimeStartTimeAndLocalIdentifier;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
+use Tfboe\FmLib\Service\RankingSystemService;
 use Tfboe\FmLib\Service\RankingSystemServiceInterface;
 use Tfboe\FmLib\Service\TermsServiceInterface;
 use Tymon\JWTAuth\Providers\LumenServiceProvider;
@@ -54,7 +62,6 @@ class FmLibServiceProvider extends ServiceProvider
   ];
 //</editor-fold desc="Fields">
 //<editor-fold desc="Public Methods">
-
   /**
    * Bootstrap the application services.
    *
@@ -101,7 +108,8 @@ class FmLibServiceProvider extends ServiceProvider
         $app->make(EntityManagerInterface::class),
         $timeService,
         new EntityComparerByTimeStartTimeAndLocalIdentifier($timeService),
-        $app->make(ObjectCreatorServiceInterface::class));
+        $app->make(ObjectCreatorServiceInterface::class),
+        $app->make(LoadingServiceInterface::class));
     });
 
     include __DIR__ . '/../routes.php';

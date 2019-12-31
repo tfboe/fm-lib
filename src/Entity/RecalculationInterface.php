@@ -16,7 +16,7 @@ use Tfboe\FmLib\Entity\Helpers\TimeEntityInterface;
  * Interface LastRecalculationInterface
  * @package Tfboe\FmLib\Entity
  */
-interface LastRecalculationInterface extends BaseEntityInterface, TimeEntityInterface
+interface RecalculationInterface extends BaseEntityInterface, TimeEntityInterface
 {
 //<editor-fold desc="Public Methods">
   /**
@@ -25,9 +25,30 @@ interface LastRecalculationInterface extends BaseEntityInterface, TimeEntityInte
   public function getId(): int;
 
   /**
+   * @return RankingSystemInterface
+   */
+  public function getRankingSystem(): RankingSystemInterface;
+
+  /**
+   * @return \DateTime|null
+   */
+  public function getRecalculateFrom(): ?\DateTime;
+
+  /**
    * @return int
    */
   public function getVersion(): int;
+
+  /**
+   * @param RankingSystemInterface $rankingSystem
+   * @return mixed
+   */
+  public function setRankingSystem(RankingSystemInterface $rankingSystem): void;
+
+  /**
+   * @param \DateTime|null $recalculateFrom
+   */
+  public function setRecalculateFrom(?\DateTime $recalculateFrom): void;
 
   /**
    * @param int $version

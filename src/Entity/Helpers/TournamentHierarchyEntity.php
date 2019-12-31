@@ -24,8 +24,10 @@ use Tfboe\FmLib\Entity\RankingSystemInterface;
  * @ORM\Entity
  * @ORM\InheritanceType("JOINED")
  * @ORM\DiscriminatorColumn(name="discriminator", type="string")
+ * @ORM\HasLifecycleCallbacks
  */
-abstract class TournamentHierarchyEntity extends BaseEntity implements TournamentHierarchyInterface
+abstract class TournamentHierarchyEntity extends BaseEntity implements TournamentHierarchyInterface,
+  TournamentHierarchyAssociableInterface
 {
   use GameMode;
   use TeamMode;
@@ -46,6 +48,11 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    * @var Collection|RankingSystemInterface[]
    */
   private $rankingSystems;
+
+  /**
+   * @var RankingSystemInterface[]
+   */
+  private $influencingRankingSystems;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -55,16 +62,57 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   public function __construct()
   {
     $this->rankingSystems = new ArrayCollection();
+    $this->influencingRankingSystems = [];
   }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad()
+  {
+    $this->influencingRankingSystems = [];
+  }
+
   /**
    * @return RankingSystemInterface[]|Collection
    */
   public function getRankingSystems()
   {
     return $this->rankingSystems;
+  }
+
+  /**
+   * @return RankingSystemInterface[]
+   */
+  public function getInfluencingRankingSystems(): array
+  {
+    if ($this->influencingRankingSystems == null) {
+      $this->influencingRankingSystems = [];
+    }
+    return $this->influencingRankingSystems;
+  }
+
+  /**
+   * @inheritdoc
+   */
+  public function addInfluencingRankingSystem(RankingSystemInterface $rankingSystem): bool
+  {
+    if (!array_key_exists($rankingSystem->getId(), $this->influencingRankingSystems)) {
+      $this->influencingRankingSystems[$rankingSystem->getId()] = $rankingSystem;
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function getHierarchyEntity(): TournamentHierarchyInterface
+  {
+    return $this;
   }
 //</editor-fold desc="Public Methods">
 }

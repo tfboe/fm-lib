@@ -13,6 +13,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Http\Request;
 use Laravel\Lumen\Routing\Controller;
 use Tfboe\FmLib\Helpers\SpecificationHandler;
+use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
+use Tfboe\FmLib\Helpers\Tools;
 
 /**
  * Class Controllers

@@ -33,6 +33,7 @@ class SpecificationHandlerTest extends UnitTestCase
    * @throws Exception
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::datetimetzTransformer
+   * @uses   \Tfboe\FmLib\Helpers\Tools::datetimetzTransformer
    */
   public function testDatetimetzTransformer()
   {
@@ -53,6 +54,7 @@ class SpecificationHandlerTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Helpers\BasicEnum
    * @uses   \Tfboe\FmLib\Helpers\TransformerFactory::enumTransformer
+   * @uses   \Tfboe\FmLib\Helpers\Tools::enumTransformer
    */
   public function testEnumTransformer()
   {
@@ -66,6 +68,7 @@ class SpecificationHandlerTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::getDatetimetzFormat
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+   * @uses   \Tfboe\FmLib\Helpers\Tools::getDatetimetzFormat
    */
   public function testGetDatetimetzFormat()
   {
@@ -78,6 +81,7 @@ class SpecificationHandlerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
+   * @uses   \Tfboe\FmLib\Helpers\Tools::setFromSpecification
    */
   public function testSetFromSpecificationWithDefault()
   {
@@ -93,9 +97,11 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
+   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
+   * @uses   \Tfboe\FmLib\Helpers\Tools::setFromSpecification
+   * @uses   \Tfboe\FmLib\Helpers\Tools::transformValue
    */
   public function testSetFromSpecificationWithProperty()
   {
@@ -111,7 +117,8 @@ class SpecificationHandlerTest extends UnitTestCase
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::setFromSpecification
-   * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::transformValue
+   * @uses   \Tfboe\FmLib\Helpers\Tools::setFromSpecification
+   * @uses   \Tfboe\FmLib\Helpers\Tools::transformValue
    */
   public function testSetFromSpecificationWithSetter()
   {
@@ -130,124 +137,124 @@ class SpecificationHandlerTest extends UnitTestCase
     self::assertTrue($executed);
   }
 
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
-   */
-  public function testTransformValueByReference()
-  {
-    $user = "resultUser";
-    $specification = ['reference' => User::class];
-    $value = 'user-id';
-
-    $handler = $this->handler(["getReference" => $user]);
-
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertTrue($value === $user);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTransformer()
-  {
-    $value = "5";
-    $transformer = function ($input) {
-      self::assertEquals("5", $input);
-      return 6;
-    };
-    $specification = ['transformer' => $transformer];
-
-    $handler = $this->handler();
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertEquals(6, $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @throws Exception
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTypeDateTime()
-  {
-    $value = "2005-02-28 16:35:01";
-    $datetime = new DateTime($value);
-    $specification = ['type' => 'datetime'];
-
-    $handler = $this->handler();
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertEquals($datetime, $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTypeDefault()
-  {
-    $value = "2005-02-28 16:35:01";
-    $specification = ['type' => 'default'];
-
-    $handler = $this->handler();
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertEquals("2005-02-28 16:35:01", $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
-   * @throws Exception
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   */
-  public function testTransformValueByTypeInvalidDateTime()
-  {
-    $orig = "INVALID DATE";
-    $value = "INVALID DATE";
-    $specification = ['type' => 'datetime'];
-
-    $handler = $this->handler();
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertEquals($orig, $value);
-  }
-
-  /**
-   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
-   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
-   */
-  public function testTransformValueNullValue()
-  {
-    $handler = $this->handler();
-    $specification = ['nullValue' => 5];
-    $value = null;
-
-
-    $method = self::getMethod(get_class($handler), 'transformValue');
-    $method->invokeArgs($handler, [&$value, $specification]);
-
-    self::assertTrue($value === 5);
-  }
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
+//   */
+//  public function testTransformValueByReference()
+//  {
+//    $user = "resultUser";
+//    $specification = ['reference' => User::class];
+//    $value = 'user-id';
+//
+//    $handler = $this->handler(["getReference" => $user]);
+//
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertTrue($value === $user);
+//  }
+//
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   */
+//  public function testTransformValueByTransformer()
+//  {
+//    $value = "5";
+//    $transformer = function ($input) {
+//      self::assertEquals("5", $input);
+//      return 6;
+//    };
+//    $specification = ['transformer' => $transformer];
+//
+//    $handler = $this->handler();
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertEquals(6, $value);
+//  }
+//
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
+//   * @throws Exception
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   */
+//  public function testTransformValueByTypeDateTime()
+//  {
+//    $value = "2005-02-28 16:35:01";
+//    $datetime = new DateTime($value);
+//    $specification = ['type' => 'datetime'];
+//
+//    $handler = $this->handler();
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertEquals($datetime, $value);
+//  }
+//
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   */
+//  public function testTransformValueByTypeDefault()
+//  {
+//    $value = "2005-02-28 16:35:01";
+//    $specification = ['type' => 'default'];
+//
+//    $handler = $this->handler();
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertEquals("2005-02-28 16:35:01", $value);
+//  }
+//
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformByType
+//   * @throws Exception
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   */
+//  public function testTransformValueByTypeInvalidDateTime()
+//  {
+//    $orig = "INVALID DATE";
+//    $value = "INVALID DATE";
+//    $specification = ['type' => 'datetime'];
+//
+//    $handler = $this->handler();
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertEquals($orig, $value);
+//  }
+//
+//  /**
+//   * @covers \Tfboe\FmLib\Http\Controllers\BaseController::transformValue
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
+//   * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getReference
+//   */
+//  public function testTransformValueNullValue()
+//  {
+//    $handler = $this->handler();
+//    $specification = ['nullValue' => 5];
+//    $value = null;
+//
+//
+//    $method = self::getMethod(get_class($handler), 'transformValue');
+//    $method->invokeArgs($handler, [&$value, $specification]);
+//
+//    self::assertTrue($value === 5);
+//  }
 
   /**
    * @covers \Tfboe\FmLib\Http\Controllers\BaseController::validateBySpecification

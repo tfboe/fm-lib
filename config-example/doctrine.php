@@ -50,7 +50,7 @@ return [
       |
       */
       'events' => [
-        'listeners' => [],
+        'listeners' => [Doctrine\ORM\Events::onFlush => \Tfboe\FmLib\Listeners\RankingSystemUpdateListener::class],
         'subscribers' => []
       ],
       'filters' => [],

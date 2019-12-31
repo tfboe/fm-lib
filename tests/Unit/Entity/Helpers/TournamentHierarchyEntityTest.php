@@ -47,6 +47,23 @@ class TournamentHierarchyEntityTest extends UnitTestCase
     self::assertEquals(1, $entity->getRankingSystems()->count());
     self::assertEquals($system, $entity->getRankingSystems()[$system->getId()]);
   }
+
+  /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::postLoad
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::addInfluencingRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::getInfluencingRankingSystems
+   */
+  public function testPostLoad()
+  {
+    $entity = $this->entity();
+    /** @var RankingSystemInterface $system */
+    $system = $this->createStubWithId(RankingSystem::class);
+    $entity->addInfluencingRankingSystem($system);
+    self::assertCount(1, $entity->getInfluencingRankingSystems());
+    $entity->postLoad();
+    self::assertEmpty($entity->getInfluencingRankingSystems());
+  }
 //</editor-fold desc="Public Methods">
 
 //<editor-fold desc="Private Methods">

@@ -62,7 +62,11 @@ abstract class AuthenticatedTestCase extends DatabaseTestCase
   protected function jsonAuth(string $method, string $uri, array $data = [], array $headers = [])
   {
     $headers['Authorization'] = 'Bearer ' . $this->token;
-    return $this->json($method, $uri, $data, $headers);
+    EntityManager::clear();
+    $result = $this->json($method, $uri, $data, $headers);
+    /** @noinspection PhpUndefinedMethodInspection */
+    EntityManager::clear();
+    return $result;
   }
 
   /**

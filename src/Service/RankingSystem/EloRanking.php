@@ -58,7 +58,8 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   /**
    * @inheritDoc
    */
-  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list): array
+  protected function getChanges(TournamentHierarchyEntity $entity, RankingSystemListInterface $list,
+                                array $oldChanges, array &$entries): array
   {
     /** @var GameInterface $game */
     $game = $entity;
@@ -67,13 +68,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
     if (!$game->isPlayed() || $game->getResult() === Result::NOT_YET_FINISHED ||
       $game->getResult() === Result::NULLED) {
       //game gets not elo rated
-      $this->addNotRatedChanges($changes, $game->getPlayersA(), $entity, $list->getRankingSystem());
-      $this->addNotRatedChanges($changes, $game->getPlayersB(), $entity, $list->getRankingSystem());
+      $this->addNotRatedChanges($changes, $game->getPlayersA(), $entity, $list->getRankingSystem(), $oldChanges);
+      $this->addNotRatedChanges($changes, $game->getPlayersB(), $entity, $list->getRankingSystem(), $oldChanges);
       return $changes;
     }
 
-    $entriesA = $this->getEntriesOfPlayers($game->getPlayersA(), $list);
-    $entriesB = $this->getEntriesOfPlayers($game->getPlayersB(), $list);
+    $entriesA = $this->getEntriesOfPlayers($game->getPlayersA(), $list, $entries);
+    $entriesB = $this->getEntriesOfPlayers($game->getPlayersB(), $list, $entries);
 
     $isAProvisory = $this->hasProvisoryEntry($entriesA);
     $isBProvisory = $this->hasProvisoryEntry($entriesB);
@@ -101,9 +102,9 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
 
 
     $this->computeChanges($changes, $entriesA, $resultA, $expectationDiffA, $game, $averageA, $averageB,
-      $isAProvisory, $isBProvisory);
+      $isAProvisory, $isBProvisory, $oldChanges);
     $this->computeChanges($changes, $entriesB, $resultB, $expectationDiffB, $game, $averageB, $averageA,
-      $isBProvisory, $isAProvisory);
+      $isBProvisory, $isAProvisory, $oldChanges);
     return $changes;
   }
 //</editor-fold desc="Protected Methods">
@@ -114,12 +115,13 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param Collection|PlayerInterface[] $players
    * @param TournamentHierarchyEntity $entity
    * @param EntityRankingSystemInterface $ranking
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
    */
   private function addNotRatedChanges(array &$changes, Collection $players, TournamentHierarchyEntity $entity,
-                                      EntityRankingSystemInterface $ranking)
+                                      EntityRankingSystemInterface $ranking, array $oldChanges)
   {
     foreach ($players as $player) {
-      $change = $this->getOrCreateChange($entity, $ranking, $player);
+      $change = $this->getOrCreateChange($entity, $ranking, $player, $oldChanges);
       /** @var RankingSystemChange $change */
       $change->setTeamElo(0.0);
       $change->setOpponentElo(0.0);
@@ -141,15 +143,16 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    * @param float $opponentAverage
    * @param bool $teamHasProvisory
    * @param bool $opponentHasProvisory
+   * @param RankingSystemChangeInterface[] $oldChanges the dictionary of old changes of this entity indexed by player id
    * @noinspection PhpTooManyParametersInspection TODO: refactor?
    */
   private function computeChanges(array &$changes, array $entries, float $result, float $expectationDiff,
                                   GameInterface $game, float $teamAverage, float $opponentAverage,
-                                  bool $teamHasProvisory, bool $opponentHasProvisory)
+                                  bool $teamHasProvisory, bool $opponentHasProvisory, array $oldChanges)
   {
     foreach ($entries as $entry) {
       $change = $this->getOrCreateChange($game, $entry->getRankingSystemList()->getRankingSystem(),
-        $entry->getPlayer());
+        $entry->getPlayer(), $oldChanges);
       /** @var RankingSystemChange $change */
       $change->setPlayedGames(1);
       $change->setTeamElo($teamHasProvisory ? 0.0 : $teamAverage);

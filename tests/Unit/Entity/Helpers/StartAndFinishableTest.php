@@ -28,10 +28,10 @@ class StartAndFinishableTest extends UnitTestCase
   /**
    * @covers \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::cloneFrom
    * @throws Exception
-   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getEndTime
-   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::getStartTime
-   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::setEndTime
-   * @uses   \Tfboe\FmLib\Entity\Traits\LastRecalculation::setStartTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\Recalculation::getEndTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\Recalculation::getStartTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\Recalculation::setEndTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\Recalculation::setStartTime
    * @uses   \Tfboe\FmLib\Entity\Helpers\StartAndFinishable::getStatus
    */
   public function testCloneFrom()

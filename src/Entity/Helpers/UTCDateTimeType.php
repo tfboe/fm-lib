@@ -33,11 +33,32 @@ class UTCDateTimeType extends DateTimeType
   public function convertToDatabaseValue($value, AbstractPlatform $platform)
   {
     if ($value instanceof DateTime) {
-      $value = clone $value;
       $value->setTimezone(self::getUtc());
     }
 
     return parent::convertToDatabaseValue($value, $platform);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function convertToPHPValue($value, AbstractPlatform $platform)
+  {
+    if ($value === null || $value instanceof \DateTimeInterface) {
+      return $value;
+    }
+
+    $val = DateTime::createFromFormat($platform->getDateTimeFormatString(), $value, self::getUtc());
+
+    if (! $val) {
+      $val = date_create($value, self::getUtc());
+    }
+
+    if (! $val) {
+      throw ConversionException::conversionFailedFormat($value, $this->getName(), $platform->getDateTimeFormatString());
+    }
+
+    return $val;
   }
 //</editor-fold desc="Public Methods">
 

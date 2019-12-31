@@ -14,12 +14,14 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\CompetitionInterface;
+use Tfboe\FmLib\Entity\Helpers\BaseTrait;
 use Tfboe\FmLib\Entity\Helpers\NameEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
 use Tfboe\FmLib\Helpers\Level;
+use Tfboe\FmLib\Helpers\Tools;
 
 
 /**
@@ -118,12 +120,20 @@ trait Competition
    */
   public function setTournament(TournamentInterface $tournament)
   {
-    if ($this->tournament !== null) {
+    if ($this->tournament !== null && Tools::isInitialized($this->tournament->getCompetitions())) {
       $this->tournament->getCompetitions()->remove($this->getId());
     }
-    $this->tournament = $tournament;
+    $this->setTournamentWithoutInitializing($tournament);
     $tournament->getCompetitions()->set($this->getId(), $this);
     return $this;
+  }
+
+  /**
+   * @param TournamentInterface $tournament
+   */
+  public function setTournamentWithoutInitializing(TournamentInterface $tournament)
+  {
+    $this->tournament = $tournament;
   }
 //</editor-fold desc="Public Methods">
 

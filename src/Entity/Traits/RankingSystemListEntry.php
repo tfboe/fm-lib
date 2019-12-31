@@ -11,11 +11,13 @@ namespace Tfboe\FmLib\Entity\Traits;
 
 
 use Doctrine\ORM\Mapping as ORM;
+use Tfboe\FmLib\Entity\Helpers\BaseTrait;
 use Tfboe\FmLib\Entity\Helpers\SubClassData;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Helpers\Tools;
 
 /**
  * Trait RankingSystemListEntry
@@ -125,11 +127,21 @@ trait RankingSystemListEntry
    */
   public function setRankingSystemList(RankingSystemListInterface $rankingSystemList)
   {
-    if ($this->rankingSystemList !== null) {
+    if ($this->rankingSystemList !== null && Tools::isInitialized($this->rankingSystemList->getEntries())) {
       $this->rankingSystemList->getEntries()->remove($this->getPlayer()->getId());
     }
+    $this->setRankingSystemListWithoutInitializing($rankingSystemList);
+    if (Tools::isInitialized($rankingSystemList->getEntries())) {
+      $rankingSystemList->getEntries()->set($this->getPlayer()->getId(), $this);
+    }
+  }
+
+  /**
+   * @param RankingSystemListInterface $rankingSystemList
+   */
+  public function setRankingSystemListWithoutInitializing(RankingSystemListInterface $rankingSystemList)
+  {
     $this->rankingSystemList = $rankingSystemList;
-    $rankingSystemList->getEntries()->set($this->getPlayer()->getId(), $this);
   }
 //</editor-fold desc="Public Methods">
 

@@ -9,10 +9,6 @@ declare(strict_types=1);
 
 namespace Tfboe\FmLib\Entity\Helpers;
 
-use DateTime;
-use DateTimeZone;
-use Tfboe\FmLib\Helpers\DateTimeHelper;
-
 /**
  * Trait TimeEntity
  * @package Tfboe\FmLib\Entity\Helpers
@@ -22,13 +18,13 @@ trait TimeEntity
 //<editor-fold desc="Fields">
   /**
    * @ORM\Column(type="datetime", nullable=true)
-   * @var DateTime|null
+   * @var \DateTime|null
    */
   private $startTime = null;
 
   /**
    * @ORM\Column(type="datetime", nullable=true)
-   * @var DateTime|null
+   * @var \DateTime|null
    */
   private $endTime = null;
 
@@ -44,67 +40,78 @@ trait TimeEntity
    */
   private $endTimezone = "";
 
-  /**
-   * @var bool
-   */
-  private $startLocalized = false;
+  /** @var \DateTime|null */
+  private $localizedStartTime = null;
 
-  /**
-   * @var bool
-   */
-  private $endLocalized = false;
+  /** @var \DateTime|null */
+  private $localizedEndTime = null;
+
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Public Methods">
   /**
-   * @return DateTime|null
+   * @return \DateTime|null
    */
-  public function getEndTime(): ?DateTime
+  public function getEndTime(): ?\DateTime
   {
-    if ($this->endTime !== null && !$this->endLocalized) {
-      $this->endTime->setTimezone(new DateTimeZone($this->endTimezone));
-      $this->endLocalized = true;
+    if ($this->endTime !== null && $this->localizedEndTime === null) {
+      $this->localizedEndTime = clone $this->endTime;
+      $this->localizedEndTime->setTimezone(new \DateTimeZone($this->endTimezone));
     }
-    return $this->endTime;
+    return $this->localizedEndTime;
   }
 
   /**
-   * @return DateTime|null
+   * @return \DateTime|null
    */
-  public function getStartTime(): ?DateTime
+  public function getStartTime(): ?\DateTime
   {
-    if ($this->startTime !== null && !$this->startLocalized) {
-      $this->startTime->setTimezone(new DateTimeZone($this->startTimezone));
-      $this->startLocalized = true;
+    if ($this->startTime !== null && $this->localizedStartTime === null) {
+      $this->localizedStartTime = clone $this->startTime;
+      $this->localizedStartTime->setTimezone(new \DateTimeZone($this->startTimezone));
     }
-    return $this->startTime;
+    return $this->localizedStartTime;
   }
 
+  /**
+   * @ORM\PostLoad
+   */
+  public function postLoad()
+  {
+    $this->localizedEndTime = null;
+    $this->localizedStartTime = null;
+  }
 
   /**
-   * @param DateTime|null $endTime
+   * @param \DateTime|null $endTime
    * @return $this|TimeEntity
    */
-  public function setEndTime(?DateTime $endTime)
+  public function setEndTime(?\DateTime $endTime)
   {
-    if ($this->endTime === null || !DateTimeHelper::eq($endTime, $this->getEndTime())) {
-      $this->endTime = $endTime;
-      $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
-      $this->endLocalized = true;
+    $this->localizedEndTime = $endTime;
+    $this->endTimezone = $endTime === null ? "" : $endTime->getTimezone()->getName();
+    if ($this->localizedEndTime !== null && $this->localizedEndTime != $this->endTime) {
+      $this->endTime = clone $this->localizedEndTime;
+      $this->endTime->setTimezone(new \DateTimeZone("UTC"));
+    } elseif ($endTime === null) {
+      $this->endTime = null;
     }
     return $this;
   }
 
   /**
-   * @param DateTime|null $startTime
+   * @param \DateTime|null $startTime
    * @return $this|TimeEntity
    */
-  public function setStartTime(?DateTime $startTime)
+  public function setStartTime(?\DateTime $startTime)
   {
-    if ($this->startTime === null || !DateTimeHelper::eq($startTime, $this->getStartTime())) {
-      $this->startTime = $startTime;
-      $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
-      $this->startLocalized = true;
+    $this->localizedStartTime = $startTime;
+    $this->startTimezone = $startTime === null ? "" : $startTime->getTimezone()->getName();
+    if ($this->localizedStartTime !== null && $this->localizedStartTime != $this->startTime) {
+      $this->startTime = clone $this->localizedStartTime;
+      $this->startTime->setTimezone(new \DateTimeZone("UTC"));
+    } elseif ($startTime === null) {
+      $this->startTime = null;
     }
     return $this;
   }

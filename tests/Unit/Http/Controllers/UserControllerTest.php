@@ -196,16 +196,17 @@ class UserControllerTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::getCredentialSpecification
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::getRegisterResponse
    * @covers \Tfboe\FmLib\Http\Controllers\UserController::newUser
-   * @throws ValidationException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
    * @uses   \Tfboe\FmLib\Entity\Traits\User::init
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::setFromSpecification
-   * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::transformValue
    * @uses   \Tfboe\FmLib\Helpers\SpecificationHandler::validateBySpecification
+   * @uses   \Tfboe\FmLib\Helpers\Tools::setFromSpecification
+   * @uses   \Tfboe\FmLib\Helpers\Tools::transformValue
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::__construct
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::getEntityManager
    * @uses   \Tfboe\FmLib\Http\Controllers\BaseController::validateSpec
    * @uses   \Tfboe\FmLib\Http\Controllers\UserController::__construct
-   * @uses   \Tfboe\FmLib\Entity\Helpers\BaseEntity::methodExists
+   * @throws ValidationException
    */
   public function testSuccessfulRegistration()
   {

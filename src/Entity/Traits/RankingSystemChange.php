@@ -65,6 +65,7 @@ trait RankingSystemChange
 
   /**
    * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity")
+   * @ORM\JoinColumn(name="hierarchy_entity_id", referencedColumnName="id", onDelete="CASCADE")
    * @var TournamentHierarchyEntity
    */
   private $hierarchyEntity;

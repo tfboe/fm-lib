@@ -15,6 +15,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\CompetitionInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Entity\Traits\Competition;
+use Tfboe\FmLib\Entity\Traits\Phase;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Tests\Entity\Team;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -114,6 +116,8 @@ class CompetitionTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Helpers\NameEntity::setName
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\Competition::setTournamentWithoutInitializing
+   * @uses   \Tfboe\FmLib\Helpers\Tools::isInitialized
    */
   public function testTournamentAndParent()
   {

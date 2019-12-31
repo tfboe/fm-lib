@@ -26,9 +26,6 @@ class PlayerService implements PlayerServiceInterface
 
   /** @var LoadingServiceInterface */
   private $ls;
-
-  /** @var RankingSystemServiceInterface */
-  private $rankingSystemService;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -37,17 +34,14 @@ class PlayerService implements PlayerServiceInterface
    * PlayerService constructor.
    * @param EntityManagerInterface $em
    * @param LoadingServiceInterface $ls
-   * @param RankingSystemServiceInterface $rankingSystemService
    */
   public function __construct(
     EntityManagerInterface $em,
-    LoadingServiceInterface $ls,
-    RankingSystemServiceInterface $rankingSystemService
+    LoadingServiceInterface $ls
   )
   {
     $this->em = $em;
     $this->ls = $ls;
-    $this->rankingSystemService = $rankingSystemService;
   }
 //</editor-fold desc="Constructor">
 
@@ -103,7 +97,8 @@ class PlayerService implements PlayerServiceInterface
         foreach ($competition->getTeams() as $team) {
           foreach ($team->getMemberships() as $membership) {
             if ($membership->getPlayer()->getId() == $toMerge->getId()) {
-              $this->rankingSystemService->adaptOpenSyncFromValues($tournament, []);
+              //the listener does this automatically
+              //$this->rankingSystemService->adaptOpenSyncFromValues($tournament, []);
               $membership->setPlayer($player);
               $isMember = true;
             }

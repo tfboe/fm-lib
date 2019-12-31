@@ -15,6 +15,7 @@ use Tfboe\FmLib\Entity\Helpers\BaseEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\NameEntityInterface;
 use Tfboe\FmLib\Entity\Helpers\SubClassDataInterface;
 use Tfboe\FmLib\Entity\Helpers\TimestampableEntityInterface;
+use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyAssociableInterface;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
 
 
@@ -75,5 +76,13 @@ interface RankingSystemInterface extends BaseEntityInterface, SubClassDataInterf
    * @param string $serviceName
    */
   public function setServiceName(string $serviceName);
+
+  /**
+   * Checks if the ranking system is influenced by the given entity with the given change set
+   * @param TournamentHierarchyAssociableInterface $entity
+   * @param array $entityChangeSet
+   * @return bool
+   */
+  public function isInfluencedBy(TournamentHierarchyAssociableInterface $entity, array $entityChangeSet): bool;
 //</editor-fold desc="Public Methods">
 }

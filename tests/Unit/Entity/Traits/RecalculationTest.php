@@ -11,19 +11,19 @@ namespace Tfboe\FmLib\Tests\Unit\Entity\Traits;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\Helpers\BaseEntity;
-use Tfboe\FmLib\Entity\Traits\LastRecalculation;
+use Tfboe\FmLib\Entity\Traits\Recalculation;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
 
 /**
  * Class TournamentTest
  * @package Tfboe\FmLib\Tests\Unit\Entity
  */
-class LastRecalculationTest extends UnitTestCase
+class RecalculationTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\LastRecalculation::getVersion
-   * @covers \Tfboe\FmLib\Entity\Traits\LastRecalculation::setVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\Recalculation::getVersion
+   * @covers \Tfboe\FmLib\Entity\Traits\Recalculation::setVersion
    */
   public function testVersion()
   {
@@ -35,11 +35,11 @@ class LastRecalculationTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return MockObject|LastRecalculation
+   * @return MockObject|Recalculation
    */
   private function lastRecalculation(): MockObject
   {
-    return $this->getStubbedEntity("LastRecalculation", [], [], BaseEntity::class, false, false);
+    return $this->getStubbedEntity("Recalculation", [], [], BaseEntity::class, false, false);
   }
 //</editor-fold desc="Private Methods">
 }

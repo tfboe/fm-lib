@@ -22,6 +22,7 @@ use Tfboe\FmLib\Entity\PlayerInterface;
 use Tfboe\FmLib\Entity\TeamInterface;
 use Tfboe\FmLib\Entity\TeamMembershipInterface;
 use Tfboe\FmLib\Entity\TournamentInterface;
+use Tfboe\FmLib\Service\DeletionServiceInterface;
 use Tfboe\FmLib\Service\LoadingServiceInterface;
 use Tfboe\FmLib\Service\PlayerService;
 use Tfboe\FmLib\Service\PlayerServiceInterface;
@@ -178,16 +179,76 @@ class PlayerServiceTest extends UnitTestCase
         $t->method('getCompetitions')->willReturn(new ArrayCollection([$competition]));
       });
 
-    /** @var RankingSystemServiceInterface|MockObject $rankingSystemService */
-    $rankingSystemService = $this->createMock(RankingSystemServiceInterface::class);
-    $rankingSystemService->method('adaptOpenSyncFromValues')->with($tournament, []);
-
-    $service = new PlayerService($em, $ls, $rankingSystemService);
+    $service = new PlayerService($em, $ls);
 
     self::assertEquals(true, $service->mergePlayers($player1, $player2));
 
     self::assertEquals($game1PlayersB, new ArrayCollection([$player1->getId() => $player1]));
     self::assertEquals($game2PlayersA, new ArrayCollection([$player1->getId() => $player1]));
   }
+//  public function testMergePlayer()
+//  {
+//    $tournament = $this->createStub(TournamentInterface::class);
+//    $player1 = $this->createStubWithId(PlayerInterface::class, "p1");
+//    $player2 = $this->createStubWithId(PlayerInterface::class, "p2");
+//    $otherPlayer = $this->createStubWithId(PlayerInterface::class, "oP");
+//    $team1Membership = $this->createStub(TeamMembershipInterface::class, ['getPlayer' => $player2]);
+//    $team1Membership->method('setPlayer')->with($player1);
+//    $team1 = $this->createStub(TeamInterface::class, [
+//      'getMemberships' => new ArrayCollection([$team1Membership])
+//    ]);
+//    $otherTeam = $this->createStub(TeamInterface::class, [
+//      'getMemberships' => new ArrayCollection([$this->createStub(TeamMembershipInterface::class, [
+//        'getPlayer' => $otherPlayer
+//      ])])
+//    ]);
+//
+//    $game1PlayersB = new ArrayCollection([$player2->getId() => $player2]);
+//    $game1 = $this->createStub(GameInterface::class, [
+//      'getPlayersA' => new ArrayCollection([$otherPlayer->getId() => $otherPlayer]),
+//      'getPlayersB' => $game1PlayersB
+//    ]);
+//
+//    $game2PlayersA = new ArrayCollection([$player2->getId() => $player2]);
+//    $game2 = $this->createStub(GameInterface::class, [
+//      'getPlayersA' => $game2PlayersA,
+//      'getPlayersB' => new ArrayCollection([$otherPlayer->getId() => $otherPlayer])
+//    ]);
+//
+//    $competition = $this->createStub(CompetitionInterface::class, [
+//      'getTeams' => new ArrayCollection([$team1, $otherTeam]),
+//      'getPhases' => new ArrayCollection([$this->createStub(PhaseInterface::class, [
+//        'getMatches' => new ArrayCollection([$this->createStub(MatchInterface::class, [
+//          'getGames' => new ArrayCollection([$game1, $game2])
+//        ])])
+//      ])])
+//    ]);
+//
+//
+//    /** @var EntityManagerInterface $em */
+//    /** @noinspection SyntaxError */
+//    $em = $this->getEntityManagerMockForQuery([$tournament],
+//      'SELECT t FROM Tfboe\FmLib\Entity\TournamentInterface t INNER JOIN t.competitions c INNER JOIN c.teams te ' .
+//      'INNER JOIN te.memberships m WHERE m.player = (:id)');
+//    /** @var LoadingServiceInterface|MockObject $ls */
+//    $ls = $this->createMock(LoadingServiceInterface::class);
+//    $ls->expects(self::once())->method('loadEntities')->with([$tournament])->willReturnCallback(
+//      function ($a) use ($competition) {
+//        /** @var TournamentInterface|MockObject $t */
+//        $t = $a[0];
+//        $t->method('getCompetitions')->willReturn(new ArrayCollection([$competition]));
+//      });
+//
+//    /** @var RankingSystemServiceInterface|MockObject $rankingSystemService */
+//    $rankingSystemService = $this->createMock(RankingSystemServiceInterface::class);
+//    $rankingSystemService->method('adaptOpenSyncFromValues')->with($tournament, []);
+//
+//    $service = new PlayerService($em, $ls, $rankingSystemService);
+//
+//    self::assertEquals(true, $service->mergePlayers($player1, $player2));
+//
+//    self::assertEquals($game1PlayersB, new ArrayCollection([$player1->getId() => $player1]));
+//    self::assertEquals($game2PlayersA, new ArrayCollection([$player1->getId() => $player1]));
+//  }
 //</editor-fold desc="Public Methods">
 }

@@ -11,6 +11,8 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Tests\Unit\Providers;
 
 use Doctrine\DBAL\DBALException;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Routing\Router;
 use Illuminate\Support\Facades\Validator;
@@ -72,6 +74,15 @@ class FmLibServiceProviderTest extends UnitTestCase
       if ($x === EloRankingInterface::class) {
         $app2 = $this->createMock(Container::class);
         $app2->method('make')->willReturnCallback(function ($c) {
+          if ($c === EntityManagerInterface::class) {
+            $em = $this->createMock(EntityManagerInterface::class);
+            $em->method('getClassMetadata')->willReturnCallback(function ($name) {
+              return $this->createStub(ClassMetadataInfo::class, ['getReflectionClass' =>
+                $this->createStub(\ReflectionClass::class, ['getName' => 'reflected' . $name])
+              ]);
+            });
+            return $em;
+          }
           return $this->getStub($c);
         });
         $inst = $y($app2);

@@ -41,8 +41,9 @@ class TermsServiceTest extends UnitTestCase
   public function testGetLatestTerms()
   {
     $terms = $this->getStub(TermsInterface::class);
-    $em = $this->getEntityManagerMockForQuery([$terms], /** @lang DQL */
-      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
+    $em = $this->getEntityManagerMockForQuery($terms, /** @lang DQL */
+      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC', [], 1,
+      'getOneOrNullResult');
     $service = $this->service($em);
     self::assertTrue($terms === $service->getLatestTerms());
   }
@@ -54,8 +55,9 @@ class TermsServiceTest extends UnitTestCase
    */
   public function testGetLatestTermsNotExisting()
   {
-    $em = $this->getEntityManagerMockForQuery([], /** @lang DQL */
-      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC');
+    $em = $this->getEntityManagerMockForQuery(null, /** @lang DQL */
+      'SELECT e FROM Tfboe\FmLib\Entity\TermsInterface e ORDER BY e.majorVersion DESC, e.minorVersion DESC', [], 1,
+      'getOneOrNullResult');
     $this->expectException(Error::class);
     $this->expectExceptionMessage("The terms table is empty!");
     $service = $this->service($em);
