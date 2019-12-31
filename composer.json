@@ -13,22 +13,30 @@
       "email": "blacktemplar@a1.net"
     }
   ],
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/blacktemplar/jwt-auth-guard"
+    }
+  ],
   "require": {
-    "laravel/lumen-framework": "^5.5.0",
-    "laravel-doctrine/orm": "^1.4.2",
-    "laravel-doctrine/extensions": "^1.0.12",
-    "gedmo/doctrine-extensions": "^2.4.33",
-    "tymon/jwt-auth": "^1.0.0",
-    "irazasyed/jwt-auth-guard": "dev-master",
-    "doctrine/orm": "^2.6",
-    "ext-json": "*"
+    "php": ">=7.1",
+    "ext-json": "*",
+    "gedmo/doctrine-extensions": "^2.4",
+    "irazasyed/jwt-auth-guard": "^1.0.5",
+    "laravel-doctrine/extensions": "^1.1",
+    "laravel-doctrine/orm": "^1.5",
+    "laravel/lumen-framework": "^6.0",
+    "tymon/jwt-auth": "^1.0",
+    "monolog/monolog": "^2.0"
   },
   "require-dev": {
-    "barryvdh/laravel-ide-helper": "^2.4.1",
-    "phpunit/phpcov": "^5.0",
+    "barryvdh/laravel-ide-helper": "^2.5",
+    "fzaninotto/faker": "^1.8",
+    "mockery/mockery": "^1.2",
     "phpmd/phpmd": "^2.6",
-    "phpunit/phpunit": "^7.0",
-    "fzaninotto/faker": "^1.4"
+    "phpunit/phpcov": "^6.0",
+    "phpunit/phpunit": "^8.4"
   },
   "autoload": {
     "psr-4": {
@@ -43,6 +51,7 @@
   "minimum-stability": "dev",
   "prefer-stable": true,
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "sort-packages": true
   }
 }
