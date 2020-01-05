@@ -526,6 +526,9 @@ abstract class RankingSystemService implements RankingSystemInterface
    */
   private function getNextGenerationTime(DateTime $time, int $generationLevel): DateTime
   {
+    if ($generationLevel === AutomaticInstanceGeneration::OFF) {
+      return $this->getMaxDate();
+    }
     $year = (int)$time->format('Y');
     $month = (int)$time->format('m');
     if ($generationLevel === AutomaticInstanceGeneration::MONTHLY) {
@@ -534,8 +537,6 @@ abstract class RankingSystemService implements RankingSystemInterface
         $month = 1;
         $year += 1;
       }
-    } elseif ($generationLevel === AutomaticInstanceGeneration::OFF) {
-      return $this->getMaxDate();
     } else {
       $year += 1;
     }
@@ -585,16 +586,21 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param RankingSystemListInterface $base the list to use as base
    * @param TournamentHierarchyEntity[] $entities the list of entities to use for the computation
    * @param DateTime $lastListTime the time of the last list or the first entry
+   * @param bool $doFlushAndForget if we should flush and forget entities in between
    */
   private function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base,
-                                    array &$entities, DateTime $lastListTime)
+                                    array &$entities, DateTime $lastListTime, bool $doFlushAndForget = true)
   {
     $nextGeneration = $this->getNextGenerationTime($lastListTime, $list->getRankingSystem()->getGenerationInterval());
-    $this->cloneInto($list, $base);
+    if ($list !== $base) {
+      $this->cloneInto($list, $base);
+    }
     for ($i = 0, $c = count($entities); $i < $c; $i++) {
       $time = $this->timeService->getTime($entities[$i]);
       if (!$list->isCurrent() && $time > $list->getLastEntryTime()) {
-        $this->flushAndForgetEntities($entities, $i);
+        if ($doFlushAndForget) {
+          $this->flushAndForgetEntities($entities, $i);
+        }
         return;
       }
       if ($nextGeneration < $time) {
@@ -608,12 +614,16 @@ abstract class RankingSystemService implements RankingSystemInterface
         $nextGeneration = $this->getNextGenerationTime($nextGeneration,
           $list->getRankingSystem()->getGenerationInterval());
         //clear entityManager to save memory
-        $this->flushAndForgetEntities($entities, $i);
-        $c = count($entities);
+        if ($doFlushAndForget) {
+          $this->flushAndForgetEntities($entities, $i);
+          $c = count($entities);
+        }
       }
       $this->applyEntityToList($entities[$i], $time, $list);
     }
-    $this->flushAndForgetEntities($entities, $c);
+    if ($doFlushAndForget) {
+      $this->flushAndForgetEntities($entities, $c);
+    }
   }
 
   /**
