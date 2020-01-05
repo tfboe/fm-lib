@@ -611,26 +611,37 @@ abstract class RankingSystemService implements RankingSystemInterface
         $this->flushAndForgetEntities($entities, $i);
         $c = count($entities);
       }
-      $changes = $this->getChanges($entities[$i], $list);
-      foreach ($changes as $change) {
-        $entry = $this->getOrCreateRankingSystemListEntry($list, $change->getPlayer());
-        $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
-        $pointsAfterwards = $entry->getPoints() + $change->getPointsChange();
-        $entry->setPoints($pointsAfterwards);
-        $change->setPointsAfterwards($pointsAfterwards);
-        //apply further changes
-        foreach ($this->getAdditionalFields() as $field => $value) {
-          // PropertyNotExistingException => entry and field have exactly the static properties from getAdditionalFields
-
-          $entry->setProperty($field, $entry->getProperty($field) + $change->getProperty($field));
-        }
-        if ($time > $list->getLastEntryTime()) {
-          $list->setLastEntryTime($time);
-        }
-        $this->entityManager->persist($change);
-      }
+      $this->applyEntityToList($entities[$i], $time, $list);
     }
     $this->flushAndForgetEntities($entities, $c);
+  }
+
+  /**
+   * @param TournamentHierarchyEntity $entity
+   * @param DateTime $entityTime
+   * @param RankingSystemListInterface $list
+   */
+  protected function applyEntityToList(TournamentHierarchyEntity $entity, DateTime $entityTime,
+                                       RankingSystemListInterface $list)
+  {
+    $changes = $this->getChanges($entity, $list);
+    foreach ($changes as $change) {
+      $entry = $this->getOrCreateRankingSystemListEntry($list, $change->getPlayer());
+      $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
+      $pointsAfterwards = $entry->getPoints() + $change->getPointsChange();
+      $entry->setPoints($pointsAfterwards);
+      $change->setPointsAfterwards($pointsAfterwards);
+      //apply further changes
+      foreach ($this->getAdditionalFields() as $field => $value) {
+        // PropertyNotExistingException => entry and field have exactly the static properties from getAdditionalFields
+
+        $entry->setProperty($field, $entry->getProperty($field) + $change->getProperty($field));
+      }
+      if ($entityTime > $list->getLastEntryTime()) {
+        $list->setLastEntryTime($entityTime);
+      }
+      $this->entityManager->persist($change);
+    }
   }
 
   /**
