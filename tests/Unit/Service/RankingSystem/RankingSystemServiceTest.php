@@ -105,6 +105,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
    */
   public function testDontUseDeletedChange()
   {
@@ -116,7 +117,8 @@ class RankingSystemServiceTest extends UnitTestCase
       'getRepository']);
     $entityManager->expects(self::once())->method('flush');
     $entityManager->expects(self::once())->method('remove')->with($change);
-    $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, [], [$entity]);
+    $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, [], [$entity],
+      new DateTime('2000-01-01'));
 
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
@@ -606,6 +608,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
    */
   public function testGetOrCreateGetDeletedChange()
   {
@@ -616,7 +619,8 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager = $this->getEntityManagerMockForQuery([$change], null, ['persist', 'flush', 'detach', 'remove',
       'getRepository']);
     $entityManager->expects(self::once())->method('flush');
-    $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, ['getChanges'], [$entity]);
+    $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, ['getChanges'], [$entity],
+      new DateTime('2000-01-01'));
     $service->expects(self::once())->method('getChanges')->willReturnCallback(
       function ($e) use ($service, $ranking, $player, $change) {
         $foundChange = static::callProtectedMethod($service, 'getOrCreateChange', [$e, $ranking, $player]);
@@ -709,6 +713,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
    */
   public function testUpdateRankingCreateMonthlyLists()
   {
@@ -982,6 +987,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
    * @throws ReflectionException
    * @throws ReflectionException
    * @throws PreconditionFailedException
@@ -1355,18 +1361,19 @@ class RankingSystemServiceTest extends UnitTestCase
    * @param int $numListsToUpdate
    * @param array $mockedMethods
    * @param array $entities
+   * @param DateTime|null $timeServiceTime
    * @return MockObject|RankingSystemService
    * @throws Exception
    */
   private function prepareUpdateRankingFrom(MockObject $ranking, ?EntityManagerInterface $entityManager = null,
                                             $listsArray = null, $numListsToUpdate = 1, $mockedMethods = [],
-                                            $entities = []): MockObject
+                                            $entities = [], ?DateTime $timeServiceTime = null): MockObject
   {
     if ($entityManager === null) {
       $entityManager = $this->getEntityManagerMockForQuery([]);
     }
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
-      [$entityManager, $this->createMock(TimeServiceInterface::class),
+      [$entityManager, $this->getStub(TimeServiceInterface::class, ['getTime' => $timeServiceTime]),
         $this->createMock(EntityComparerInterface::class),
         $this->getObjectCreator()], '', true, true, true, $mockedMethods);
 
