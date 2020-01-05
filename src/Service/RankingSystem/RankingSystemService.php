@@ -588,8 +588,8 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param DateTime $lastListTime the time of the last list or the first entry
    * @param bool $doFlushAndForget if we should flush and forget entities in between
    */
-  private function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base,
-                                    array &$entities, DateTime $lastListTime, bool $doFlushAndForget = true)
+  protected function recomputeBasedOn(RankingSystemListInterface $list, RankingSystemListInterface $base,
+                                      array &$entities, DateTime $lastListTime, bool $doFlushAndForget = true)
   {
     $nextGeneration = $this->getNextGenerationTime($lastListTime, $list->getRankingSystem()->getGenerationInterval());
     if ($list !== $base) {
