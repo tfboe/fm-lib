@@ -714,6 +714,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::createNewList
    */
   public function testUpdateRankingCreateMonthlyLists()
   {
@@ -1164,6 +1165,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::createNewList
    * @throws ReflectionException
    * @throws ReflectionException
    * @throws PreconditionFailedException

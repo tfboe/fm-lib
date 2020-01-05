@@ -41,7 +41,7 @@ abstract class RankingSystemService implements RankingSystemInterface
   /** @var EntityManagerInterface */
   private $entityManager;
   /** @var TimeServiceInterface */
-  private $timeService;
+  protected $timeService;
   /** @var EntityComparerInterface */
   private $entityComparer;
   /**
@@ -167,11 +167,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     }
 
     if ($current === null) {
-      /** @var RankingSystemListInterface $current */
-      $current = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
-      $current->setCurrent(true);
-      $this->entityManager->persist($current);
-      $current->setRankingSystem($ranking);
+      $current = $this->createNewList($ranking, true);
     }
 
     $entities = $this->getNextEntities($ranking, $lastReusable, $current, $lastListTime);
@@ -605,11 +601,8 @@ abstract class RankingSystemService implements RankingSystemInterface
       }
       if ($nextGeneration < $time) {
         /** @var RankingSystemListInterface $newList */
-        $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
-        $newList->setCurrent(false);
+        $newList = $this->createNewList($list->getRankingSystem(), false);
         $newList->setLastEntryTime($nextGeneration);
-        $this->entityManager->persist($newList);
-        $newList->setRankingSystem($list->getRankingSystem());
         $this->cloneInto($newList, $list);
         $nextGeneration = $this->getNextGenerationTime($nextGeneration,
           $list->getRankingSystem()->getGenerationInterval());
@@ -624,6 +617,21 @@ abstract class RankingSystemService implements RankingSystemInterface
     if ($doFlushAndForget) {
       $this->flushAndForgetEntities($entities, $c);
     }
+  }
+
+  /**
+   * @param EntityRankingSystemInterface $rankingSystem
+   * @param bool $current
+   * @return RankingSystemListInterface
+   */
+  protected function createNewList(EntityRankingSystemInterface $rankingSystem,
+                                   bool $current): RankingSystemListInterface
+  {
+    $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
+    $newList->setCurrent($current);
+    $this->entityManager->persist($newList);
+    $newList->setRankingSystem($rankingSystem);
+    return $newList;
   }
 
   /**
