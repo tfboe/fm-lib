@@ -13,6 +13,7 @@ namespace Tfboe\FmLib\Tests\Unit\Providers;
 use Doctrine\DBAL\DBALException;
 use Illuminate\Contracts\Container\Container;
 use Illuminate\Routing\Router;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Lumen\Application;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -79,7 +80,12 @@ class FmLibServiceProviderTest extends UnitTestCase
       }
     });
     $provider = $this->provider($app);
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(true);
     $provider->register();
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
   }
 //</editor-fold desc="Public Methods">
 

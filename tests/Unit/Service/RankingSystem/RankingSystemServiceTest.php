@@ -17,6 +17,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
+use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\MockObject\MockObject;
 use ReflectionException;
 use Tfboe\FmLib\Entity\CompetitionInterface;
@@ -59,6 +60,28 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
  */
 class RankingSystemServiceTest extends UnitTestCase
 {
+  /**
+   * @inheritDoc
+   */
+  protected function setUp(): void
+  {
+    parent::setUp();
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(true);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function tearDown(): void
+  {
+    parent::tearDown();
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+  }
+
+
 //<editor-fold desc="Public Methods">
 
   /**
@@ -1129,6 +1152,45 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::resetListEntry
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
+   */
+  public function testDoNotFlushAndForget()
+  {
+    //mock from setUp
+    self::assertTrue(Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true));
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(false);
+    $ranking = $this->createStubWithId(RankingSystem::class);
+
+    $entityManager = $this->getEntityManagerMockForQuery([], null, ['flush']);
+    $entityManager->expects(self::never())->method('flush');
+    $service = $this->prepareUpdateRankingFrom($ranking, $entityManager);
+
+    /** @var RankingSystemInterface $ranking */
+    $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
    * @throws PreconditionFailedException
@@ -1374,6 +1436,7 @@ class RankingSystemServiceTest extends UnitTestCase
     if ($entityManager === null) {
       $entityManager = $this->getEntityManagerMockForQuery([]);
     }
+
     $service = $this->getMockForAbstractClass(RankingSystemService::class,
       [$entityManager, $this->getStub(TimeServiceInterface::class, ['getTime' => $timeServiceTime]),
         $this->createMock(EntityComparerInterface::class),

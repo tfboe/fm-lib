@@ -48,6 +48,7 @@ class ResolveTargetEntityExtensionTest extends UnitTestCase
       });
 
     Config::shouldReceive('get')
+      ->once()
       ->with('fm-lib.entityMaps', [])
       ->andReturn($mapping);
 

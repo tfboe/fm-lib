@@ -12,6 +12,7 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Support\Facades\Config;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
@@ -301,10 +302,16 @@ class EloRankingTest extends UnitTestCase
     if ($objectCreatorService === null) {
       $objectCreatorService = $this->createMock(ObjectCreatorServiceInterface::class);
     }
-    return new EloRanking(
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(true);
+    $eloRanking = new EloRanking(
       $entityManager, $this->createMock(TimeServiceInterface::class),
       $this->createMock(EntityComparerInterface::class), $objectCreatorService
     );
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+    return $eloRanking;
   }
 //</editor-fold desc="Private Methods">
 }

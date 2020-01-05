@@ -13,6 +13,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Config;
 use PHPUnit\Framework\Error\Error;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\CompetitionInterface;
@@ -304,8 +305,13 @@ class RankingSystemServiceTest extends UnitTestCase
     $dsls->expects(self::exactly(2))->method('loadRankingSystemService')->with('service')->willReturn($service);
     /** @var DynamicServiceLoadingServiceInterface $dsls */
     /** @var EntityManagerInterface $entityManager */
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(true);
     $system = new RankingSystemService($dsls, $entityManager);
     $system->recalculateRankingSystems();
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
   }
 //</editor-fold desc="Public Methods">
 }

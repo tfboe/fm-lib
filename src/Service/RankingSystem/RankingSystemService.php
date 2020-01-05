@@ -14,6 +14,7 @@ use DateTime;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
+use Illuminate\Support\Facades\Config;
 use Tfboe\FmLib\Entity\Helpers\AutomaticInstanceGeneration;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
@@ -64,6 +65,9 @@ abstract class RankingSystemService implements RankingSystemInterface
 
   /** @var ObjectCreatorServiceInterface */
   private $objectCreatorService;
+
+  /** @var bool */
+  private $doFlushAndForget;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -85,6 +89,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     $this->oldChanges = [];
     $this->updateRankingCalls = [];
     $this->objectCreatorService = $objectCreatorService;
+    $this->doFlushAndForget = Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
   }
 //</editor-fold desc="Constructor">
 
@@ -406,6 +411,9 @@ abstract class RankingSystemService implements RankingSystemInterface
    */
   private function flushAndForgetEntities(&$entities, &$current)
   {
+    if (!$this->doFlushAndForget) {
+      return;
+    }
     for ($i = 0; $i < $current; $i++) {
       $eId = $entities[$i]->getId();
       if (array_key_exists($eId, $this->oldChanges)) {

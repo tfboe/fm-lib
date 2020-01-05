@@ -20,5 +20,6 @@ return [
     'Tfboe\\FmLib\\Entity\\UserInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\User',
     'Tfboe\\FmLib\\Entity\\TeamMembershipInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\TeamMembership',
     'Tfboe\\FmLib\\Entity\\LastRecalculationInterface' => 'Tfboe\\FmLib\\Tests\\Entity\\LastRecalculation',
-  ]
+  ],
+  'doFlushAndForgetInRankingCalculations' => true,
 ];

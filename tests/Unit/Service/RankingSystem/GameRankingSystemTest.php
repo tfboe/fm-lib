@@ -14,6 +14,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder;
 use Exception;
+use Illuminate\Support\Facades\Config;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Service\ObjectCreatorServiceInterface;
 use Tfboe\FmLib\Service\RankingSystem\EntityComparerInterface;
@@ -29,7 +30,30 @@ use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
  */
 class GameRankingSystemTest extends UnitTestCase
 {
+
+  /**
+   * @inheritDoc
+   */
+  protected function setUp(): void
+  {
+    parent::setUp();
+    Config::shouldReceive('get')
+      ->once()
+      ->with('fm-lib.doFlushAndForgetInRankingCalculations', true)
+      ->andReturn(true);
+  }
+
+  /**
+   * @inheritDoc
+   */
+  public function tearDown(): void
+  {
+    parent::tearDown();
+    Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+  }
+
 //<editor-fold desc="Public Methods">
+
   /**
    * @covers \Tfboe\FmLib\Service\RankingSystem\GameRankingSystemService::getEntitiesQueryBuilder
    * @throws Exception

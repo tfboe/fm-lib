@@ -15,6 +15,7 @@ use Doctrine\DBAL\LockMode;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Contracts\Container\BindingResolutionException;
+use Illuminate\Support\Facades\Config;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyInterface;
 use Tfboe\FmLib\Entity\LastRecalculationInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
@@ -132,7 +133,9 @@ class RankingSystemService implements RankingSystemServiceInterface
   {
     //clear entityManager to save memory
     $this->entityManager->flush();
-    $this->entityManager->clear();
+    if (Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true)) {
+      $this->entityManager->clear();
+    }
     $rankingSystemOpenSyncFromValues = [];
     /** @var RankingSystemInterface[] $rankingSystems */
     $rankingSystems = [];
