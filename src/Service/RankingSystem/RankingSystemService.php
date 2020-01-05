@@ -80,7 +80,8 @@ abstract class RankingSystemService implements RankingSystemInterface
    */
   public function __construct(EntityManagerInterface $entityManager, TimeServiceInterface $timeService,
                               EntityComparerInterface $entityComparer,
-                              ObjectCreatorServiceInterface $objectCreatorService)
+                              ObjectCreatorServiceInterface $objectCreatorService,
+                              ?bool $doFlushAndForget = null)
   {
     $this->entityManager = $entityManager;
     $this->timeService = $timeService;
@@ -89,7 +90,10 @@ abstract class RankingSystemService implements RankingSystemInterface
     $this->oldChanges = [];
     $this->updateRankingCalls = [];
     $this->objectCreatorService = $objectCreatorService;
-    $this->doFlushAndForget = Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+    if ($doFlushAndForget === null) {
+      $doFlushAndForget = Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+    }
+    $this->doFlushAndForget = $doFlushAndForget;
   }
 //</editor-fold desc="Constructor">
 

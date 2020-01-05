@@ -73,7 +73,11 @@ abstract class UnitTestCase extends TestCase
     $params = $reflection->getConstructor()->getParameters();
     $allArguments = $arguments;
     for ($i = count($arguments), $c = count($params); $i < $c; $i++) {
-      $allArguments[] = $this->createMock($params[$i]->getClass()->name);
+      if ($params[$i]->getType()->allowsNull()) {
+        $allArguments[] = null;
+      } else {
+        $allArguments[] = $this->createMock($params[$i]->getClass()->name);
+      }
     }
     return $this->getMockForAbstractClass($className, $allArguments, '', true, true, true, $mockedMethods);
   }
