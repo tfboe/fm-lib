@@ -1157,7 +1157,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
    * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
-   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @throws PreconditionFailedException
+   * @throws Exception
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
@@ -1165,6 +1166,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
    */
   public function testDoNotFlushAndForget()
   {

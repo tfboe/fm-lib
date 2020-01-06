@@ -77,6 +77,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param TimeServiceInterface $timeService
    * @param EntityComparerInterface $entityComparer
    * @param ObjectCreatorServiceInterface $objectCreatorService
+   * @param bool|null $doFlushAndForget
    */
   public function __construct(EntityManagerInterface $entityManager, TimeServiceInterface $timeService,
                               EntityComparerInterface $entityComparer,

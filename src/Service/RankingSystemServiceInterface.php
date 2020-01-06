@@ -45,7 +45,8 @@ interface RankingSystemServiceInterface
 
   /**
    * Recalculates all ranking systems which have an open sync from value.
+   * @param bool|null $doForget
    */
-  public function recalculateRankingSystems(): void;
+  public function recalculateRankingSystems(?bool $doForget = null): void;
 //</editor-fold desc="Public Methods">
 }

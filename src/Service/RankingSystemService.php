@@ -129,11 +129,14 @@ class RankingSystemService implements RankingSystemServiceInterface
   /**
    * @inheritDoc
    */
-  public function recalculateRankingSystems(): void
+  public function recalculateRankingSystems(?bool $doForget = null): void
   {
     //clear entityManager to save memory
     $this->entityManager->flush();
-    if (Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true)) {
+    if ($doForget === null) {
+      $doForget = Config::get('fm-lib.doFlushAndForgetInRankingCalculations', true);
+    }
+    if ($doForget) {
       $this->entityManager->clear();
     }
     $rankingSystemOpenSyncFromValues = [];
