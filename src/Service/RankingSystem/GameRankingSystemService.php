@@ -50,7 +50,7 @@ abstract class GameRankingSystemService extends RankingSystemService implements 
         "c.startTime, t.endTime, t.startTime, t.updatedAt) > :from")
       ->setParameter('from', $from)
       ->andWhere("COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime, " .
-        "c.startTime, t.endTime, t.startTime, t.updatedAt) <= :to")
+        "c.startTime, t.endTime, t.startTime, t.updatedAt) < :to")
       ->setParameter('to', $to)
       ->andWhere($query->expr()->orX(
         $query->expr()->isNotNull('grs.id'),

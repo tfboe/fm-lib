@@ -42,11 +42,6 @@ interface RankingSystemListInterface extends BaseEntityInterface, UUIDEntityInte
   public function isCurrent(): bool;
 
   /**
-   * @param bool $current
-   */
-  public function setCurrent(bool $current);
-
-  /**
    * @param DateTime $lastEntryTime
    */
   public function setLastEntryTime(DateTime $lastEntryTime);
@@ -55,5 +50,15 @@ interface RankingSystemListInterface extends BaseEntityInterface, UUIDEntityInte
    * @param RankingSystemInterface $rankingSystem
    */
   public function setRankingSystem(RankingSystemInterface $rankingSystem);
+
+  /**
+   * @return DateTime|null
+   */
+  public function getEntryTimeLimit(): ?DateTime;
+
+  /**
+   * @param DateTime|null $entryTimeLimit
+   */
+  public function setEntryTimeLimit(?DateTime $entryTimeLimit): void;
 //</editor-fold desc="Public Methods">
 }

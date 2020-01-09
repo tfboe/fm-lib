@@ -141,7 +141,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $entityManager->expects(self::once())->method('flush');
     $entityManager->expects(self::once())->method('remove')->with($change);
     $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, [], [$entity],
-      new DateTime('2000-01-01'));
+      new DateTime('2001-01-01'));
 
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
   }
@@ -643,7 +643,7 @@ class RankingSystemServiceTest extends UnitTestCase
       'getRepository']);
     $entityManager->expects(self::once())->method('flush');
     $service = $this->prepareUpdateRankingFrom($ranking, $entityManager, null, 1, ['getChanges'], [$entity],
-      new DateTime('2000-01-01'));
+      new DateTime('2001-01-01'));
     $service->expects(self::once())->method('getChanges')->willReturnCallback(
       function ($e) use ($service, $ranking, $player, $change) {
         $foundChange = static::callProtectedMethod($service, 'getOrCreateChange', [$e, $ranking, $player]);
@@ -1028,6 +1028,16 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setRankingSystem
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testUpdateRankingFrom()
   {
@@ -1036,38 +1046,45 @@ class RankingSystemServiceTest extends UnitTestCase
     $ranking->method('getGenerationInterval')->willReturn(-1);
 
     //create mocks for ranking lists
-    $list1 = $this->createMock(RankingSystemList::class);
-    $list1->method('isCurrent')->willReturn(false);
-    $list1->method('getLastEntryTime')->willReturn(new DateTime("2017-01-01"));
-    $list1->method('getRankingSystem')->willReturn($ranking);
+    /** @var RankingSystemList|MockObject $list1 */
+    $list1 = $this->getMockWithMockedArguments(RankingSystemList::class, [], ["getId"]);
+    $list1->method("getId")->willReturn("list1");
+    $list1->setEntryTimeLimit(new DateTime("2017-01-01"));
+    $list1->setRankingSystem($ranking);
 
     $entry1 = $this->createEmptyEntry();
     $entry2 = $this->createEmptyEntry();
     $entry3 = $this->createEmptyEntry();
 
-    $list2 = $this->createMock(RankingSystemList::class);
-    $list2->method('isCurrent')->willReturn(false);
-    $list2->method('getLastEntryTime')->willReturn(new DateTime("2017-02-01"));
-    $list2->method('getEntries')->willReturn(new ArrayCollection([1 => $entry1, 3 => $entry3]));
-    $list2->method('getRankingSystem')->willReturn($ranking);
+    /** @var RankingSystemList|MockObject $list2 */
+    $list2 = $this->getMockWithMockedArguments(RankingSystemList::class, [], ["getId"]);
+    $list2->method("getId")->willReturn("list2");
+    $list2->setEntryTimeLimit(new DateTime("2017-02-01"));
+    $list2->setRankingSystem($ranking);
+    $list2->getEntries()->set(1, $entry1);
+    $list2->getEntries()->set(3, $entry3);
 
-    $list3 = $this->createMock(RankingSystemList::class);
-    $list3->method('isCurrent')->willReturn(false);
-    $list3->method('getLastEntryTime')->willReturn(new DateTime("2017-03-01"));
-    $list3->method('getEntries')->willReturn(new ArrayCollection([1 => $entry1, 2 => $entry2]));
-    $list3->method('getRankingSystem')->willReturn($ranking);
+    /** @var RankingSystemList|MockObject $list3 */
+    $list3 = $this->getMockWithMockedArguments(RankingSystemList::class, [], ["getId"]);
+    $list3->method("getId")->willReturn("list3");
+    $list3->setEntryTimeLimit(new DateTime("2017-03-01"));
+    $list3->setRankingSystem($ranking);
+    $list3->getEntries()->set(1, $entry1);
+    $list3->getEntries()->set(2, $entry2);
+    $list3->setLastEntryTime(new DateTime("2017-02-28 12:00:00"));
 
-    $list4 = $this->createMock(RankingSystemList::class);
-    $list4->method('isCurrent')->willReturn(false);
-    $list4->method('getLastEntryTime')->willReturn(new DateTime("2017-04-01"));
-    $list4->method('getEntries')->willReturn(new ArrayCollection());
-    $list4->method('getRankingSystem')->willReturn($ranking);
+    /** @var RankingSystemList|MockObject $list4 */
+    $list4 = $this->getMockWithMockedArguments(RankingSystemList::class, [], ["getId"]);
+    $list4->method("getId")->willReturn("list4");
+    $list4->setEntryTimeLimit(new DateTime("2017-04-01"));
+    $list4->setLastEntryTime(new DateTime("2017-03-02"));
+    $list4->setRankingSystem($ranking);
 
-    $list5 = $this->createMock(RankingSystemList::class);
-    $list5->method('isCurrent')->willReturn(true);
-    $list5->method('getLastEntryTime')->willReturn(new DateTime("2017-05-01"));
-    $list5->method('getEntries')->willReturn(new ArrayCollection());
-    $list5->method('getRankingSystem')->willReturn($ranking);
+    /** @var RankingSystemList|MockObject $list5 */
+    $list5 = $this->getMockWithMockedArguments(RankingSystemList::class, [], ["getId"]);
+    $list5->method("getId")->willReturn("list5");
+    $list5->setLastEntryTime(new DateTime("2017-05-01"));
+    $list5->setRankingSystem($ranking);
 
     $lists = $this->createMock(Collection::class);
     $lists->expects(static::once())->method('toArray')->willReturn([$list1, $list2, $list3, $list4, $list5]);
@@ -1108,30 +1125,30 @@ class RankingSystemServiceTest extends UnitTestCase
     $entity4 = $this->createStubWithId(TournamentHierarchyEntity::class, "e4");
     $entity4->method('getEndTime')->willReturn(new DateTime("2017-03-02"));
 
-    $parent = $this->createStubWithId(TournamentHierarchyEntity::class, "e4");
+    $parent = $this->createStubWithId(TournamentHierarchyEntity::class, "p4");
     $parent->method('getEndTime')->willReturn(new DateTime("2017-12-02"));
     $entity4->method('getParent')->willReturn($parent);
 
     //create query mock for getEntities
     $query3 = $this->createMock(AbstractQuery::class);
-    $query3->expects(static::once())->method('getResult')->willReturn([$entity1, $entity2, $entity3, $entity4]);
+    $query3->expects(static::once())->method('getResult')->willReturn([$entity2]);
     $queryBuilder3 = $this->createMock(QueryBuilder::class);
     $queryBuilder3->expects(static::once())->method('getQuery')->willReturn($query3);
 
     $query4 = $this->createMock(AbstractQuery::class);
-    $query4->expects(static::once())->method('getResult')->willReturn([$entity1, $entity2, $entity3, $entity4]);
+    $query4->expects(static::once())->method('getResult')->willReturn([$entity1, $entity4]);
     $queryBuilder4 = $this->createMock(QueryBuilder::class);
     $queryBuilder4->expects(static::once())->method('getQuery')->willReturn($query4);
 
     $query5 = $this->createMock(AbstractQuery::class);
-    $query5->expects(static::once())->method('getResult')->willReturn([$entity1, $entity2, $entity3, $entity4]);
+    $query5->expects(static::once())->method('getResult')->willReturn([]);
     $queryBuilder5 = $this->createMock(QueryBuilder::class);
     $queryBuilder5->expects(static::once())->method('getQuery')->willReturn($query5);
 
     $service->method('getEntitiesQueryBuilder')
-      ->withConsecutive([$ranking, new DateTime("2017-02-01"), new DateTime("2017-03-01")],
-        [$ranking, new DateTime("2017-03-01"), new DateTime("2017-04-01")],
-        [$ranking, new DateTime("2017-04-01")])
+      ->withConsecutive([$ranking, new DateTime("2000-01-01"), new DateTime("2017-03-01")],
+        [$ranking, new DateTime("2017-02-01 00:00:01"), new DateTime("2017-04-01")],
+        [$ranking, new DateTime("2017-03-02")])
       ->willReturnOnConsecutiveCalls($queryBuilder3, $queryBuilder4, $queryBuilder5);
     $changes = [
       $this->createEmptyChange(),
@@ -1143,7 +1160,7 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemService $service */
     /** @var RankingSystemInterface $ranking */
 
-    $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
+    $service->updateRankingFrom($ranking, new DateTime('2017-02-01'));
   }
 
   /**
@@ -1167,6 +1184,8 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
    * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
    */
   public function testDoNotFlushAndForget()
   {
@@ -1241,6 +1260,7 @@ class RankingSystemServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList
    * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
    * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
    */
   public function testUpdateRankingFromNoCurrent()
   {
@@ -1252,6 +1272,7 @@ class RankingSystemServiceTest extends UnitTestCase
     $list = $this->createMock(RankingSystemList::class);
     $list->method('isCurrent')->willReturn(false);
     $list->method('getLastEntryTime')->willReturn(new DateTime("2017-12-01"));
+    $list->method('getEntryTimeLimit')->willReturn(new DateTime("2018-01-01"));
     $list->method('getEntries')->willReturn(new ArrayCollection());
     $list->method('getRankingSystem')->willReturn($ranking);
 
@@ -1317,7 +1338,8 @@ class RankingSystemServiceTest extends UnitTestCase
     //create mocks for ranking lists
     $list = $this->createMock(RankingSystemList::class);
     $list->method('isCurrent')->willReturn(false);
-    $list->method('getLastEntryTime')->willReturn(new DateTime("2017-12-01"));
+    $list->method('getLastEntryTime')->willReturn(new DateTime("2017-11-01"));
+    $list->method('getEntryTimeLimit')->willReturn(new DateTime("2017-12-01"));
     $list->method('getEntries')->willReturn(new ArrayCollection());
     $list->method('getRankingSystem')->willReturn($ranking);
 
@@ -1335,6 +1357,350 @@ class RankingSystemServiceTest extends UnitTestCase
     /** @var RankingSystemInterface $ranking */
 
     $service->updateRankingFrom($ranking, new DateTime('2017-02-28'));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
+   * @throws PreconditionFailedException
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPointsAfterwards
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::cloneSubClassDataFrom
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::resetListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
+   */
+  public function testUpdateRankingFromUpdateableNonCurrentList()
+  {
+    $ranking = $this->createStubWithId(RankingSystem::class);
+
+    //create mocks for ranking lists
+    /** @var RankingSystemListInterface|MockObject $list */
+    $list = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $list->method('getId')->willReturn('list');
+    $list->setLastEntryTime(new DateTime("2017-11-01"));
+    $list->setEntryTimeLimit(new DateTime("2017-11-01 00:00:00.002"));
+    $list->setRankingSystem($ranking);
+
+    /** @var RankingSystemListInterface|MockObject $current */
+    $current = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $current->method('getId')->willReturn('current');
+    $current->setLastEntryTime(new DateTime("2017-12-01"));
+    $current->setRankingSystem($ranking);
+
+    $lists = $this->createMock(Collection::class);
+    $lists->expects(static::once())->method('toArray')->willReturn([$list, $current]);
+
+    //finish mock for input
+    $ranking->expects(static::once())->method('getLists')->willReturn($lists);
+
+    //create time service, entity comparer and ranking service mock
+    $timeService = $this->createMock(TimeServiceInterface::class);
+    $timeService->expects(self::atLeastOnce())->method('clearTimes')->id('clearTimes');
+    $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
+      return $entity->getEndTime();
+    })->after('clearTimes');
+    $entityComparer = $this->createMock(EntityComparerInterface::class);
+    $entityComparer->method('compareEntities')->willReturnCallback(
+      function (TournamentHierarchyInterface $entity1, TournamentHierarchyInterface $entity2) {
+        return $entity1->getEndTime() <=> $entity2->getEndTime();
+      });
+    $entityManager = $this->getEntityManagerMockForQuery([],
+      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChangeInterface c WHERE c.rankingSystem = :ranking' .
+      ' AND c.hierarchyEntity IN(:entities)', ['persist', 'remove', 'flush', 'detach'], 2);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
+      [$entityManager,
+        $timeService,
+        $this->createMock(EntityComparerInterface::class),
+        $this->getObjectCreator()]);
+
+    $entity1 = $this->createStubWithId(TournamentHierarchyEntity::class, "e1");
+    $entity1->method('getEndTime')->willReturn(new DateTime("2017-11-01 00:00:00.001"));
+
+    $query1 = $this->createMock(AbstractQuery::class);
+    $query1->expects(static::once())->method('getResult')->willReturn([$entity1]);
+    $queryBuilder1 = $this->createMock(QueryBuilder::class);
+    $queryBuilder1->expects(static::once())->method('getQuery')->willReturn($query1);
+
+    $query2 = $this->createMock(AbstractQuery::class);
+    $query2->expects(static::once())->method('getResult')->willReturn([]);
+    $queryBuilder2 = $this->createMock(QueryBuilder::class);
+    $queryBuilder2->expects(static::once())->method('getQuery')->willReturn($query2);
+
+    $service->method('getEntitiesQueryBuilder')
+      ->withConsecutive([$ranking, new DateTime("2017-11-01"), new DateTime("2017-11-01 00:00:00.002")],
+        [$ranking, new DateTime("2017-11-01 00:00:00.001")])
+      ->willReturnOnConsecutiveCalls($queryBuilder1, $queryBuilder2);
+    $changes = [
+      $this->createEmptyChange(),
+      $this->createEmptyChange(),
+    ];
+    $service->method('getChanges')->willReturn($changes);
+
+    /** @var RankingSystemService $service */
+    /** @var RankingSystemInterface $ranking */
+
+    $service->updateRankingFrom($ranking, new DateTime('2017-11-01 00:00:00.001'));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
+   * @throws PreconditionFailedException
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPointsAfterwards
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::cloneSubClassDataFrom
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::resetListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
+   */
+  public function testUpdateRankingWithTooManyEntities()
+  {
+    $ranking = $this->createStubWithId(RankingSystem::class);
+
+    //create mocks for ranking lists
+    /** @var RankingSystemListInterface|MockObject $list */
+    $list = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $list->method('getId')->willReturn('list');
+    $list->setLastEntryTime(new DateTime("2017-11-01"));
+    $list->setEntryTimeLimit(new DateTime("2017-11-01 00:00:00.002"));
+    $list->setRankingSystem($ranking);
+
+    /** @var RankingSystemListInterface|MockObject $current */
+    $current = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $current->method('getId')->willReturn('current');
+    $current->setLastEntryTime(new DateTime("2017-12-01"));
+    $current->setRankingSystem($ranking);
+
+    $lists = $this->createMock(Collection::class);
+    $lists->expects(static::once())->method('toArray')->willReturn([$list, $current]);
+
+    //finish mock for input
+    $ranking->expects(static::once())->method('getLists')->willReturn($lists);
+
+    //create time service, entity comparer and ranking service mock
+    $timeService = $this->createMock(TimeServiceInterface::class);
+    $timeService->expects(self::atLeastOnce())->method('clearTimes')->id('clearTimes');
+    $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
+      return $entity->getEndTime();
+    })->after('clearTimes');
+    $entityComparer = $this->createMock(EntityComparerInterface::class);
+    $entityComparer->method('compareEntities')->willReturnCallback(
+      function (TournamentHierarchyInterface $entity1, TournamentHierarchyInterface $entity2) {
+        return $entity1->getEndTime() <=> $entity2->getEndTime();
+      });
+    $entityManager = $this->getEntityManagerMockForQuery([],
+      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChangeInterface c WHERE c.rankingSystem = :ranking' .
+      ' AND c.hierarchyEntity IN(:entities)', ['persist', 'remove', 'flush', 'detach'], 2);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
+      [$entityManager,
+        $timeService,
+        $this->createMock(EntityComparerInterface::class),
+        $this->getObjectCreator()]);
+
+    $entity1 = $this->createStubWithId(TournamentHierarchyEntity::class, "e1");
+    $entity1->method('getEndTime')->willReturn(new DateTime("2017-11-01 00:00:00.002"));
+
+    $query1 = $this->createMock(AbstractQuery::class);
+    $query1->expects(static::once())->method('getResult')->willReturn([$entity1]);
+    $queryBuilder1 = $this->createMock(QueryBuilder::class);
+    $queryBuilder1->expects(static::once())->method('getQuery')->willReturn($query1);
+
+    $query2 = $this->createMock(AbstractQuery::class);
+    $query2->expects(static::once())->method('getResult')->willReturn([$entity1]);
+    $queryBuilder2 = $this->createMock(QueryBuilder::class);
+    $queryBuilder2->expects(static::once())->method('getQuery')->willReturn($query2);
+
+    $service->method('getEntitiesQueryBuilder')
+      ->withConsecutive([$ranking, new DateTime("2017-11-01"), new DateTime("2017-11-01 00:00:00.002")],
+        [$ranking, new DateTime("2017-11-01")])
+      ->willReturnOnConsecutiveCalls($queryBuilder1, $queryBuilder2);
+    $changes = [
+      $this->createEmptyChange(),
+      $this->createEmptyChange(),
+    ];
+    $service->method('getChanges')->willReturn($changes);
+
+    /** @var RankingSystemService $service */
+    /** @var RankingSystemInterface $ranking */
+
+    $service->updateRankingFrom($ranking, new DateTime('2017-11-01 00:00:00.001'));
+  }
+
+  /**
+   * @covers \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextGenerationTime
+   * @throws ReflectionException
+   * @throws PreconditionFailedException
+   * @throws ReflectionException
+   * @throws ReflectionException
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemChange::setPointsAfterwards
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntries
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::getRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::isCurrent
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setEntryTimeLimit
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setLastEntryTime
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemList::setRankingSystem
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::getPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::initSubClassData
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setNumberRankedEntities
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPlayer
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setPoints
+   * @uses   \Tfboe\FmLib\Entity\Traits\RankingSystemListEntry::setRankingSystemList
+   * @uses   \Tfboe\FmLib\Exceptions\Internal::assert
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::eq
+   * @uses   \Tfboe\FmLib\Helpers\DateTimeHelper::future
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::__construct
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::applyEntityToList
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::cloneInto
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::deleteOldChanges
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::flushAndForgetEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getMaxDate
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getNextEntities
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::getOrCreateRankingSystemListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::markOldChangesAsDeleted
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::recomputeBasedOn
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::resetListEntry
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::startPoints
+   * @uses   \Tfboe\FmLib\Service\RankingSystem\RankingSystemService::updateRankingFrom
+   */
+  public function testMonthlyListGenerationInJanuary()
+  {
+    $ranking = $this->createStubWithId(RankingSystem::class);
+    $ranking->method('getGenerationInterval')->willReturn(AutomaticInstanceGeneration::MONTHLY);
+
+    //create mocks for ranking lists
+    /** @var RankingSystemListInterface|MockObject $list */
+    $list = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $list->method('getId')->willReturn('list');
+    $list->setLastEntryTime(new DateTime("2017-11-01"));
+    $list->setEntryTimeLimit(new DateTime("2017-12-01"));
+    $list->setRankingSystem($ranking);
+
+    /** @var RankingSystemListInterface|MockObject $current */
+    $current = $this->getMockWithMockedArguments(RankingSystemList::class, [], ['getId']);
+    $current->method('getId')->willReturn('current');
+    $current->setLastEntryTime(new DateTime("2017-11-01"));
+    $current->setRankingSystem($ranking);
+
+    $lists = $this->createMock(Collection::class);
+    $lists->expects(static::once())->method('toArray')->willReturn([$list, $current]);
+
+    //finish mock for input
+    $ranking->expects(static::once())->method('getLists')->willReturn($lists);
+
+    //create time service, entity comparer and ranking service mock
+    $timeService = $this->createMock(TimeServiceInterface::class);
+    $timeService->expects(self::atLeastOnce())->method('clearTimes')->id('clearTimes');
+    $timeService->method('getTime')->willReturnCallback(function (TournamentHierarchyInterface $entity) {
+      return $entity->getEndTime();
+    })->after('clearTimes');
+    $entityComparer = $this->createMock(EntityComparerInterface::class);
+    $entityComparer->method('compareEntities')->willReturnCallback(
+      function (TournamentHierarchyInterface $entity1, TournamentHierarchyInterface $entity2) {
+        return $entity1->getEndTime() <=> $entity2->getEndTime();
+      });
+    $entityManager = $this->getEntityManagerMockForQuery([],
+      'SELECT c FROM Tfboe\FmLib\Entity\RankingSystemChangeInterface c WHERE c.rankingSystem = :ranking' .
+      ' AND c.hierarchyEntity IN(:entities)', ['persist', 'remove', 'flush', 'detach'], 1);
+    $service = $this->getMockWithMockedArguments(RankingSystemService::class,
+      [$entityManager,
+        $timeService,
+        $this->createMock(EntityComparerInterface::class),
+        $this->getObjectCreator()]);
+
+    $entity1 = $this->createStubWithId(TournamentHierarchyEntity::class, "e1");
+    $entity1->method('getEndTime')->willReturn(new DateTime("2018-01-01"));
+
+    $query1 = $this->createMock(AbstractQuery::class);
+    $query1->expects(static::once())->method('getResult')->willReturn([$entity1]);
+    $queryBuilder1 = $this->createMock(QueryBuilder::class);
+    $queryBuilder1->expects(static::once())->method('getQuery')->willReturn($query1);
+
+    $service->method('getEntitiesQueryBuilder')
+      ->withConsecutive([$ranking, new DateTime("2017-11-01")])
+      ->willReturnOnConsecutiveCalls($queryBuilder1);
+    $changes = [
+      $this->createEmptyChange(),
+      $this->createEmptyChange(),
+    ];
+    $service->method('getChanges')->willReturn($changes);
+
+    /** @var RankingSystemService $service */
+    /** @var RankingSystemInterface $ranking */
+
+    $service->updateRankingFrom($ranking, new DateTime('2017-12-01'));
   }
 
   /**

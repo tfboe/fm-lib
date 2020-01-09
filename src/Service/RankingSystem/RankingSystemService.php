@@ -148,15 +148,13 @@ abstract class RankingSystemService implements RankingSystemInterface
     foreach ($lists as $list) {
       if ($list->isCurrent()) {
         $current = $list;
-      } elseif ($list->getLastEntryTime() >= $from) {
+      } elseif ($list->getEntryTimeLimit() > $from) {
         $toUpdate[] = $list;
-      } elseif ($lastReusable === null || $list->getLastEntryTime() > $lastReusable->getLastEntryTime()) {
+      }
+      if ($list->getLastEntryTime() < $from &&
+        ($lastReusable === null || $list->getLastEntryTime() > $lastReusable->getLastEntryTime())) {
         $lastReusable = $list;
       }
-    }
-
-    if ($current !== null && $current->getLastEntryTime() < $from) {
-      $lastReusable = $current;
     }
 
     if ($lastReusable === null) {
@@ -164,20 +162,24 @@ abstract class RankingSystemService implements RankingSystemInterface
     }
 
     usort($toUpdate, function (RankingSystemListInterface $list1, RankingSystemListInterface $list2) {
-      return $list1->getLastEntryTime() <=> $list2->getLastEntryTime();
+      return $list1->getEntryTimeLimit() <=> $list2->getEntryTimeLimit();
     });
 
 
     $lastListTime = null;
     foreach ($toUpdate as $list) {
+      if ($list->getLastEntryTime() < $from) {
+        Internal::assert($lastReusable->getLastEntryTime() === $list->getLastEntryTime());
+        $lastReusable = $list;
+      }
       $entities = $this->getNextEntities($ranking, $lastReusable, $list, $lastListTime);
       $this->recomputeBasedOn($list, $lastReusable, $entities, $lastListTime);
       $lastReusable = $list;
-      $lastListTime = $lastReusable->getLastEntryTime();
+      $lastListTime = $lastReusable->getEntryTimeLimit();
     }
 
     if ($current === null) {
-      $current = $this->createNewList($ranking, true);
+      $current = $this->createNewList($ranking);
     }
 
     $entities = $this->getNextEntities($ranking, $lastReusable, $current, $lastListTime);
@@ -210,7 +212,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param EntityRankingSystemInterface $ranking the ranking for which to get the entities
    * @param DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities
    *                       with time value exactly $from
-   * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
+   * @param DateTime $to search for entities with a time value SMALLER than $to
    * @return TournamentHierarchyEntity[]
    */
   final protected function getEntities(EntityRankingSystemInterface $ranking, DateTime $from, DateTime $to): array
@@ -332,7 +334,7 @@ abstract class RankingSystemService implements RankingSystemInterface
    * @param EntityRankingSystemInterface $ranking the ranking for which to get the entities
    * @param DateTime $from search for entities with a time value LARGER than $from, i.e. don't search for entities
    *                       with time value exactly $from
-   * @param DateTime $to search for entities with a time value SMALLER OR EQUAL than $to
+   * @param DateTime $to search for entities with a time value SMALLER than $to
    * @return QueryBuilder
    */
   abstract protected function getEntitiesQueryBuilder(EntityRankingSystemInterface $ranking,
@@ -398,6 +400,7 @@ abstract class RankingSystemService implements RankingSystemInterface
         //$this->entityManager->remove($entry);
       }
     }
+    $list->setLastEntryTime($base->getLastEntryTime());
   }
 
   private function deleteOldChanges()
@@ -504,7 +507,7 @@ abstract class RankingSystemService implements RankingSystemInterface
   {
     $this->deleteOldChanges();
     $entities = $this->getEntities($ranking, $lastReusable->getLastEntryTime(),
-      $list->isCurrent() ? $this->getMaxDate() : $list->getLastEntryTime());
+      $list->isCurrent() ? $this->getMaxDate() : $list->getEntryTimeLimit());
 
     //sort entities
     $this->timeService->clearTimes();
@@ -515,10 +518,13 @@ abstract class RankingSystemService implements RankingSystemInterface
     $this->markOldChangesAsDeleted($ranking, $entities);
 
     if ($lastListTime == null) {
-      if (count($entities) > 0) {
-        $lastListTime = max($lastReusable->getLastEntryTime(), $this->timeService->getTime($entities[0]));
-      } else {
+      if ($lastReusable->isCurrent() && $lastReusable->getEntries()->isEmpty() && count($entities) > 0) {
+        $lastListTime = $this->timeService->getTime($entities[0]);
+        Internal::assert($lastListTime >= $lastReusable->getLastEntryTime());
+      } elseif ($lastReusable->isCurrent()) {
         $lastListTime = $lastReusable->getLastEntryTime();
+      } else {
+        $lastListTime = $lastReusable->getEntryTimeLimit();
       }
     }
 
@@ -606,7 +612,7 @@ abstract class RankingSystemService implements RankingSystemInterface
     }
     for ($i = 0, $c = count($entities); $i < $c; $i++) {
       $time = $this->timeService->getTime($entities[$i]);
-      if (!$list->isCurrent() && $time > $list->getLastEntryTime()) {
+      if (!$list->isCurrent() && $time >= $list->getEntryTimeLimit()) {
         if ($doFlushAndForget) {
           $this->flushAndForgetEntities($entities, $i);
         }
@@ -614,8 +620,7 @@ abstract class RankingSystemService implements RankingSystemInterface
       }
       if ($nextGeneration < $time) {
         /** @var RankingSystemListInterface $newList */
-        $newList = $this->createNewList($list->getRankingSystem(), false);
-        $newList->setLastEntryTime($nextGeneration);
+        $newList = $this->createNewList($list->getRankingSystem(), $nextGeneration);
         $this->cloneInto($newList, $list);
         $nextGeneration = $this->getNextGenerationTime($nextGeneration,
           $list->getRankingSystem()->getGenerationInterval());
@@ -634,14 +639,15 @@ abstract class RankingSystemService implements RankingSystemInterface
 
   /**
    * @param EntityRankingSystemInterface $rankingSystem
-   * @param bool $current
+   * @param DateTime|null $entryTimeLimit
    * @return RankingSystemListInterface
    */
   protected function createNewList(EntityRankingSystemInterface $rankingSystem,
-                                   bool $current): RankingSystemListInterface
+                                   ?DateTime $entryTimeLimit = null): RankingSystemListInterface
   {
+    /** @var RankingSystemListInterface $newList */
     $newList = $this->objectCreatorService->createObjectFromInterface(RankingSystemListInterface::class);
-    $newList->setCurrent($current);
+    $newList->setEntryTimeLimit($entryTimeLimit);
     $this->entityManager->persist($newList);
     $newList->setRankingSystem($rankingSystem);
     return $newList;

@@ -17,6 +17,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Tfboe\FmLib\Entity\Helpers\UUIDEntity;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
+use Tfboe\FmLib\Exceptions\Internal;
 use Tfboe\FmLib\Helpers\DateTimeHelper;
 
 
@@ -34,11 +35,7 @@ trait RankingSystemList
    * @var RankingSystemInterface
    */
   private $rankingSystem;
-  /**
-   * @ORM\Column(type="boolean")
-   * @var bool
-   */
-  private $current;
+
   /**
    * @ORM\Column(type="datetime")
    * @var DateTime
@@ -51,6 +48,35 @@ trait RankingSystemList
    * @var RankingSystemListEntryInterface[]|Collection
    */
   private $entries;
+
+  /**
+   * For non-current lists this gives the time up to which entries get added to this list. Note that only entries with a
+   * strictly smaller time get added. For example if entryTimeLimit = 2020-01-01 00:00:00 then all entries with times in
+   * the year 2019 or earlier get added and an entry with the exact time 2020-01-01 00:00:00 does not get added to this
+   * list!
+   * @ORM\Column(type="datetime", nullable=true)
+   * @var DateTime|null
+   */
+  private $entryTimeLimit;
+
+  /**
+   * @return DateTime|null
+   */
+  public function getEntryTimeLimit(): ?DateTime
+  {
+    return $this->entryTimeLimit;
+  }
+
+  /**
+   * @param DateTime|null $entryTimeLimit
+   */
+  public function setEntryTimeLimit(?DateTime $entryTimeLimit): void
+  {
+    if ($entryTimeLimit !== null) {
+      Internal::assert($entryTimeLimit > $this->getLastEntryTime());
+    }
+    $this->entryTimeLimit = $entryTimeLimit;
+  }
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -86,15 +112,7 @@ trait RankingSystemList
    */
   public function isCurrent(): bool
   {
-    return $this->current;
-  }
-
-  /**
-   * @param bool $current
-   */
-  public function setCurrent(bool $current)
-  {
-    $this->current = $current;
+    return $this->getEntryTimeLimit() === null;
   }
 
   /**
@@ -103,6 +121,9 @@ trait RankingSystemList
   public function setLastEntryTime(DateTime $lastEntryTime)
   {
     if (!DateTimeHelper::eq($this->lastEntryTime, $lastEntryTime)) {
+      if ($this->getEntryTimeLimit() !== null) {
+        Internal::assert($this->getEntryTimeLimit() > $lastEntryTime);
+      }
       $this->lastEntryTime = $lastEntryTime;
     }
   }
@@ -127,7 +148,7 @@ trait RankingSystemList
   final protected function init()
   {
     $this->lastEntryTime = new DateTime("2000-01-01");
-    $this->current = false;
+    $this->entryTimeLimit = null;
     $this->entries = new ArrayCollection();
   }
 //</editor-fold desc="Protected Final Methods">

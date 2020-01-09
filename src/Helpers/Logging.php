@@ -34,7 +34,6 @@ abstract class Logging
    * @param string $message the message to log
    * @param string $logger the logger to use
    * @param int $type the type of the message
-   * @noinspection PhpDocMissingThrowsInspection
    */
   public static function log(string $message, string $logger = Logs::GENERAL, int $type = Logger::INFO): void
   {
@@ -49,9 +48,7 @@ abstract class Logging
       // Exception => path is static and it is ensured that it is valid
 
       $path = (self::$storagePathFunction)() . '/logs/' . $logger . '.log';
-      /** @noinspection PhpUnhandledExceptionInspection */ //$path is always a string
-      self::$loggers[$logger]->pushHandler(
-        new StreamHandler($path));
+      self::$loggers[$logger]->pushHandler(new StreamHandler($path));
     }
     self::$loggers[$logger]->log($type, $message);
   }

@@ -78,7 +78,7 @@ class GameRankingSystemTest extends UnitTestCase
       'crs = :ranking INNER JOIN c.tournament t LEFT JOIN t.rankingSystems trs WITH trs = :ranking WHERE ' .
       'COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, p.endTime, p.startTime, c.endTime, c.startTime, ' .
       't.endTime, t.startTime, t.updatedAt) > :from AND COALESCE(g.endTime, g.startTime, m.endTime, m.startTime, ' .
-      'p.endTime, p.startTime, c.endTime, c.startTime, t.endTime, t.startTime, t.updatedAt) <= :to AND (grs.id IS ' .
+      'p.endTime, p.startTime, c.endTime, c.startTime, t.endTime, t.startTime, t.updatedAt) < :to AND (grs.id IS ' .
       'NOT NULL OR mrs.id IS NOT NULL OR prs.id IS NOT NULL OR crs.id IS NOT NULL OR trs.id IS NOT NULL)',
       $builder->getDQL());
   }
