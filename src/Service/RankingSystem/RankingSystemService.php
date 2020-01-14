@@ -395,9 +395,9 @@ abstract class RankingSystemService implements RankingSystemInterface
     //remove all unused entries from list
     foreach ($list->getEntries()->toArray() as $playerId => $entry) {
       if (!array_key_exists($playerId, $clonedPlayers)) {
-        $this->resetListEntry($entry);
-        //$list->getEntries()->removeElement($entry);
-        //$this->entityManager->remove($entry);
+        //$this->resetListEntry($entry);
+        $list->getEntries()->removeElement($entry);
+        $this->entityManager->remove($entry);
       }
     }
     $list->setLastEntryTime($base->getLastEntryTime());
