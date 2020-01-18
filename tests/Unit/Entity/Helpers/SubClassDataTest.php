@@ -116,6 +116,22 @@ class SubClassDataTest extends UnitTestCase
   }
 
   /**
+   * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData
+   * @throws PropertyNotExistingException
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::getProperty
+   * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
+   */
+  public function testInitSubClassDataWithDefault()
+  {
+    $entity = $this->mock();
+    $entity->initSubClassData(["nodefault", "default" => "def"]);
+    self::assertTrue($entity->hasProperty("nodefault"));
+    self::assertTrue($entity->hasProperty(("default")));
+    self::assertNull($entity->getProperty("nodefault"));
+    self::assertEquals("def", $entity->getProperty("default"));
+  }
+
+  /**
    * @covers \Tfboe\FmLib\Entity\Helpers\SubClassData::methodExists
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::hasProperty
    * @uses   \Tfboe\FmLib\Entity\Helpers\SubClassData::initSubClassData

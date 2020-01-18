@@ -124,8 +124,12 @@ trait SubClassData
   public function initSubClassData(array $keys)
   {
     $this->subClassData = [];
-    foreach ($keys as $key) {
-      $this->subClassData[strtolower($key)] = null;
+    foreach ($keys as $key => $value) {
+      if (is_numeric($key)) {
+        $key = $value;
+        $value = null;
+      }
+      $this->subClassData[strtolower($key)] = $value;
     }
     return $this;
   }
