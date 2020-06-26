@@ -53,7 +53,10 @@ trait RankingSystemChange
   private $player;
 
   /**
-   * @ORM\ManyToOne(targetEntity="\Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity")
+   * @ORM\ManyToOne(
+   *   targetEntity="\Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity",
+   *   inversedBy="rankingSystemChanges"
+   * )
    * @var TournamentHierarchyEntity
    */
   private $hierarchyEntity;
