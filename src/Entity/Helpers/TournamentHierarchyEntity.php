@@ -18,6 +18,7 @@ use Tfboe\FmLib\Entity\CategoryTraits\OrganizingMode;
 use Tfboe\FmLib\Entity\CategoryTraits\ScoreMode;
 use Tfboe\FmLib\Entity\CategoryTraits\Table;
 use Tfboe\FmLib\Entity\CategoryTraits\TeamMode;
+use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 
 /**
@@ -46,6 +47,16 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    * @var Collection|RankingSystemInterface[]
    */
   private $rankingSystems;
+
+  /**
+   * @ORM\OneToMany(
+   *   targetEntity="\Tfboe\FmLib\Entity\Helpers\RankingSystemChangeInterface",
+   *   mappedBy="hierarchyEntity",
+   *   cascade={"remove"}
+   * )
+   * @var RankingSystemChangeInterface
+   */
+  private $rankingSystemChanges;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
