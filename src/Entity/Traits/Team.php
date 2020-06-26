@@ -49,7 +49,7 @@ trait Team
   private $competition;
 
   /**
-   * @ORM\Column(type="integer")
+   * @ORM\Column(name="`rank`", type="integer")
    * @var int
    */
   private $rank;
