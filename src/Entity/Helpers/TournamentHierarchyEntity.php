@@ -50,7 +50,7 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
 
   /**
    * @ORM\OneToMany(
-   *   targetEntity="\Tfboe\FmLib\Entity\Helpers\RankingSystemChangeInterface",
+   *   targetEntity="\Tfboe\FmLib\Entity\RankingSystemChangeInterface",
    *   mappedBy="hierarchyEntity",
    *   cascade={"remove"}
    * )
