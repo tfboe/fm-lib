@@ -618,7 +618,7 @@ abstract class RankingSystemService implements RankingSystemInterface
         }
         return;
       }
-      if ($nextGeneration < $time) {
+      while ($nextGeneration < $time) {
         /** @var RankingSystemListInterface $newList */
         $newList = $this->createNewList($list->getRankingSystem(), $nextGeneration);
         $this->cloneInto($newList, $list);
