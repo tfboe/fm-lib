@@ -63,9 +63,7 @@ class RankingSystemService implements RankingSystemServiceInterface
    */
   public function recalculateRankingSystems(): void
   {
-    //clear entityManager to save memory
     $this->entityManager->flush();
-    $this->entityManager->clear();
 
     $query = $this->entityManager->createQueryBuilder();
     $query
