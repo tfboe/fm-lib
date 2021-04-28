@@ -10,6 +10,7 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Service\RankingSystem;
 
 use Doctrine\Common\Collections\Collection;
+use Tfboe\FmLib\Entity\Categories\ScoreMode;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\Helpers\Result;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
@@ -201,7 +202,14 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
       } else if (!$teamHasProvisory && !$opponentHasProvisory) {
         //real elo ranking
         $change->setProvisoryRanking(0.0);
-        $change->setPointsChange(max(self::K * $expectationDiff, self::START - $entry->getPoints()));
+        $gameFactor = 1;
+        $scoreMode = $game->getInherited("getScoreMode");
+        if ($scoreMode == ScoreMode::BEST_OF_THREE) {
+          $gameFactor = 2;
+        } else if ($scoreMode == ScoreMode::BEST_OF_FIVE) {
+          $gameFactor = 3;
+        }
+        $change->setPointsChange(max(self::K * $gameFactor * $expectationDiff, self::START - $entry->getPoints()));
         $change->setRatedGames(1);
 
       } else {
