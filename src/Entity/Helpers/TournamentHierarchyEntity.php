@@ -109,7 +109,7 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   /**
    * @inheritdoc
    */
-  public function getInherited($method): mixed {
+  public function getInherited($method) {
     if (method_exists($this, $method)) {
       $res = $this->$method();
       if ($res !== null) {

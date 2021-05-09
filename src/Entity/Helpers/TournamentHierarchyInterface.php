@@ -60,7 +60,7 @@ interface TournamentHierarchyInterface extends BaseEntityInterface, GameModeInte
   /**
    * Tries this and all ancestors to get a value from a getter
    */
-  public function getInherited($method): mixed;
+  public function getInherited($method);
 
   /**
    * @param RankingSystemInterface $rankingSystem
