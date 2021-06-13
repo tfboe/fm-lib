@@ -31,9 +31,10 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   const K = 20;
   const MAX_DIFF_TO_OPPONENT_FOR_PROVISORY = 400;
   const NO_NEG = true;
-  const NUM_PROVISORY_GAMES = 20;
+  const NUM_PROVISORY_GAMES = 10;
   const PROVISORY_PARTNER_FACTOR = 0.5;
   const START = 1200.0;
+  const TEAM_ADJUSTMENT_FACTOR = 0.1;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Protected Methods">
@@ -210,7 +211,17 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         } else if ($scoreMode == ScoreMode::BEST_OF_FIVE) {
           $gameFactor = 3;
         }
-        $change->setPointsChange(max(self::K * $gameFactor * $expectationDiff, self::START - $entry->getPoints()));
+
+        $eloChange = self::K * $gameFactor * $expectationDiff;
+
+        if (count($entries) > 1) {
+          //let team mates come closer to each other with 10% of the points (5% on each side)
+          $teamDiff = $teamAverage - $entry->getPoints();
+          $adjustment = min(abs($teamDiff), abs($eloChange * self::TEAM_ADJUSTMENT_FACTOR / 2));
+          $eloChange += ($teamDiff < 0 ? (-1) : 1) * $adjustment;
+        }
+
+        $change->setPointsChange(max($eloChange, self::START - $entry->getPoints()));
         $change->setRatedGames(1);
 
       } else {
