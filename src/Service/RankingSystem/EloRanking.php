@@ -130,6 +130,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   private function addNotRatedChanges(array &$changes, Collection $players, TournamentHierarchyEntity $entity,
                                       RankingSystemInterface $ranking, array $oldChanges)
   {
+    return; //we ignore not rated changes here
     foreach ($players as $player) {
       $change = $this->getOrCreateChange($entity, $ranking, $player, $oldChanges);
       $change->setTeamElo(0.0);
