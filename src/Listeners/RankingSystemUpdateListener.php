@@ -11,6 +11,8 @@ namespace Tfboe\FmLib\Listeners;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
+use Tfboe\FmLib\Entity\TeamInterface;
+use Tfboe\FmLib\Entity\TeamMembershipInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 
 /**
@@ -81,6 +83,10 @@ class RankingSystemUpdateListener
           $rankingSystem->setOpenSyncFrom($earliestInfluence);
         }
       }
+    } else if ($entity instanceof TeamMembershipInterface) {
+      $this->updateRankingSystems($entity->getTeam(), $dsls, $entityChangeSet);
+    } else if ($entity instanceof TeamInterface) {
+      $this->updateRankingSystems($entity->getCompetition(), $dsls, $entityChangeSet);
     }
   }
 //</editor-fold desc="Private Methods">
