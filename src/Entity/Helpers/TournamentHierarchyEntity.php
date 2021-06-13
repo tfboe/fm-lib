@@ -47,11 +47,6 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    * @var Collection|RankingSystemInterface[]
    */
   private $rankingSystems;
-
-  /**
-   * @var RankingSystemInterface[]
-   */
-  private $influencingRankingSystems;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -61,18 +56,10 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
   public function __construct()
   {
     $this->rankingSystems = new ArrayCollection();
-    $this->influencingRankingSystems = [];
   }
 //</editor-fold desc="Constructor">
 
 //<editor-fold desc="Public Methods">
-  /**
-   * @ORM\PostLoad
-   */
-  public function postLoad()
-  {
-    $this->influencingRankingSystems = [];
-  }
 
   /**
    * @return RankingSystemInterface[]|Collection
@@ -87,22 +74,10 @@ abstract class TournamentHierarchyEntity extends BaseEntity implements Tournamen
    */
   public function getInfluencingRankingSystems(): array
   {
-    if ($this->influencingRankingSystems == null) {
-      $this->influencingRankingSystems = [];
-    }
-    return $this->influencingRankingSystems;
-  }
-
-  /**
-   * @inheritdoc
-   */
-  public function addInfluencingRankingSystem(RankingSystemInterface $rankingSystem): bool
-  {
-    if (!array_key_exists($rankingSystem->getId(), $this->influencingRankingSystems)) {
-      $this->influencingRankingSystems[$rankingSystem->getId()] = $rankingSystem;
-      return true;
+    if ($this->getParent() !== null) {
+      return array_merge($this->getRankingSystems()->toArray(), $this->getParent()->getInfluencingRankingSystems());
     } else {
-      return false;
+      return $this->getRankingSystems()->toArray();
     }
   }
 

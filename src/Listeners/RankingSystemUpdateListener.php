@@ -83,10 +83,6 @@ class RankingSystemUpdateListener
           $rankingSystem->setOpenSyncFrom($earliestInfluence);
         }
       }
-    } else if ($entity instanceof TeamMembershipInterface) {
-      $this->updateRankingSystems($entity->getTeam(), $dsls, $entityChangeSet);
-    } else if ($entity instanceof TeamInterface) {
-      $this->updateRankingSystems($entity->getCompetition(), $dsls, $entityChangeSet);
     }
   }
 //</editor-fold desc="Private Methods">

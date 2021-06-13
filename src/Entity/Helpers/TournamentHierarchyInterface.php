@@ -61,11 +61,5 @@ interface TournamentHierarchyInterface extends BaseEntityInterface, GameModeInte
    * Tries this and all ancestors to get a value from a getter
    */
   public function getInherited($method);
-
-  /**
-   * @param RankingSystemInterface $rankingSystem
-   * @returns true if it got really added and false if it already was added
-   */
-  public function addInfluencingRankingSystem(RankingSystemInterface $rankingSystem): bool;
 //</editor-fold desc="Public Methods">
 }
