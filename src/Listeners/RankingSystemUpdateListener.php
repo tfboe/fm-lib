@@ -10,9 +10,9 @@ declare(strict_types=1);
 namespace Tfboe\FmLib\Listeners;
 
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use \Doctrine\ORM\EntityManager;
 use Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity;
-use Tfboe\FmLib\Entity\TeamInterface;
-use Tfboe\FmLib\Entity\TeamMembershipInterface;
+use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Service\DynamicServiceLoadingServiceInterface;
 
 /**
@@ -39,25 +39,26 @@ class RankingSystemUpdateListener
   public function onFlush(OnFlushEventArgs $eventArgs)
   {
     $dsls = app(DynamicServiceLoadingServiceInterface::class);
-    $uow = $eventArgs->getEntityManager()->getUnitOfWork();
+    $em = $eventArgs->getEntityManager();
+    $uow = $em->getUnitOfWork();
     foreach ($uow->getScheduledEntityInsertions() as $entity) {
-      $this->updateRankingSystems($entity, $dsls);
+      $this->updateRankingSystems($em, $entity, $dsls);
     }
 
     foreach ($uow->getScheduledEntityUpdates() as $entity) {
-      $this->updateRankingSystems($entity, $dsls, $uow->getEntityChangeSet($entity));
+      $this->updateRankingSystems($em, $entity, $dsls, $uow->getEntityChangeSet($entity));
     }
 
     foreach ($uow->getScheduledEntityDeletions() as $entity) {
-      $this->updateRankingSystems($entity, $dsls);
+      $this->updateRankingSystems($em, $entity, $dsls);
     }
 
     foreach ($uow->getScheduledCollectionDeletions() as $entity) {
-      $this->updateRankingSystems($entity, $dsls);
+      $this->updateRankingSystems($em, $entity, $dsls);
     }
 
     foreach ($uow->getScheduledCollectionUpdates() as $entity) {
-      $this->updateRankingSystems($entity, $dsls);
+      $this->updateRankingSystems($em, $entity, $dsls);
     }
   }
 //</editor-fold desc="Public Methods">
@@ -70,7 +71,7 @@ class RankingSystemUpdateListener
    * @param mixed[][]|null $entityChangeSet maps properties which changed to an array with two elements, the first the
    *                       old value and the second the new value
    */
-  private function updateRankingSystems($entity, DynamicServiceLoadingServiceInterface $dsls,
+  private function updateRankingSystems(EntityManager $em, $entity, DynamicServiceLoadingServiceInterface $dsls,
                                         ?array $entityChangeSet = null)
   {
     if ($entity instanceof TournamentHierarchyEntity) {
@@ -81,6 +82,9 @@ class RankingSystemUpdateListener
         if ($earliestInfluence !== null &&
           ($rankingSystem->getOpenSyncFrom() === null || $rankingSystem->getOpenSyncFrom() > $earliestInfluence)) {
           $rankingSystem->setOpenSyncFrom($earliestInfluence);
+
+          $md = $em->getClassMetadata(RankingSystemInterface::class);
+          $em->getUnitOfWork()->recomputeSingleEntityChangeSet($md, $rankingSystem);
         }
       }
     }
