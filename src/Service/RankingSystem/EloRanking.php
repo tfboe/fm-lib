@@ -32,7 +32,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   const K = 20;
   const MAX_DIFF_TO_OPPONENT_FOR_PROVISORY = 400;
   const NO_NEG = true;
-  const NUM_PROVISORY_GAMES = 20;
+  const NUM_PROVISORY_GAMES = 15;
   const PROVISORY_PARTNER_FACTOR = 0.5;
   const START = 1200.0;
   const TEAM_ADJUSTMENT_FACTOR = 0.1;
@@ -206,7 +206,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         $change->setPointsChange(0.0);
         $change->setRatedGames(1);
         $change->setWeightedGames($gameFactor);
-        if ($entry->getWeightedGames() + $gameFactor >= self::NUM_PROVISORY_GAMES) {
+        if ($entry->getPlayedGames() + 1 >= self::NUM_PROVISORY_GAMES) {
           $change->setPointsChange(max(self::START, $entry->getProvisoryRanking() + $change->getProvisoryRanking())
             - $entry->getPoints());
         }
@@ -266,7 +266,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   }
 
   private function isProvisory(RankingSystemListEntryInterface $entry) {
-    return $entry->getWeightedGames() < self::NUM_PROVISORY_GAMES;
+    return $entry->getPlayedGames() < self::NUM_PROVISORY_GAMES;
   }
 //</editor-fold desc="Private Methods">
 }
