@@ -19,6 +19,7 @@ use Tfboe\FmLib\Entity\RankingSystemChangeInterface;
 use Tfboe\FmLib\Entity\RankingSystemInterface;
 use Tfboe\FmLib\Entity\RankingSystemListEntryInterface;
 use Tfboe\FmLib\Entity\RankingSystemListInterface;
+use Tfboe\FmLib\Tests\Entity\RankingSystem;
 
 /**
  * Class EloRanking
@@ -31,7 +32,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   const K = 20;
   const MAX_DIFF_TO_OPPONENT_FOR_PROVISORY = 400;
   const NO_NEG = true;
-  const NUM_PROVISORY_GAMES = 15;
+  const NUM_PROVISORY_GAMES = 20;
   const PROVISORY_PARTNER_FACTOR = 0.5;
   const START = 1200.0;
   const TEAM_ADJUSTMENT_FACTOR = 0.1;
@@ -53,7 +54,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
    */
   protected function getAdditionalFields(): array
   {
-    return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => self::START];
+    return ['playedGames' => 0, 'ratedGames' => 0, 'provisoryRanking' => self::START, 'weightedGames' => 0];
   }
 
   /**
@@ -168,7 +169,14 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
       $change->setTeamElo($teamHasProvisory ? 0.0 : $teamAverage);
       $change->setOpponentElo($opponentHasProvisory ? 0.0 : $opponentAverage);
       $factor = 2 * $result - 1;
-      if ($entry->getPlayedGames() < self::NUM_PROVISORY_GAMES) {
+      $gameFactor = 1;
+      $scoreMode = $game->getInherited("getScoreMode");
+      if ($scoreMode == ScoreMode::BEST_OF_THREE) {
+        $gameFactor = 2;
+      } else if ($scoreMode == ScoreMode::BEST_OF_FIVE) {
+        $gameFactor = 3;
+      }
+      if ($this->isProvisory($entry)) {
         //provisory entry => recalculate
         if (count($entries) > 1) {
           $teamMatesAverage = ($teamAverage * count($entries) - $entry->getProvisoryRanking()) /
@@ -189,28 +197,22 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
         }
         $performance += self::EXP_DIFF * $factor;
         //old average performance = $entry->getProvisoryRating()
-        //=> new average performance = ($entry->getProvisoryRating() * $entry->getRatedGames() + $performance) /
-        //                             ($entry->getRatedGames() + 1)
-        //=> performance change = ($entry->getProvisoryRating() * $entry->getRatedGames() + $performance) /
-        //                        ($entry->getRatedGames() + 1) - $entry->getProvisoryRating()
-        //                      = ($performance - $entry->getProvisoryRating()) / ($entry->getRatedGames() + 1)
-        $change->setProvisoryRanking(($performance - $entry->getProvisoryRanking()) / ($entry->getRatedGames() + 1));
+        //=> new average performance = ($entry->getProvisoryRating() * $entry->getWeightedGames() + $gameFactor * $performance) /
+        //                             ($entry->getRatedGames() + $gameFactor)
+        //=> performance change = ($entry->getProvisoryRating() * $entry->getRatedGames() + $gameFactor * $performance) /
+        //                        ($entry->getRatedGames() + $gameFactor) - $entry->getProvisoryRating()
+        //                      = $gameFactor * ($performance - $entry->getProvisoryRating()) / ($entry->getRatedGames() + $gameFactor)
+        $change->setProvisoryRanking($gameFactor * ($performance - $entry->getProvisoryRanking()) / ($entry->getWeightedGames() + $gameFactor));
         $change->setPointsChange(0.0);
         $change->setRatedGames(1);
-        if ($entry->getPlayedGames() == self::NUM_PROVISORY_GAMES - 1) {
+        $change->setWeightedGames($gameFactor);
+        if ($entry->getWeightedGames() + $gameFactor >= self::NUM_PROVISORY_GAMES) {
           $change->setPointsChange(max(self::START, $entry->getProvisoryRanking() + $change->getProvisoryRanking())
             - $entry->getPoints());
         }
       } else if (!$teamHasProvisory && !$opponentHasProvisory) {
         //real elo ranking
         $change->setProvisoryRanking(0.0);
-        $gameFactor = 1;
-        $scoreMode = $game->getInherited("getScoreMode");
-        if ($scoreMode == ScoreMode::BEST_OF_THREE) {
-          $gameFactor = 2;
-        } else if ($scoreMode == ScoreMode::BEST_OF_FIVE) {
-          $gameFactor = 3;
-        }
 
         $eloChange = self::K * $gameFactor * $expectationDiff;
 
@@ -243,7 +245,7 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   {
     $sum = 0;
     foreach ($entries as $entry) {
-      $sum += $entry->getRatedGames() < self::NUM_PROVISORY_GAMES ? $entry->getProvisoryRanking() : $entry->getPoints();
+      $sum += $this->isProvisory($entry) ? $entry->getProvisoryRanking() : $entry->getPoints();
     }
     return $sum / count($entries);
   }
@@ -256,11 +258,15 @@ class EloRanking extends GameRankingSystemService implements EloRankingInterface
   private function hasProvisoryEntry(array $entries): bool
   {
     foreach ($entries as $entry) {
-      if ($entry->getPlayedGames() < self::NUM_PROVISORY_GAMES) {
+      if ($this->isProvisory($entry)) {
         return true;
       }
     }
     return false;
+  }
+
+  private function isProvisory(RankingSystemListEntryInterface $entry) {
+    return $entry->getWeightedGames() < self::NUM_PROVISORY_GAMES;
   }
 //</editor-fold desc="Private Methods">
 }

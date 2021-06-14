@@ -26,6 +26,8 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
  * @method setRatedGames(int $ratedGames)
  * @method float getProvisoryRanking()
  * @method setProvisoryRanking(float $provisoryRanking)
+ * @method int getWeightedGames()
+ * @method setWeightedGames(int $weightedGames)
  * @method setTeamElo(float $teamElo)
  * @method float getTeamElo()
  * @method setOpponentElo(float $opponentElo)

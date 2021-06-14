@@ -24,6 +24,8 @@ use Tfboe\FmLib\Entity\Helpers\UUIDEntityInterface;
  * @method RankingSystemListEntryInterface setRatedGames(int $ratedGames)
  * @method float getProvisoryRanking()
  * @method RankingSystemListEntryInterface setProvisoryRanking(float $provisoryRanking)
+ * @method int getWeightedGames()
+ * @method setWeightedGames(int $weightedGames)
  */
 interface RankingSystemListEntryInterface extends BaseEntityInterface, UUIDEntityInterface, SubClassDataInterface
 {
