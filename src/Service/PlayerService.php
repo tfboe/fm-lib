@@ -51,6 +51,63 @@ class PlayerService implements PlayerServiceInterface
   }
 //</editor-fold desc="Constructor">
 
+private function tournamentDoesNotContainPlayer(string $playerId, string $tournamentId) {
+  $tournament = $this->em->find(TournamentInterface::class, $tournamentId);
+  if ($tournament === null) {
+    return "Tournament with id $tournamentId does not exist";
+  }
+  $this->ls->loadEntities([$tournament]);
+  foreach ($tournament->getCompetitions() as $competition) {
+    foreach ($competition->getTeams() as $team) {
+      foreach ($team->getMemberships() as $membership) {
+        if ($membership->getPlayer()->getId() == $playerId) {
+          return "Player 1 and player 2 both attended the tournament " . $tournament->getName() .
+            "(" . $tournament->getStartTime()->format('d.m.Y H:i') . ", id='" . $tournament->getId() . "')";
+        }
+      }
+    }
+  }
+  $this->em->clear();
+  return true;
+}
+
+private function changePlayerInTournament(string $fromPlayerId, string $toPlayerId, string $tournamentId) {
+  $tournament = $this->em->find(TournamentInterface::class, $tournamentId);
+  $player = $this->em->find(PlayerInterface::class, $toPlayerId);
+  if ($tournament === null) {
+    return "Tournament with id $tournamentId does not exist";
+  }
+  $this->ls->loadEntities([$tournament]);
+  foreach ($tournament->getCompetitions() as $competition) {
+    $isMember = false;
+    foreach ($competition->getTeams() as $team) {
+      foreach ($team->getMemberships() as $membership) {
+        if ($membership->getPlayer()->getId() == $fromPlayerId) {
+          $membership->setPlayer($player);
+          $isMember = true;
+        }
+      }
+    }
+    if ($isMember) {
+      foreach ($competition->getPhases() as $phase) {
+        foreach ($phase->getMatches() as $match) {
+          foreach ($match->getGames() as $game) {
+            if ($game->getPlayersA()->containsKey($fromPlayerId())) {
+              $game->getPlayersA()->remove($fromPlayerId());
+              $game->getPlayersA()->set($player->getId(), $player);
+            }
+            if ($game->getPlayersB()->containsKey($fromPlayerId())) {
+              $game->getPlayersB()->remove($fromPlayerId());
+              $game->getPlayersB()->set($player->getId(), $player);
+            }
+          }
+        }
+      }
+    }
+  }
+  $this->em->flush();
+  $this->em->clear();
+}
 
 //<editor-fold desc="Public Methods">
   /**
@@ -60,7 +117,9 @@ class PlayerService implements PlayerServiceInterface
    */
   public function mergePlayers(PlayerInterface $player, PlayerInterface $toMerge)
   {
-    if ($player->getId() == $toMerge->getId()) {
+    $playerId = $player->getId();
+    $toMergeId = $toMerge->getId();
+    if ($playerId == $toMergeId) {
       return "Players are identical!";
     }
 
@@ -71,63 +130,26 @@ class PlayerService implements PlayerServiceInterface
      ->innerJoin('t.competitions', 'c')
      ->innerJoin('c.teams', 'te')
      ->innerJoin('te.memberships', 'm')
-     ->where('m.player = (:id)')->setParameter('id', $toMerge->getId())
+     ->where('m.player = (:id)')->setParameter('id', $toMergeId)
      ->getQuery()->getResult();
 
-   $tMap = [];
-   foreach ($ts as $tournament) {
-     $tMap[$tournament->getId()] = $tournament;
-   }
+    $tIds = [];
+    foreach ($ts as $tournament) {
+      $tIds[] = $tournament->getId();
+    }
 
-   $ts = array_values($tMap);
-   $this->ls->loadEntities($ts);
+    foreach($tIds as $id) {
+      $check = $this->tournamentDoesNotContainPlayer($playerId, $toMergeId, $id);
+      if (!$check) {
+        return $check;
+      }
+    }
 
-   // check if player is attendant in one of the tournaments of toMerge
-   foreach ($ts as $tournament) {
-     foreach ($tournament->getCompetitions() as $competition) {
-       foreach ($competition->getTeams() as $team) {
-         foreach ($team->getMemberships() as $membership) {
-           if ($membership->getPlayer()->getId() == $player->getId()) {
-             return "Player 1 and player 2 both attended the tournament " . $tournament->getName() .
-               "(" . $tournament->getStartTime()->format('d.m.Y H:i') . ", id='" . $tournament->getId() . "')";
-           }
-         }
-       }
-     }
-   }
+    foreach($tIds as $id) {
+      $this->changePlayerInTournament($toMergeId, $playerId, $id);
+    }
 
-  //change players
-   foreach ($ts as $tournament) {
-     foreach ($tournament->getCompetitions() as $competition) {
-       $isMember = false;
-       foreach ($competition->getTeams() as $team) {
-         foreach ($team->getMemberships() as $membership) {
-           if ($membership->getPlayer()->getId() == $toMerge->getId()) {
-             $membership->setPlayer($player);
-             $isMember = true;
-           }
-         }
-       }
-       if ($isMember) {
-         foreach ($competition->getPhases() as $phase) {
-           foreach ($phase->getMatches() as $match) {
-             foreach ($match->getGames() as $game) {
-               if ($game->getPlayersA()->containsKey($toMerge->getId())) {
-                 $game->getPlayersA()->remove($toMerge->getId());
-                 $game->getPlayersA()->set($player->getId(), $player);
-               }
-               if ($game->getPlayersB()->containsKey($toMerge->getId())) {
-                 $game->getPlayersB()->remove($toMerge->getId());
-                 $game->getPlayersB()->set($player->getId(), $player);
-               }
-             }
-           }
-         }
-       }
-     }
-   }
-
-   return true;
+    return true;
   }
 //</editor-fold desc="Public Methods">
 }
