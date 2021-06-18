@@ -51,7 +51,7 @@ class PlayerService implements PlayerServiceInterface
   }
 //</editor-fold desc="Constructor">
 
-private function tournamentDoesNotContainPlayer(string $playerId, string $tournamentId) {
+private function tournamentDoesNotContainPlayer(int $playerId, string $tournamentId) {
   $tournament = $this->em->find(TournamentInterface::class, $tournamentId);
   if ($tournament === null) {
     return "Tournament with id $tournamentId does not exist";
@@ -71,7 +71,7 @@ private function tournamentDoesNotContainPlayer(string $playerId, string $tourna
   return true;
 }
 
-private function changePlayerInTournament(string $fromPlayerId, string $toPlayerId, string $tournamentId) {
+private function changePlayerInTournament(int $fromPlayerId, int $toPlayerId, string $tournamentId) {
   $tournament = $this->em->find(TournamentInterface::class, $tournamentId);
   $player = $this->em->find(PlayerInterface::class, $toPlayerId);
   if ($tournament === null) {
@@ -139,7 +139,7 @@ private function changePlayerInTournament(string $fromPlayerId, string $toPlayer
     }
 
     foreach($tIds as $id) {
-      $check = $this->tournamentDoesNotContainPlayer($playerId, $toMergeId, $id);
+      $check = $this->tournamentDoesNotContainPlayer($playerId, $id);
       if (!$check) {
         return $check;
       }
