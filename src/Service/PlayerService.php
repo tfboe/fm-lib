@@ -56,7 +56,12 @@ private function tournamentDoesNotContainPlayer(int $playerId, string $tournamen
   if ($tournament === null) {
     return "Tournament with id $tournamentId does not exist";
   }
-  $this->ls->loadEntities([$tournament]);
+  $this->ls->loadEntities([$tournament], [
+    TournamentInterface::class => [["competitions"]],
+    CompetitionInterface::class => [["teams"]],
+    TeamInterface::class => [["memberships"]],
+    TeamMembershipInterface::class => [["player"]],
+  ]);
   foreach ($tournament->getCompetitions() as $competition) {
     foreach ($competition->getTeams() as $team) {
       foreach ($team->getMemberships() as $membership) {
@@ -77,7 +82,17 @@ private function changePlayerInTournament(int $fromPlayerId, int $toPlayerId, st
   if ($tournament === null) {
     return "Tournament with id $tournamentId does not exist";
   }
-  $this->ls->loadEntities([$tournament]);
+  if ($player === null) {
+    return "Player with id $toPlayerId does not exist";
+  }
+  $this->ls->loadEntities([$tournament], [
+    TournamentInterface::class => [["competitions"]],
+    CompetitionInterface::class => [["teams"], ["phases"]],
+    TeamInterface::class => [["memberships"]],
+    PhaseInterface::class => [["matches"]],
+    MatchInterface::class => [["games"]],
+    GameInterface::class => [["playersA", "playersB"]],
+  ]);
   foreach ($tournament->getCompetitions() as $competition) {
     $isMember = false;
     foreach ($competition->getTeams() as $team) {
@@ -92,12 +107,12 @@ private function changePlayerInTournament(int $fromPlayerId, int $toPlayerId, st
       foreach ($competition->getPhases() as $phase) {
         foreach ($phase->getMatches() as $match) {
           foreach ($match->getGames() as $game) {
-            if ($game->getPlayersA()->containsKey($fromPlayerId())) {
-              $game->getPlayersA()->remove($fromPlayerId());
+            if ($game->getPlayersA()->containsKey($fromPlayerId)) {
+              $game->getPlayersA()->remove($fromPlayerId);
               $game->getPlayersA()->set($player->getId(), $player);
             }
-            if ($game->getPlayersB()->containsKey($fromPlayerId())) {
-              $game->getPlayersB()->remove($fromPlayerId());
+            if ($game->getPlayersB()->containsKey($fromPlayerId)) {
+              $game->getPlayersB()->remove($fromPlayerId);
               $game->getPlayersB()->set($player->getId(), $player);
             }
           }
@@ -125,7 +140,7 @@ private function changePlayerInTournament(int $fromPlayerId, int $toPlayerId, st
 
    /** @var TournamentInterface[] $ts */
    $ts = $this->em->createQueryBuilder()
-     ->select("t")
+     ->select("t.id")
      ->from(TournamentInterface::class, 't')
      ->innerJoin('t.competitions', 'c')
      ->innerJoin('c.teams', 'te')
@@ -135,7 +150,7 @@ private function changePlayerInTournament(int $fromPlayerId, int $toPlayerId, st
 
     $tIds = [];
     foreach ($ts as $tournament) {
-      $tIds[] = $tournament->getId();
+      $tIds[] = $tournament["id"];
     }
 
     foreach($tIds as $id) {
