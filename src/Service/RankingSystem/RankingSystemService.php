@@ -415,7 +415,7 @@ abstract class RankingSystemService implements \Tfboe\FmLib\Service\RankingSyste
     /** @noinspection PhpUnhandledExceptionInspection */
     $playerCol = $meta->getSingleAssociationJoinColumnName('player');
     $pointsCol = $meta->getColumnName('points');
-    $lastChangedCol = $meta->getColumnName('lastChanged');
+    $lastChangeCol = $meta->getColumnName('lastChange');
     $idCol = $meta->getColumnName('id');
     $numberRankedEntitiesCol = $meta->getColumnName('numberRankedEntities');
     $subClassDataCol = $meta->getColumnName('subClassData');
@@ -435,7 +435,7 @@ UPDATE $table AS l
 INNER JOIN $table AS b ON b.$playerCol = l.$playerCol AND b.$rankingSystemListCol = ?
 SET l.$subClassDataCol = b.$subClassDataCol, 
     l.$pointsCol = b.$pointsCol,
-    l.$lastChangedCol = b.$lastChangedCol,
+    l.$lastChangeCol = b.$lastChangeCol,
     l.$numberRankedEntitiesCol = b.$numberRankedEntitiesCol
 WHERE l.$rankingSystemListCol = ?
 SQL;
@@ -443,8 +443,8 @@ SQL;
 
     //last but not least insert entries into list which are in base but not in list, we do this with a native query
     $query = <<<SQL
-INSERT INTO $table ($idCol, $rankingSystemListCol, $playerCol, $pointsCol, $lastChangedCol, $numberRankedEntitiesCol, $subClassDataCol)
-SELECT UUID(), ?, b.$playerCol, b.$pointsCol, b.$lastChangedCol, b.$numberRankedEntitiesCol, b.$subClassDataCol
+INSERT INTO $table ($idCol, $rankingSystemListCol, $playerCol, $pointsCol, $lastChangeCol, $numberRankedEntitiesCol, $subClassDataCol)
+SELECT UUID(), ?, b.$playerCol, b.$pointsCol, b.$lastChangeCol, b.$numberRankedEntitiesCol, b.$subClassDataCol
 FROM $table AS b
 LEFT JOIN $table AS l
 ON l.$playerCol = b.$playerCol AND l.$rankingSystemListCol = ?
