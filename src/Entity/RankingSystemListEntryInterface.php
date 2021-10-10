@@ -66,6 +66,11 @@ interface RankingSystemListEntryInterface extends BaseEntityInterface, UUIDEntit
   public function setPoints(float $points);
 
   /**
+   * @param \Datetime $lastChange
+   */
+  public function setLastChange(\DateTime $lastChange);
+
+  /**
    * @param RankingSystemListInterface $rankingSystemList
    */
   public function setRankingSystemList(RankingSystemListInterface $rankingSystemList);

@@ -794,6 +794,7 @@ SQL;
           $entry->setNumberRankedEntities($entry->getNumberRankedEntities() + 1);
           $pointsAfterwards = $entry->getPoints() + $change->getPointsChange();
           $entry->setPoints($pointsAfterwards);
+          $entry->setLastChange($time);
           $change->setPointsAfterwards($pointsAfterwards);
           //apply further changes
           foreach ($this->getAdditionalFields() as $field => $value) {
@@ -827,6 +828,7 @@ SQL;
   {
     $entry->setPoints($this->startPoints());
     $entry->setNumberRankedEntities(0);
+    $entry->setLastChange(new \DateTime("2000-01-01"));
     foreach ($this->getAdditionalFields() as $field => $value) {
       // PropertyNotExistingException => we know for sure that the property exists (see 2 lines above)
       /** @noinspection PhpUnhandledExceptionInspection */

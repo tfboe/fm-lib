@@ -51,6 +51,12 @@ trait RankingSystemListEntry
    * @var PlayerInterface
    */
   private $player;
+
+  /**
+   * @ORM\Column(type="datetime", nullable=false)
+   * @var \DateTime
+   */
+  private $lastChange;
 //</editor-fold desc="Fields">
 
 //<editor-fold desc="Constructor">
@@ -111,6 +117,14 @@ trait RankingSystemListEntry
   public function setPoints(float $points)
   {
     $this->points = $points;
+  }
+
+  /**
+   * @param \Datetime $lastChange
+   */
+  public function setLastChange(\DateTime $lastChange)
+  {
+    $this->lastChange = $lastChange;
   }
 
   /**
