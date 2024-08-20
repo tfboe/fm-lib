@@ -51,10 +51,10 @@ class Handler extends ExceptionHandler
 //<editor-fold desc="Protected Methods">
   /**
    * Extracts the status code of an exception
-   * @param Exception $exception the exception to extract from
+   * @param Throwable $exception the exception to extract from
    * @return int|mixed the status code or 500 if no status code found
    */
-  protected function getExceptionHTTPStatusCode(Exception $exception)
+  protected function getExceptionHTTPStatusCode(Throwable $exception)
   {
     // Not all Exceptions have a http status code
     // We will give Error 500 if none found
@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
       return $exception->getResponse()->getStatusCode();
     }
     return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() :
-      ($exception->getCode() > 0 ? $exception->getCode() : 500);
+      (method_exists($exception, 'getCode') && $exception->getCode() > 0 ? $exception->getCode() : 500);
   }
 
   /**
