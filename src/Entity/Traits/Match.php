@@ -21,10 +21,10 @@ use Tfboe\FmLib\Entity\RankingInterface;
 use Tfboe\FmLib\Helpers\Level;
 
 /**
- * Trait Match
+ * Trait MatchClass
  * @package Tfboe\FmLib\Entity\Traits
  */
-trait Match
+trait MatchClass
 {
   use ResultEntity;
 
@@ -159,7 +159,7 @@ trait Match
 
 //<editor-fold desc="Protected Final Methods">
   /**
-   * Match constructor.
+   * MatchClass constructor.
    */
   protected final function init()
   {

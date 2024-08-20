@@ -14,7 +14,7 @@ use Doctrine\Common\Collections\Collection;
 use PHPUnit\Framework\MockObject\MockObject;
 use Tfboe\FmLib\Entity\GameInterface;
 use Tfboe\FmLib\Entity\PhaseInterface;
-use Tfboe\FmLib\Entity\Traits\Match;
+use Tfboe\FmLib\Entity\Traits\MatchClass;
 use Tfboe\FmLib\Helpers\Level;
 use Tfboe\FmLib\Tests\Entity\Ranking;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -28,10 +28,10 @@ class MatchTest extends UnitTestCase
 {
 //<editor-fold desc="Public Methods">
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getGames
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getChildren
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getGames
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getChildren
    * @uses   \Tfboe\FmLib\Entity\GameInterface
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::init
    */
   public function testGamesAndChildren()
   {
@@ -48,11 +48,11 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::init
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::init
    * @uses   \Tfboe\FmLib\Entity\Helpers\TournamentHierarchyEntity::__construct
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getGames
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::getGames
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::getRankingsA
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::getRankingsB
    */
   public function testInit()
   {
@@ -67,7 +67,7 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getLevel
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getLevel
    */
   public function testLevel()
   {
@@ -75,9 +75,9 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getLocalIdentifier
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::setMatchNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getMatchNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getLocalIdentifier
    */
   public function testMatchNumberAndLocalIdentifier()
   {
@@ -89,11 +89,11 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::setPhase
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getPhase
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getParent
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::getMatchNumber
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::setMatchNumber
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::setPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getPhase
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getParent
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::getMatchNumber
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::setMatchNumber
    */
   public function testPhaseAndParent()
   {
@@ -119,9 +119,9 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsA
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getRankingsA
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::init
    */
   public function testRankingsA()
   {
@@ -135,9 +135,9 @@ class MatchTest extends UnitTestCase
   }
 
   /**
-   * @covers \Tfboe\FmLib\Entity\Traits\Match::getRankingsB
+   * @covers \Tfboe\FmLib\Entity\Traits\MatchClass::getRankingsB
    * @uses   \Tfboe\FmLib\Entity\Traits\Ranking
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match::init
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass::init
    */
   public function testRankingsB()
   {
@@ -153,11 +153,11 @@ class MatchTest extends UnitTestCase
 
 //<editor-fold desc="Private Methods">
   /**
-   * @return Match|MockObject a new match
+   * @return MatchClass|MockObject a new match
    */
   private function match(): MockObject
   {
-    return $this->getMockForTrait(Match::class);
+    return $this->getMockForTrait(MatchClass::class);
   }
 //</editor-fold desc="Private Methods">
 }
