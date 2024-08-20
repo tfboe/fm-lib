@@ -13,7 +13,7 @@ namespace Tfboe\FmLib\Tests\Unit\Service\RankingSystem;
 use Tfboe\FmLib\Service\RankingSystem\RecursiveEndStartTimeService;
 use Tfboe\FmLib\Tests\Entity\Competition;
 use Tfboe\FmLib\Tests\Entity\Game;
-use Tfboe\FmLib\Tests\Entity\Match;
+use Tfboe\FmLib\Tests\Entity\MatchClass;
 use Tfboe\FmLib\Tests\Entity\Phase;
 use Tfboe\FmLib\Tests\Entity\Tournament;
 use Tfboe\FmLib\Tests\Helpers\UnitTestCase;
@@ -59,8 +59,8 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
    * @uses   \Tfboe\FmLib\Entity\Traits\Competition
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
    * @uses   \Tfboe\FmLib\Entity\Traits\Game
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match
-   * @uses   \Tfboe\FmLib\Entity\Traits\Match
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass
+   * @uses   \Tfboe\FmLib\Entity\Traits\MatchClass
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    * @uses   \Tfboe\FmLib\Entity\Traits\Phase
    * @uses   \Tfboe\FmLib\Entity\Traits\Tournament
@@ -88,9 +88,9 @@ class RecursiveEndStartTimeServiceTest extends UnitTestCase
     static::getProperty(Phase::class, 'id')->setValue($phase, 'p1');
     $phase->setPhaseNumber(1);
     $phase->setCompetition($competition);
-    $match = new Match();
+    $match = new MatchClass();
     /** @noinspection PhpUnhandledExceptionInspection */
-    static::getProperty(Match::class, 'id')->setValue($match, 'm1');
+    static::getProperty(MatchClass::class, 'id')->setValue($match, 'm1');
     $match->setMatchNumber(1);
     $match->setPhase($phase);
     $game = new Game();
