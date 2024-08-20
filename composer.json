@@ -21,9 +21,9 @@
   ],
   "require": {
     "laravel/lumen-framework": "^8.0",
-    "laravel-doctrine/orm": "^1.4.2",
-    "laravel-doctrine/extensions": "^1.0.12",
-    "gedmo/doctrine-extensions": "^2.4.33",
+    "laravel-doctrine/orm": "~1.7",
+    "laravel-doctrine/extensions": "~1.4",
+    "gedmo/doctrine-extensions": "^3.0",
     "tymon/jwt-auth": "^1.0.0",
     "irazasyed/jwt-auth-guard": "dev-master",
     "doctrine/orm": "^2.6",
