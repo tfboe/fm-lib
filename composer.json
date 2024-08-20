@@ -13,8 +13,14 @@
       "email": "blacktemplar@a1.net"
     }
   ],
+  "repositories": [
+      {
+          "type": "vcs",
+          "url": "https://github.com/blacktemplar/jwt-auth-guard"
+      }
+  ],
   "require": {
-    "laravel/lumen-framework": "^5.5.0",
+    "laravel/lumen-framework": "^8.0",
     "laravel-doctrine/orm": "^1.4.2",
     "laravel-doctrine/extensions": "^1.0.12",
     "gedmo/doctrine-extensions": "^2.4.33",
@@ -25,9 +31,9 @@
   },
   "require-dev": {
     "barryvdh/laravel-ide-helper": "^2.4.1",
-    "phpunit/phpcov": "^5.0",
+    "phpunit/phpcov": "^8.0",
     "phpmd/phpmd": "^2.6",
-    "phpunit/phpunit": "^7.0",
+    "phpunit/phpunit": "^9.0",
     "fzaninotto/faker": "^1.4"
   },
   "autoload": {

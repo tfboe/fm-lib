@@ -35,13 +35,13 @@ class Handler extends ExceptionHandler
    * @return \Illuminate\Http\Response
    * @SuppressWarnings(PHPMD.UnusedFormalParameter)
    */
-  public function render($request, Exception $exception, $printTrace = false)
+  public function render($request, Throwable $throwable, $printTrace = false)
   {
     //don't throw html exceptions always render using json
-    $statusCode = $this->getExceptionHTTPStatusCode($exception);
+    $statusCode = $this->getExceptionHTTPStatusCode($throwable);
 
     return response()->json(
-      $this->getJsonMessage($exception, $statusCode, $printTrace),
+      $this->getJsonMessage($throwable, $statusCode, $printTrace),
       $statusCode
     );
   }
