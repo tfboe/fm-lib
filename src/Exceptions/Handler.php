@@ -6,6 +6,7 @@ namespace Tfboe\FmLib\Exceptions;
 use Exception;
 use Illuminate\Validation\ValidationException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
+use Throwable;
 
 /**
  * Class Handler
