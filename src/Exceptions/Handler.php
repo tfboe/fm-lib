@@ -62,7 +62,7 @@ class Handler extends ExceptionHandler
       return $exception->getResponse()->getStatusCode();
     }
     return method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() :
-      (method_exists($exception, 'getCode') && $exception->getCode() > 0 ? $exception->getCode() : 500);
+      ($exception->getCode() > 0 ? $exception->getCode() : 500);
   }
 
   /**
@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
    * @param Exception $exception the exception whose name we want
    * @return string the exception name
    */
-  protected function getExceptionName(Exception $exception): string
+  protected function getExceptionName(Throwable $exception): string
   {
     if ($exception instanceof AuthenticationException) {
       return ExceptionNames::AUTHENTICATION_EXCEPTION;
@@ -95,12 +95,12 @@ class Handler extends ExceptionHandler
 
   /**
    * Extracts the status and the message from the given exception and status code
-   * @param Exception $exception the raised exception
+   * @param Throwable $exception the raised exception
    * @param string|null $statusCode the status code or null if unknown
    * @param  bool $printTrace if true a trace will be appended to the exception message
    * @return array containing the infos status and message
    */
-  protected function getJsonMessage(Exception $exception, $statusCode = null, $printTrace = false)
+  protected function getJsonMessage(Throwable $exception, $statusCode = null, $printTrace = false)
   {
 
     $result = method_exists($exception, 'getJsonMessage') ? $exception->getJsonMessage() :
