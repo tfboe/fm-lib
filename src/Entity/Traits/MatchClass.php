@@ -38,14 +38,14 @@ trait MatchClass
 
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
-   * @ORM\JoinTable(name="relation__match_rankingA")
+   * @ORM\JoinTable(name="relation__match_rankingA", joinColumns={@ORM\JoinColumn(name="match_id")})
    * @var Collection|RankingInterface[]
    */
   private $rankingsA;
 
   /**
    * @ORM\ManyToMany(targetEntity="\Tfboe\FmLib\Entity\RankingInterface", indexBy="uniqueRank")
-   * @ORM\JoinTable(name="relation__match_rankingB")
+   * @ORM\JoinTable(name="relation__match_rankingB", joinColumns={@ORM\JoinColumn(name="match_id")})
    * @var Collection|RankingInterface[]
    */
   private $rankingsB;
