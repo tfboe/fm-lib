@@ -335,7 +335,7 @@ WHERE ($rankingTimePart > ?) AND
       trs.$tournamentRankingSystemsAssociationTournamentIdCol IS NOT NULL)
 ORDER BY rankingTime ASC, g.$gameIdCol ASC
 SQL;
-    $this->getEntityManager()->getConnection()->executeUpdate("TRUNCATE TABLE $rankingTimesTable");
+    $this->getEntityManager()->getConnection()->executeUpdate("DELETE FROM $rankingTimesTable");
     $this->getEntityManager()->getConnection()->executeUpdate($query, [
       $rankingSystem->getId(), $rankingSystem->getId(), $rankingSystem->getId(), $rankingSystem->getId(),
       $rankingSystem->getId(), $rankingSystem->getId(), $from->format('Y-m-d H:i:s')
